@@ -31,6 +31,7 @@ export default function PackOpeningPage() {
   const [currentStackIndex, setCurrentStackIndex] = useState(0);
   const [currentSwipingCard, setCurrentSwipingCard] = useState<{ id: string, direction: 'left' | 'right' } | null>(null);
   const [hasHolo, setHasHolo] = useState(false);
+  const [hasRareNonHolo, setHasRareNonHolo] = useState(false);
 
 
   useEffect(() => {
@@ -52,6 +53,7 @@ export default function PackOpeningPage() {
     setCurrentStackIndex(0);
     setCurrentSwipingCard(null);
     setHasHolo(false);
+    setHasRareNonHolo(false);
 
     setTimeout(() => {
       const packCards: PokemonCard[] = [];
@@ -65,32 +67,43 @@ export default function PackOpeningPage() {
       
       const pulledIds = new Set<string>();
 
-      for (let i = 0; i < packData.rarityDistribution.rareSlot; i++) {
-        const isHolo = Math.random() < 0.30; 
-        let card = pullCardByRarity(isHolo ? 'Holo Rare' : 'Rare', pulledIds);
-        if (!card) card = pullCardByRarity(isHolo ? 'Rare' : 'Holo Rare', pulledIds); 
-        if (!card) card = availableCardsInPack.find(c => (c.rarity === 'Rare' || c.rarity === 'Holo Rare') && !pulledIds.has(c.id)); 
-        if (!card) card = availableCardsInPack.find(c => !pulledIds.has(c.id)); 
-
-        if (card) { packCards.push(card); pulledIds.add(card.id); }
+      // Pull for the rare slot (can be Holo Rare or Rare)
+      let rareSlotCard: PokemonCard | undefined;
+      const isHoloAttempt = Math.random() < 0.30; // 30% chance for the rare slot to be Holo if possible
+      if (isHoloAttempt) {
+        rareSlotCard = pullCardByRarity('Holo Rare', pulledIds);
+      }
+      if (!rareSlotCard) {
+        rareSlotCard = pullCardByRarity('Rare', pulledIds);
+      }
+      // Fallback if specific rarity isn't available or if Holo attempt failed
+      if (!rareSlotCard) {
+          rareSlotCard = availableCardsInPack.find(c => (c.rarity === 'Holo Rare' || c.rarity === 'Rare') && !pulledIds.has(c.id));
+      }
+      if (rareSlotCard) {
+        packCards.push(rareSlotCard);
+        pulledIds.add(rareSlotCard.id);
       }
 
+
+      // Pull Uncommons
       for (let i = 0; i < packData.rarityDistribution.uncommon; i++) {
         let card = pullCardByRarity('Uncommon', pulledIds);
         if (!card) card = availableCardsInPack.find(c => c.rarity === 'Uncommon' && !pulledIds.has(c.id));
         if (!card) card = availableCardsInPack.find(c => !pulledIds.has(c.id) && c.rarity !== 'Holo Rare' && c.rarity !== 'Rare'); 
-
         if (card) { packCards.push(card); pulledIds.add(card.id); }
       }
       
-      for (let i = 0; i < packData.rarityDistribution.common; i++) {
+      // Pull Commons (fill remaining slots, ensure total cardsPerPack)
+      const commonsToPull = packData.cardsPerPack - packCards.length;
+      for (let i = 0; i < commonsToPull; i++) {
         let card = pullCardByRarity('Common', pulledIds);
          if (!card) card = availableCardsInPack.find(c => c.rarity === 'Common' && !pulledIds.has(c.id));
          if (!card) card = availableCardsInPack.find(c => !pulledIds.has(c.id)); 
-
         if (card) { packCards.push(card); pulledIds.add(card.id); }
       }
       
+      // Ensure pack is full if possible
       let attempts = 0; 
       while(packCards.length < packData.cardsPerPack && pulledIds.size < availableCardsInPack.length && attempts < 20) {
         const remainingCardsForPool = availableCardsInPack.filter(c => !pulledIds.has(c.id));
@@ -106,6 +119,11 @@ export default function PackOpeningPage() {
 
       const isHoloPulled = packCards.some(card => card.rarity === 'Holo Rare');
       setHasHolo(isHoloPulled);
+      if (!isHoloPulled) {
+        const isRarePulled = packCards.some(card => card.rarity === 'Rare');
+        setHasRareNonHolo(isRarePulled);
+      }
+
 
       const raritySortOrder: Record<CardRarity, number> = {
         'Common': 0,
@@ -113,12 +131,13 @@ export default function PackOpeningPage() {
         'Rare': 2,
         'Holo Rare': 3,
       };
+      // Sort so commons appear first in the array, holos last for stack reveal
       packCards.sort((a, b) => raritySortOrder[a.rarity] - raritySortOrder[b.rarity]);
 
       setOpenedCards(packCards);
       addCardsToCollection(packCards.map(c => c.id)); 
       setStage('stack-reveal');
-    }, 1000); // Duration of opening-pack-burst animation is 0.9s, so 1s timeout is good.
+    }, 1000); 
   }, [packData, addCardsToCollection, pokedexLoaded, allCards]);
 
   const handleRevealNextCard = () => {
@@ -155,6 +174,7 @@ export default function PackOpeningPage() {
     setCurrentStackIndex(0);
     setCurrentSwipingCard(null);
     setHasHolo(false);
+    setHasRareNonHolo(false);
   }
 
   if (!pokedexLoaded || !packData) {
@@ -165,11 +185,15 @@ export default function PackOpeningPage() {
       </div>
     );
   }
+  
+  const showHoloBackground = hasHolo && (stage === 'stack-reveal' || stage === 'all-revealed');
+  const showRareBackground = !hasHolo && hasRareNonHolo && (stage === 'stack-reveal' || stage === 'all-revealed');
 
   return (
     <div className={cn(
         "space-y-8 text-center transition-colors duration-1000",
-        hasHolo && (stage === 'stack-reveal' || stage === 'all-revealed') && "holo-background-active animate-holo-bg-shimmer"
+        showHoloBackground && "holo-background-active animate-holo-bg-shimmer",
+        showRareBackground && "rare-glow-background-active animate-rare-glow-bg"
       )}>
       <Button variant="outline" onClick={() => router.push('/')} className="absolute top-24 left-4 md:left-8 z-10">
         <ArrowLeft className="mr-2 h-4 w-4" /> Back to Packs

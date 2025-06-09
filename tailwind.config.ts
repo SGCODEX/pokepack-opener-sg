@@ -87,7 +87,7 @@ export default {
           '0%': { transform: 'scale(0.5) translateY(50px)', opacity: '0' },
           '100%': { transform: 'scale(1) translateY(0)', opacity: '1' },
         },
-         'pack-shake': { // Used for hover on initial page
+         'pack-shake': { 
           '0%, 100%': { transform: 'translateX(0) rotate(0deg)' },
           '10%, 30%, 50%': { transform: 'translateX(-5px) rotate(-2deg)' },
           '20%, 40%, 60%': { transform: 'translateX(5px) rotate(2deg)' },
@@ -129,8 +129,12 @@ export default {
           '100%': { transform: 'translateX(150%) rotate(15deg)', opacity: '0' },
         },
         'holo-bg-shimmer': {
-          '0%': { backgroundPosition: '200% 0%' }, /* Start from further left */
-          '100%': { backgroundPosition: '-200% 0%' }, /* Move to further right */
+          '0%': { backgroundPosition: '200% 0%' }, 
+          '100%': { backgroundPosition: '-200% 0%' }, 
+        },
+        'rare-glow-bg': {
+          '0%': { backgroundPosition: '150% 0%' },
+          '100%': { backgroundPosition: '-150% 0%' },
         },
       },
       animation: {
@@ -138,8 +142,8 @@ export default {
         'accordion-up': 'accordion-up 0.2s ease-out',
         'card-flip': 'card-flip 0.6s ease-in-out',
         'card-reveal': 'card-reveal 0.5s ease-out forwards',
-        'pack-shake': 'pack-shake 0.6s ease-in-out infinite', // For hover
-        'opening-pack-burst': 'opening-pack-burst 0.9s ease-in-out forwards', // For the opening sequence
+        'pack-shake': 'pack-shake 0.6s ease-in-out infinite', 
+        'opening-pack-burst': 'opening-pack-burst 0.9s ease-in-out forwards', 
         'rarity-glow-common': 'rarity-glow-common 2s infinite ease-in-out',
         'rarity-glow-uncommon': 'rarity-glow-uncommon 2s infinite ease-in-out',
         'rarity-glow-rare': 'rarity-glow-rare 2s infinite ease-in-out',
@@ -147,6 +151,7 @@ export default {
         'swipe-out-left': 'swipe-out-left 0.5s ease-in-out forwards',
         'swipe-out-right': 'swipe-out-right 0.5s ease-in-out forwards',
         'holo-bg-shimmer': 'holo-bg-shimmer 10s linear infinite',
+        'rare-glow-bg': 'rare-glow-bg 12s linear infinite',
       },
     },
   },

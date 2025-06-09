@@ -105,6 +105,18 @@ body {
       hsl(60 100% 50% / 0.6),  /* Bright Yellow */
       hsl(var(--primary) / 0.6)
     );
-    background-size: 400% 400%; /* Needs to be larger for smooth animation */
+    background-size: 400% 400%; 
+  }
+
+  .rare-glow-background-active {
+    background: linear-gradient(
+      270deg,
+      hsl(var(--primary) / 0.3), /* Subdued primary */
+      hsl(var(--secondary) / 0.4), /* Subdued secondary */
+      hsl(var(--accent) / 0.2), /* Very subtle accent */
+      hsl(var(--secondary) / 0.4),
+      hsl(var(--primary) / 0.3)
+    );
+    background-size: 300% 300%;
   }
 }
