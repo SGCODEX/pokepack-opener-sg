@@ -41,7 +41,7 @@ export const allCards: PokemonCard[] = [
     id: 'base-charizard-004',
     name: 'Charizard',
     image: 'https://den-cards.pokellector.com/119/Charizard.BS.4.png',
-    dataAiHint: 'Charizard flying fire pokemon',
+    dataAiHint: 'Charizard flying fire dragon',
     rarity: 'Holo Rare',
     type: 'Fire',
     series: 'Base Set',
@@ -53,7 +53,7 @@ export const allCards: PokemonCard[] = [
     image: 'https://den-cards.pokellector.com/119/Clefairy.BS.5.png',
     dataAiHint: 'Clefairy fairy pokemon',
     rarity: 'Holo Rare',
-    type: 'Colorless', // Often considered Colorless in Base Set context despite later Fairy typing
+    type: 'Colorless',
     series: 'Base Set',
     pokedexNumber: '5/102',
   },
@@ -168,7 +168,7 @@ export const allCards: PokemonCard[] = [
     pokedexNumber: '16/102',
   },
 
-  // Rares (Non-Holo)
+  // Rares (Non-Holo Pokemon: 17/102 to 22/102)
   {
     id: 'base-beedrill-017',
     name: 'Beedrill',
@@ -224,13 +224,15 @@ export const allCards: PokemonCard[] = [
     name: 'Pidgeotto',
     image: 'https://den-cards.pokellector.com/119/Pidgeotto.BS.22.png',
     dataAiHint: 'Pidgeotto bird pokemon',
-    rarity: 'Rare', // This is Pidgeotto, not Pidgeot (which isn't in Base Set)
+    rarity: 'Rare',
     type: 'Colorless',
     series: 'Base Set',
     pokedexNumber: '22/102',
   },
+
+  // Uncommons (Pokemon: 23/102 to 42/102, skipping some for brevity if needed, but aiming for full)
   {
-    id: 'base-arcanine-023', // Arcanine is Uncommon in Base set, not Rare
+    id: 'base-arcanine-023',
     name: 'Arcanine',
     image: 'https://den-cards.pokellector.com/119/Arcanine.BS.23.png',
     dataAiHint: 'Arcanine legendary fire dog',
@@ -239,8 +241,6 @@ export const allCards: PokemonCard[] = [
     series: 'Base Set',
     pokedexNumber: '23/102',
   },
-
-  // Uncommons (Adding a good selection)
   {
     id: 'base-charmeleon-024',
     name: 'Charmeleon',
@@ -260,6 +260,16 @@ export const allCards: PokemonCard[] = [
     type: 'Water',
     series: 'Base Set',
     pokedexNumber: '25/102',
+  },
+  {
+    id: 'base-dratini-026',
+    name: 'Dratini',
+    image: 'https://den-cards.pokellector.com/119/Dratini.BS.26.png',
+    dataAiHint: 'Dratini dragon pokemon',
+    rarity: 'Uncommon',
+    type: 'Colorless',
+    series: 'Base Set',
+    pokedexNumber: '26/102',
   },
   {
     id: 'base-farfetchd-027',
@@ -307,7 +317,7 @@ export const allCards: PokemonCard[] = [
     image: 'https://den-cards.pokellector.com/119/Jynx.BS.31.png',
     dataAiHint: 'Jynx psychic ice pokemon',
     rarity: 'Uncommon',
-    type: 'Psychic', // Water in some games, Psychic in TCG Base
+    type: 'Psychic',
     series: 'Base Set',
     pokedexNumber: '31/102',
   },
@@ -422,7 +432,7 @@ export const allCards: PokemonCard[] = [
     pokedexNumber: '42/102',
   },
 
-  // Commons (Adding a good selection)
+  // Commons (Pokemon: 43/102 to 69/102)
   {
     id: 'base-abra-043',
     name: 'Abra',
@@ -474,6 +484,16 @@ export const allCards: PokemonCard[] = [
     pokedexNumber: '47/102',
   },
   {
+    id: 'base-doduo-048',
+    name: 'Doduo',
+    image: 'https://den-cards.pokellector.com/119/Doduo.BS.48.png',
+    dataAiHint: 'Doduo twin bird pokemon',
+    rarity: 'Common',
+    type: 'Colorless',
+    series: 'Base Set',
+    pokedexNumber: '48/102',
+  },
+  {
     id: 'base-drowzee-049',
     name: 'Drowzee',
     image: 'https://den-cards.pokellector.com/119/Drowzee.BS.49.png',
@@ -492,6 +512,16 @@ export const allCards: PokemonCard[] = [
     type: 'Psychic',
     series: 'Base Set',
     pokedexNumber: '50/102',
+  },
+  {
+    id: 'base-koffing-051',
+    name: 'Koffing',
+    image: 'https://den-cards.pokellector.com/119/Koffing.BS.51.png',
+    dataAiHint: 'Koffing poison gas pokemon',
+    rarity: 'Common',
+    type: 'Grass',
+    series: 'Base Set',
+    pokedexNumber: '51/102',
   },
   {
     id: 'base-machop-052',
@@ -554,10 +584,10 @@ export const allCards: PokemonCard[] = [
     pokedexNumber: '57/102',
   },
   {
-    id: 'base-pikachu-058', // Yellow Cheeks Pikachu is standard Base Set
+    id: 'base-pikachu-058',
     name: 'Pikachu',
     image: 'https://den-cards.pokellector.com/119/Pikachu.BS.58.png',
-    dataAiHint: 'Pikachu electric pokemon',
+    dataAiHint: 'Pikachu electric mouse pokemon',
     rarity: 'Common',
     type: 'Lightning',
     series: 'Base Set',
@@ -676,11 +706,61 @@ export const allCards: PokemonCard[] = [
 
   // Trainer Cards
   {
+    id: 'base-clefairy-doll-070',
+    name: 'Clefairy Doll',
+    image: 'https://den-cards.pokellector.com/119/Clefairy-Doll.BS.70.png',
+    dataAiHint: 'Clefairy Doll trainer',
+    rarity: 'Rare', // This is a Rare Trainer
+    type: 'Trainer',
+    series: 'Base Set',
+    pokedexNumber: '70/102',
+  },
+  {
+    id: 'base-computer-search-071',
+    name: 'Computer Search',
+    image: 'https://den-cards.pokellector.com/119/Computer-Search.BS.71.png',
+    dataAiHint: 'Computer Search trainer',
+    rarity: 'Rare',
+    type: 'Trainer',
+    series: 'Base Set',
+    pokedexNumber: '71/102',
+  },
+  {
+    id: 'base-devolution-spray-072',
+    name: 'Devolution Spray',
+    image: 'https://den-cards.pokellector.com/119/Devolution-Spray.BS.72.png',
+    dataAiHint: 'Devolution Spray trainer',
+    rarity: 'Rare',
+    type: 'Trainer',
+    series: 'Base Set',
+    pokedexNumber: '72/102',
+  },
+  {
+    id: 'base-imposter-professor-oak-073',
+    name: 'Imposter Professor Oak',
+    image: 'https://den-cards.pokellector.com/119/Imposter-Professor-Oak.BS.73.png',
+    dataAiHint: 'Imposter Professor Oak trainer',
+    rarity: 'Rare',
+    type: 'Trainer',
+    series: 'Base Set',
+    pokedexNumber: '73/102',
+  },
+  {
+    id: 'base-item-finder-074',
+    name: 'Item Finder',
+    image: 'https://den-cards.pokellector.com/119/Item-Finder.BS.74.png',
+    dataAiHint: 'Item Finder trainer',
+    rarity: 'Rare',
+    type: 'Trainer',
+    series: 'Base Set',
+    pokedexNumber: '74/102',
+  },
+  {
     id: 'base-lass-075',
     name: 'Lass',
     image: 'https://den-cards.pokellector.com/119/Lass.BS.75.png',
     dataAiHint: 'Lass pokemon trainer',
-    rarity: 'Rare', // Lass is actually a Rare trainer
+    rarity: 'Rare',
     type: 'Trainer',
     series: 'Base Set',
     pokedexNumber: '75/102',
@@ -726,6 +806,86 @@ export const allCards: PokemonCard[] = [
     pokedexNumber: '79/102',
   },
   {
+    id: 'base-defender-080',
+    name: 'Defender',
+    image: 'https://den-cards.pokellector.com/119/Defender.BS.80.png',
+    dataAiHint: 'Defender trainer item',
+    rarity: 'Uncommon',
+    type: 'Trainer',
+    series: 'Base Set',
+    pokedexNumber: '80/102',
+  },
+  {
+    id: 'base-energy-retrieval-081',
+    name: 'Energy Retrieval',
+    image: 'https://den-cards.pokellector.com/119/Energy-Retrieval.BS.81.png',
+    dataAiHint: 'Energy Retrieval trainer',
+    rarity: 'Uncommon',
+    type: 'Trainer',
+    series: 'Base Set',
+    pokedexNumber: '81/102',
+  },
+  {
+    id: 'base-full-heal-082',
+    name: 'Full Heal',
+    image: 'https://den-cards.pokellector.com/119/Full-Heal.BS.82.png',
+    dataAiHint: 'Full Heal trainer item',
+    rarity: 'Uncommon',
+    type: 'Trainer',
+    series: 'Base Set',
+    pokedexNumber: '82/102',
+  },
+  {
+    id: 'base-maintenance-083',
+    name: 'Maintenance',
+    image: 'https://den-cards.pokellector.com/119/Maintenance.BS.83.png',
+    dataAiHint: 'Maintenance trainer',
+    rarity: 'Uncommon',
+    type: 'Trainer',
+    series: 'Base Set',
+    pokedexNumber: '83/102',
+  },
+  {
+    id: 'base-pluspower-084',
+    name: 'PlusPower',
+    image: 'https://den-cards.pokellector.com/119/PlusPower.BS.84.png',
+    dataAiHint: 'PlusPower trainer item',
+    rarity: 'Uncommon',
+    type: 'Trainer',
+    series: 'Base Set',
+    pokedexNumber: '84/102',
+  },
+  {
+    id: 'base-pokemon-center-085',
+    name: 'Pokémon Center',
+    image: 'https://den-cards.pokellector.com/119/Pokemon-Center.BS.85.png',
+    dataAiHint: 'Pokemon Center stadium',
+    rarity: 'Uncommon',
+    type: 'Trainer',
+    series: 'Base Set',
+    pokedexNumber: '85/102',
+  },
+  {
+    id: 'base-pokemon-flute-086',
+    name: 'Pokémon Flute',
+    image: 'https://den-cards.pokellector.com/119/Pokemon-Flute.BS.86.png',
+    dataAiHint: 'Pokemon Flute item',
+    rarity: 'Uncommon',
+    type: 'Trainer',
+    series: 'Base Set',
+    pokedexNumber: '86/102',
+  },
+  {
+    id: 'base-pokedex-087',
+    name: 'Pokédex',
+    image: 'https://den-cards.pokellector.com/119/Pokedex.BS.87.png',
+    dataAiHint: 'Pokedex trainer item',
+    rarity: 'Uncommon',
+    type: 'Trainer',
+    series: 'Base Set',
+    pokedexNumber: '87/102',
+  },
+  {
     id: 'base-professor-oak-088',
     name: 'Professor Oak',
     image: 'https://den-cards.pokellector.com/119/Professor-Oak.BS.88.png',
@@ -734,6 +894,26 @@ export const allCards: PokemonCard[] = [
     type: 'Trainer',
     series: 'Base Set',
     pokedexNumber: '88/102',
+  },
+  {
+    id: 'base-revive-089',
+    name: 'Revive',
+    image: 'https://den-cards.pokellector.com/119/Revive.BS.89.png',
+    dataAiHint: 'Revive trainer item',
+    rarity: 'Uncommon',
+    type: 'Trainer',
+    series: 'Base Set',
+    pokedexNumber: '89/102',
+  },
+  {
+    id: 'base-super-potion-090',
+    name: 'Super Potion',
+    image: 'https://den-cards.pokellector.com/119/Super-Potion.BS.90.png',
+    dataAiHint: 'Super Potion item',
+    rarity: 'Uncommon',
+    type: 'Trainer',
+    series: 'Base Set',
+    pokedexNumber: '90/102',
   },
   {
     id: 'base-bill-091',
@@ -786,7 +966,27 @@ export const allCards: PokemonCard[] = [
     pokedexNumber: '95/102',
   },
 
-  // Energy Cards (Example, more would be needed for all 102)
+  // Energy Cards
+  {
+    id: 'base-double-colorless-energy-096',
+    name: 'Double Colorless Energy',
+    image: 'https://den-cards.pokellector.com/119/Double-Colorless-Energy.BS.96.png',
+    dataAiHint: 'Double colorless energy',
+    rarity: 'Uncommon',
+    type: 'Energy',
+    series: 'Base Set',
+    pokedexNumber: '96/102',
+  },
+  {
+    id: 'base-fighting-energy-097',
+    name: 'Fighting Energy',
+    image: 'https://den-cards.pokellector.com/119/Fighting-Energy.BS.97.png',
+    dataAiHint: 'Fighting energy symbol',
+    rarity: 'Common',
+    type: 'Energy',
+    series: 'Base Set',
+    pokedexNumber: '97/102',
+  },
   {
     id: 'base-fire-energy-098',
     name: 'Fire Energy',
@@ -837,30 +1037,6 @@ export const allCards: PokemonCard[] = [
     series: 'Base Set',
     pokedexNumber: '102/102',
   },
-  // Note: Fighting Energy (97/102) is missing an image on Pokellector with the BS.97 pattern, will use a generic or skip for now.
-  // Placeholder for Fighting Energy if image found:
-  // {
-  //   id: 'base-fighting-energy-097',
-  //   name: 'Fighting Energy',
-  //   image: 'https://placehold.co/240x336.png', // Placeholder
-  //   dataAiHint: 'Fighting energy symbol',
-  //   rarity: 'Common',
-  //   type: 'Energy',
-  //   series: 'Base Set',
-  //   pokedexNumber: '97/102',
-  // },
-  // Double Colorless Energy (96/102) is also important.
-  {
-    id: 'base-double-colorless-energy-096',
-    name: 'Double Colorless Energy',
-    image: 'https://den-cards.pokellector.com/119/Double-Colorless-Energy.BS.96.png',
-    dataAiHint: 'Double colorless energy',
-    rarity: 'Uncommon', // This is an Uncommon Trainer/Special Energy
-    type: 'Energy', // Often categorized as Trainer (Special Energy) or Energy
-    series: 'Base Set',
-    pokedexNumber: '96/102',
-  },
-
 ];
 
 // Sort cards by their set number (pokedexNumber) for consistent display
@@ -878,14 +1054,12 @@ export const allPacks: PokemonPack[] = [
     series: 'Base Set',
     image: 'https://product-images.tcgplayer.com/22754.jpg',
     dataAiHint: 'Base Set booster pack charizard',
-    cardsPerPack: 10,
+    cardsPerPack: 10, // Standard for many sets, can be 11 if energy is separate
     rarityDistribution: {
-      common: 6, // Includes Pokemon, Trainers, and basic Energy cards
-      uncommon: 3, // Includes Pokemon, Trainers, and Double Colorless Energy
-      rareSlot: 1, // This slot can be a Rare or a Holo Rare Pokemon/Trainer
+      common: 6, 
+      uncommon: 3, 
+      rareSlot: 1, // This slot can be a Rare or a Holo Rare
     },
-    // Include all cards from 'Base Set' in possibleCards.
-    // The pack opening logic will use the rarities defined on each card.
     possibleCards: allCards.map(card => card.id),
   },
 ];
@@ -897,3 +1071,4 @@ export const getCardById = (id: string): PokemonCard | undefined => {
 export const getPackById = (id: string): PokemonPack | undefined => {
   return allPacks.find(pack => pack.id === id);
 };
+
