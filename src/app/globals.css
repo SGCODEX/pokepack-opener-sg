@@ -98,12 +98,12 @@ body {
   .holo-blue-wave-background-active {
     background: linear-gradient(
       135deg,
-      hsl(200 80% 50% / 0.6), /* Bright Sky Blue */
-      hsl(220 90% 60% / 0.7), /* Deep Blue */
-      hsl(240 80% 55% / 0.6), /* Indigo/Purpleish Blue */
-      hsl(260 90% 65% / 0.7), /* Vibrant Purple */
-      hsl(220 90% 60% / 0.7),
-      hsl(200 80% 50% / 0.6)
+      hsl(200 80% 50% / 0.8), /* Increased opacity */
+      hsl(220 90% 60% / 0.85), /* Increased opacity */
+      hsl(240 80% 55% / 0.8), /* Increased opacity */
+      hsl(260 90% 65% / 0.85), /* Increased opacity */
+      hsl(220 90% 60% / 0.85),
+      hsl(200 80% 50% / 0.8)
     );
     background-size: 400% 400%;
   }
@@ -111,11 +111,11 @@ body {
   .rare-glow-background-active {
     background: linear-gradient(
       270deg,
-      hsl(200 50% 85% / 0.45), /* Pale Sky Blue */
-      hsl(0 0% 90% / 0.55),    /* Light Silver */
-      hsl(220 50% 80% / 0.35), /* Pale Periwinkle */
-      hsl(0 0% 90% / 0.55),
-      hsl(200 50% 85% / 0.45)
+      hsl(200 60% 75% / 0.75),  /* Increased opacity Pale Sky Blue */
+      hsl(0 0% 85% / 0.85),    /* Increased opacity Light Silver */
+      hsl(220 60% 70% / 0.7), /* Increased opacity Pale Periwinkle */
+      hsl(0 0% 85% / 0.85),
+      hsl(200 60% 75% / 0.75)
     );
     background-size: 300% 300%;
   }
