@@ -14,19 +14,16 @@ const nextConfig: NextConfig = {
       {
         protocol: 'https',
         hostname: 'placehold.co',
-        port: '',
         pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'images.pokellector.com',
-        port: '',
-        pathname: '/**', // Broadened from /cards/**
+        pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'product-images.tcgplayer.com',
-        port: '',
         pathname: '/**',
       },
     ],
