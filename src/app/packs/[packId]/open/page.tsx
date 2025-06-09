@@ -66,9 +66,9 @@ export default function PackOpeningPage() {
       for (let i = 0; i < packData.rarityDistribution.rareSlot; i++) {
         const isHolo = Math.random() < 0.30; 
         let card = pullCardByRarity(isHolo ? 'Holo Rare' : 'Rare', pulledIds);
-        if (!card) card = pullCardByRarity(isHolo ? 'Rare' : 'Holo Rare', pulledIds); // Try other if specific holo/non-holo rare not found
-        if (!card) card = availableCardsInPack.find(c => (c.rarity === 'Rare' || c.rarity === 'Holo Rare') && !pulledIds.has(c.id)); // Fallback to any rare
-        if (!card) card = availableCardsInPack.find(c => !pulledIds.has(c.id)); // Fallback to any card if still no rare
+        if (!card) card = pullCardByRarity(isHolo ? 'Rare' : 'Holo Rare', pulledIds); 
+        if (!card) card = availableCardsInPack.find(c => (c.rarity === 'Rare' || c.rarity === 'Holo Rare') && !pulledIds.has(c.id)); 
+        if (!card) card = availableCardsInPack.find(c => !pulledIds.has(c.id)); 
 
         if (card) { packCards.push(card); pulledIds.add(card.id); }
       }
@@ -102,10 +102,14 @@ export default function PackOpeningPage() {
         attempts++;
       }
 
-      for (let i = packCards.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [packCards[i], packCards[j]] = [packCards[j], packCards[i]];
-      }
+      // Sort cards by rarity: Common -> Uncommon -> Rare -> Holo Rare for reveal order
+      const raritySortOrder: Record<CardRarity, number> = {
+        'Common': 0,
+        'Uncommon': 1,
+        'Rare': 2,
+        'Holo Rare': 3,
+      };
+      packCards.sort((a, b) => raritySortOrder[a.rarity] - raritySortOrder[b.rarity]);
 
       setOpenedCards(packCards);
       addCardsToCollection(packCards.map(c => c.id)); 
@@ -128,7 +132,7 @@ export default function PackOpeningPage() {
       if (nextIndex >= openedCards.length) {
         setStage('all-revealed');
       }
-    }, 500); // Match animation duration (0.5s)
+    }, 500); 
   };
 
   const handleCardClickForModal = (card: PokemonCard) => {
@@ -203,28 +207,27 @@ export default function PackOpeningPage() {
         <div className="flex flex-col items-center space-y-6 py-6">
           <h2 className="text-2xl font-headline font-semibold text-primary-foreground mb-4">Click the card to reveal the next one!</h2>
           <div 
-            className="relative w-[240px] h-[336px] mx-auto cursor-pointer select-none" // Added select-none
+            className="relative w-[240px] h-[336px] mx-auto cursor-pointer select-none" 
             onClick={!currentSwipingCard ? handleRevealNextCard : undefined}
             role="button"
             tabIndex={0}
-            onKeyPress={(e) => { if(e.key === 'Enter' || e.key === ' ') { if(!currentSwipingCard) handleRevealNextCard(); }}} // Accessibility
+            onKeyPress={(e) => { if(e.key === 'Enter' || e.key === ' ') { if(!currentSwipingCard) handleRevealNextCard(); }}} 
             aria-label="Reveal next card"
           >
             {openedCards.map((card, index) => {
               if (index < currentStackIndex && (!currentSwipingCard || currentSwipingCard.id !== card.id)) return null;
 
-              const isTopCardForInteraction = index === currentStackIndex && !currentSwipingCard;
               const isBeingSwiped = currentSwipingCard && currentSwipingCard.id === card.id;
               
               let cardTransform = 'none';
               let cardOpacity = 1;
-              const cardZIndex = openedCards.length - index; // Base z-index
+              const cardZIndex = openedCards.length - index; 
 
               if (!isBeingSwiped && index > currentStackIndex) {
-                const offset = (index - currentStackIndex) * 6; // px offset for cards underneath
+                const offset = (index - currentStackIndex) * 6; 
                 const scale = 1 - (index - currentStackIndex) * 0.05;
                 cardTransform = `translateY(${offset}px) translateX(${offset/2}px) scale(${scale})`;
-                if (index > currentStackIndex + 3) { // Only show a few cards in stack, fade out deeper ones
+                if (index > currentStackIndex + 3) { 
                     cardOpacity = Math.max(0, 1 - (index - (currentStackIndex + 3)) * 0.3);
                 }
               }
@@ -233,20 +236,19 @@ export default function PackOpeningPage() {
                 <div
                   key={card.id + '-stack-' + index}
                   className={cn(
-                    "absolute top-0 left-0 w-[240px] h-[336px]", // Ensure div matches card dimensions
-                    "transition-all duration-300 ease-in-out", // Smooth transitions for stacking
+                    "absolute top-0 left-0 w-[240px] h-[336px]", 
+                    "transition-all duration-300 ease-in-out", 
                     isBeingSwiped && currentSwipingCard?.direction === 'left' ? 'animate-swipe-out-left' : '',
                     isBeingSwiped && currentSwipingCard?.direction === 'right' ? 'animate-swipe-out-right' : '',
                   )}
                   style={{
                     transform: cardTransform,
-                    zIndex: isBeingSwiped ? openedCards.length + 1 : cardZIndex, // Swiping card on very top
-                    opacity: isBeingSwiped ? 1 : cardOpacity, // Swiping card is fully opaque
+                    zIndex: isBeingSwiped ? openedCards.length + 1 : cardZIndex, 
+                    opacity: isBeingSwiped ? 1 : cardOpacity, 
                   }}
                 >
                   <CardComponent
                     card={card}
-                    // Prevent CardComponent's own onClick if it's not the top interactive card
                     onClick={undefined} 
                   />
                 </div>
@@ -272,7 +274,7 @@ export default function PackOpeningPage() {
         </>
       )}
 
-      {(stage === 'all-revealed' || stage === 'stack-reveal' && currentStackIndex >= openedCards.length) && ( // Show buttons once all cards are revealed or stack done
+      {(stage === 'all-revealed' || (stage === 'stack-reveal' && currentStackIndex >= openedCards.length)) && (
         <div className="mt-8 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
           <Button size="lg" onClick={resetPackOpening} variant="outline">
             <Shuffle className="mr-2 h-5 w-5" /> Open Another {packData?.name}
@@ -293,3 +295,4 @@ export default function PackOpeningPage() {
     </div>
   );
 }
+
