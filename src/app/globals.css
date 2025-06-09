@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -108,8 +109,7 @@ body {
     background-size: 400% 400%;
   }
 
-  .rare-glow-background-active {
-    /* Solid blue for testing */
-    background-color: hsl(220, 70%, 50%); /* A distinct, solid blue */
-  }
+  /* Removed .rare-glow-background-active as we are testing with direct Tailwind class */
 }
+
+    
