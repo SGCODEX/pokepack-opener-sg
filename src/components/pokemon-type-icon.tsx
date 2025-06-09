@@ -1,6 +1,8 @@
+
 import type { PokemonType } from '@/lib/types';
 import { Flame, Droplets, Leaf, Zap, Brain, Hand, Circle, Moon, Shield, Sparkles } from 'lucide-react';
 import type { LucideProps } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface PokemonTypeIconProps extends LucideProps {
   type: PokemonType;
