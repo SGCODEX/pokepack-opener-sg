@@ -1,7 +1,8 @@
+
 "use client";
 
-import { useState } from 'react';
-import { allCards, getCardById } from '@/lib/pokemon-data';
+import { useState, useMemo } from 'react';
+import { allCards } from '@/lib/pokemon-data';
 import type { PokemonCard } from '@/lib/types';
 import { CardComponent } from '@/components/card-component';
 import { CardDetailModal } from '@/components/card-detail-modal';
@@ -10,6 +11,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { AlertTriangle, Search } from 'lucide-react';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 
 const cardTypes = ["All", "Fire", "Water", "Grass", "Lightning", "Psychic", "Fighting", "Colorless", "Darkness", "Metal", "Dragon", "Fairy"];
 const rarities = ["All", "Common", "Uncommon", "Rare", "Holo Rare"];
@@ -33,22 +36,26 @@ export default function PokedexPage() {
     setSelectedCard(null);
   };
 
-  const filteredCards = allCards.filter(card => {
-    const nameMatch = card.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const typeMatch = filterType === 'All' || card.type === filterType;
-    const rarityMatch = filterRarity === 'All' || card.rarity === filterRarity;
-    const collectedMatch = !showCollectedOnly || isCollected(card.id);
-    return nameMatch && typeMatch && rarityMatch && collectedMatch;
-  });
-  
-  const sortedCards = [...filteredCards].sort((a, b) => {
-    // Sort by series, then by name
-    if (a.series < b.series) return -1;
-    if (a.series > b.series) return 1;
-    if (a.name < b.name) return -1;
-    if (a.name > b.name) return 1;
-    return 0;
-  });
+  const filteredAndSortedCards = useMemo(() => {
+    // Assign Pokedex numbers before filtering and sorting if not already present
+    // This ensures consistent numbering based on the *full* `allCards` list.
+    // The `pokemon-data.ts` now pre-assigns these, so this is mainly a safeguard or for dynamic scenarios.
+    const cardsWithPokedexNumbers = allCards.map((card, index) => ({
+      ...card,
+      pokedexDisplayNumber: card.pokedexNumber || index + 1,
+    }));
+
+    const filtered = cardsWithPokedexNumbers.filter(card => {
+      const nameMatch = card.name.toLowerCase().includes(searchTerm.toLowerCase());
+      const typeMatch = filterType === 'All' || card.type === filterType;
+      const rarityMatch = filterRarity === 'All' || card.rarity === filterRarity;
+      const collectedMatch = !showCollectedOnly || isCollected(card.id);
+      return nameMatch && typeMatch && rarityMatch && collectedMatch;
+    });
+    
+    // Sort by the pre-assigned Pokedex number for display consistency
+    return filtered.sort((a, b) => (a.pokedexDisplayNumber || 0) - (b.pokedexDisplayNumber || 0));
+  }, [searchTerm, filterType, filterRarity, showCollectedOnly, isCollected]);
 
 
   if (!isLoaded) {
@@ -80,7 +87,7 @@ export default function PokedexPage() {
           />
         </div>
         
-        <div className="grid grid-cols-2 md:flex gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:flex gap-2">
             <Select value={filterType} onValueChange={setFilterType}>
               <SelectTrigger className="w-full md:w-[150px]">
                 <SelectValue placeholder="Filter by Type" />
@@ -100,25 +107,26 @@ export default function PokedexPage() {
             </Select>
         </div>
         <div className="flex items-center space-x-2 pt-2 md:pt-0">
-          <input 
-            type="checkbox" 
+          <Checkbox 
             id="showCollected" 
             checked={showCollectedOnly} 
-            onChange={(e) => setShowCollectedOnly(e.target.checked)}
+            onCheckedChange={(checked) => setShowCollectedOnly(checked as boolean)}
             className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
           />
-          <label htmlFor="showCollected" className="text-sm text-foreground">Show Collected Only</label>
+          <Label htmlFor="showCollected" className="text-sm text-foreground cursor-pointer">Show Collected Only</Label>
         </div>
       </div>
       
-      {sortedCards.length > 0 ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-          {sortedCards.map((card) => (
+      {filteredAndSortedCards.length > 0 ? (
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-4 gap-y-8 justify-items-center">
+          {filteredAndSortedCards.map((card) => (
             <CardComponent
               key={card.id}
               card={card}
               onClick={() => handleCardClick(card)}
               isCollected={isCollected(card.id)}
+              viewContext="pokedex"
+              pokedexNumber={card.pokedexDisplayNumber} 
             />
           ))}
         </div>

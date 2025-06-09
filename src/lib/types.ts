@@ -1,3 +1,4 @@
+
 export type PokemonType =
   | 'Fire'
   | 'Water'
@@ -37,6 +38,7 @@ export interface PokemonCard {
   retreatCost: number;
   description: string; // A short flavor text or description
   series: string; // e.g., "Base Set", "Jungle"
+  pokedexNumber?: number; // Optional Pokedex number for display
 }
 
 export interface PokemonPack {

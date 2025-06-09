@@ -1,3 +1,4 @@
+
 import Image from 'next/image';
 import type { PokemonCard } from '@/lib/types';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,11 +11,22 @@ interface CardComponentProps {
   onClick?: () => void;
   isCollected?: boolean;
   className?: string;
-  isRevealing?: boolean; // For animation purposes
-  animationDelay?: string; // e.g., '0.2s'
+  isRevealing?: boolean;
+  animationDelay?: string;
+  viewContext?: 'pokedex' | 'default';
+  pokedexNumber?: number;
 }
 
-export function CardComponent({ card, onClick, isCollected, className, isRevealing, animationDelay }: CardComponentProps) {
+export function CardComponent({ 
+  card, 
+  onClick, 
+  isCollected, 
+  className, 
+  isRevealing, 
+  animationDelay,
+  viewContext = 'default',
+  pokedexNumber
+}: CardComponentProps) {
   const rarityColorClass = () => {
     switch (card.rarity) {
       case 'Common': return 'border-gray-300 hover:border-gray-400';
@@ -35,12 +47,58 @@ export function CardComponent({ card, onClick, isCollected, className, isReveali
     }
   };
 
+  if (viewContext === 'pokedex') {
+    return (
+      <div
+        className={cn(
+          "flex flex-col items-center group",
+          onClick ? "cursor-pointer" : "",
+          className
+        )}
+        onClick={onClick}
+        aria-label={`Pokemon card: ${card.name}`}
+      >
+        <div className={cn(
+          "relative w-[150px] h-[210px] sm:w-[180px] sm:h-[252px] rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-200 ease-in-out transform hover:-translate-y-1",
+          isCollected === false ? "grayscale" : "",
+           rarityColorClass() // Apply border based on rarity for Pokedex view as well
+        )}>
+          <Image
+            src={card.image}
+            alt={card.name}
+            fill
+            className="object-cover"
+            data-ai-hint={card.dataAiHint || card.name}
+            priority={pokedexNumber !== undefined && pokedexNumber <= 12} // Prioritize first few images
+          />
+           {card.rarity === 'Holo Rare' && isCollected !== false && (
+            <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-lg">
+              <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity duration-300" 
+                   style={{
+                     background: 'linear-gradient(45deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%)',
+                     transform: 'skewY(-10deg) scale(1.5)',
+                     animation: 'holoShine 5s infinite linear'
+                   }}>
+              </div>
+            </div>
+          )}
+        </div>
+        <div className="mt-2 w-[150px] sm:w-[180px] bg-foreground text-background text-center py-1 px-2 rounded-md shadow">
+          <p className="text-xs sm:text-sm font-semibold truncate" title={card.name}>
+            #{card.pokedexNumber || '?'} - {card.name}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Default view (for pack opening, modal, etc.)
   return (
     <Card
       className={cn(
         "w-[240px] overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 group",
         onClick ? "cursor-pointer" : "",
-        isCollected === false ? "opacity-50 grayscale" : "opacity-100",
+        isCollected === false && viewContext !== 'pokedex' ? "opacity-50 grayscale" : "opacity-100", // Grayscale for uncollected only if not in Pokedex view where it's handled differently
         rarityColorClass(),
         isRevealing ? "animate-card-reveal opacity-0" : "",
         className
@@ -57,7 +115,7 @@ export function CardComponent({ card, onClick, isCollected, className, isReveali
           height={336}
           className="object-cover transition-transform duration-300 group-hover:scale-105"
           data-ai-hint={card.dataAiHint || card.name}
-          priority // Prioritize loading card images
+          priority 
         />
         {isCollected && (
            <Badge variant="default" className="absolute top-2 right-2 bg-accent text-accent-foreground">Collected</Badge>
@@ -87,24 +145,3 @@ export function CardComponent({ card, onClick, isCollected, className, isReveali
     </Card>
   );
 }
-
-// Add keyframes for holoShine if not already in tailwind.config.ts or globals.css
-// Example for globals.css:
-// @keyframes holoShine {
-//   0% { transform: skewY(-10deg) scale(1.5) translateX(-150%); }
-//   100% { transform: skewY(-10deg) scale(1.5) translateX(150%); }
-// }
-
-// If you prefer to add it directly here in a style tag (less ideal for global keyframes):
-// This assumes you would add a <style> tag in your _app.tsx or layout.tsx
-// if (!document.getElementById('holoShine-keyframes')) {
-//   const styleSheet = document.createElement("style")
-//   styleSheet.id = 'holoShine-keyframes';
-//   styleSheet.innerText = `
-//     @keyframes holoShine {
-//       0% { transform: skewY(-10deg) scale(1.5) translateX(-150%); }
-//       100% { transform: skewY(-10deg) scale(1.5) translateX(150%); }
-//     }`;
-//   document.head.appendChild(styleSheet);
-// }
-
