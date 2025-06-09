@@ -138,7 +138,7 @@ export default function PackOpeningPage() {
       addCardsToCollection(packCards.map(c => c.id)); 
       setStage('stack-reveal');
     }, 1000); 
-  }, [packData, addCardsToCollection, pokedexLoaded, allCards]);
+  }, [packData, addCardsToCollection, pokedexLoaded]);
 
   const handleRevealNextCard = () => {
     if (stage !== 'stack-reveal' || currentStackIndex >= openedCards.length || currentSwipingCard) return;
@@ -193,7 +193,7 @@ export default function PackOpeningPage() {
     <div className={cn(
         "space-y-8 text-center transition-colors duration-1000",
         showHoloBackground && "holo-blue-wave-background-active animate-holo-blue-wave-shimmer",
-        showRareBackground && "rare-glow-background-active animate-rare-glow-bg"
+        showRareBackground && "rare-glow-background-active" /* Removed animation for solid color */
       )}>
       <Button variant="outline" onClick={() => router.push('/')} className="absolute top-24 left-4 md:left-8 z-10">
         <ArrowLeft className="mr-2 h-4 w-4" /> Back to Packs
