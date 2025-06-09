@@ -95,27 +95,27 @@ body {
 }
 
 @layer utilities {
-  .holo-background-active {
+  .holo-blue-wave-background-active {
     background: linear-gradient(
-      270deg,
-      hsl(var(--primary) / 0.6), /* Electric Yellow */
-      hsl(var(--accent) / 0.6),   /* Fiery Orange */
-      hsl(300 100% 50% / 0.5), /* Vibrant Pink/Magenta */
-      hsl(180 100% 50% / 0.5), /* Vibrant Cyan/Aqua */
-      hsl(60 100% 50% / 0.6),  /* Bright Yellow */
-      hsl(var(--primary) / 0.6)
+      135deg,
+      hsl(200 80% 50% / 0.6), /* Bright Sky Blue */
+      hsl(220 90% 60% / 0.7), /* Deep Blue */
+      hsl(240 80% 55% / 0.6), /* Indigo/Purpleish Blue */
+      hsl(260 90% 65% / 0.7), /* Vibrant Purple */
+      hsl(220 90% 60% / 0.7),
+      hsl(200 80% 50% / 0.6)
     );
-    background-size: 400% 400%; 
+    background-size: 400% 400%;
   }
 
   .rare-glow-background-active {
     background: linear-gradient(
       270deg,
-      hsl(var(--primary) / 0.3), /* Subdued primary */
-      hsl(var(--secondary) / 0.4), /* Subdued secondary */
-      hsl(var(--accent) / 0.2), /* Very subtle accent */
-      hsl(var(--secondary) / 0.4),
-      hsl(var(--primary) / 0.3)
+      hsl(200 50% 85% / 0.45), /* Pale Sky Blue */
+      hsl(0 0% 90% / 0.55),    /* Light Silver */
+      hsl(220 50% 80% / 0.35), /* Pale Periwinkle */
+      hsl(0 0% 90% / 0.55),
+      hsl(200 50% 85% / 0.45)
     );
     background-size: 300% 300%;
   }

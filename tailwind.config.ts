@@ -128,9 +128,10 @@ export default {
           '0%': { transform: 'translateX(0) rotate(0deg)', opacity: '1' },
           '100%': { transform: 'translateX(150%) rotate(15deg)', opacity: '0' },
         },
-        'holo-bg-shimmer': {
-          '0%': { backgroundPosition: '200% 0%' }, 
-          '100%': { backgroundPosition: '-200% 0%' }, 
+        'holo-blue-wave-shimmer': { /* New Holo Animation */
+          '0%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+          '100%': { backgroundPosition: '0% 50%' },
         },
         'rare-glow-bg': {
           '0%': { backgroundPosition: '150% 0%' },
@@ -150,8 +151,8 @@ export default {
         'rarity-glow-holo': 'rarity-glow-holo 2.5s infinite alternate ease-in-out',
         'swipe-out-left': 'swipe-out-left 0.5s ease-in-out forwards',
         'swipe-out-right': 'swipe-out-right 0.5s ease-in-out forwards',
-        'holo-bg-shimmer': 'holo-bg-shimmer 10s linear infinite',
-        'rare-glow-bg': 'rare-glow-bg 12s linear infinite',
+        'holo-blue-wave-shimmer': 'holo-blue-wave-shimmer 7s ease-in-out infinite', /* New Holo Animation */
+        'rare-glow-bg': 'rare-glow-bg 8s linear infinite', /* Adjusted duration */
       },
     },
   },

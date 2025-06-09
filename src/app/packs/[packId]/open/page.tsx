@@ -192,7 +192,7 @@ export default function PackOpeningPage() {
   return (
     <div className={cn(
         "space-y-8 text-center transition-colors duration-1000",
-        showHoloBackground && "holo-background-active animate-holo-bg-shimmer",
+        showHoloBackground && "holo-blue-wave-background-active animate-holo-blue-wave-shimmer",
         showRareBackground && "rare-glow-background-active animate-rare-glow-bg"
       )}>
       <Button variant="outline" onClick={() => router.push('/')} className="absolute top-24 left-4 md:left-8 z-10">
