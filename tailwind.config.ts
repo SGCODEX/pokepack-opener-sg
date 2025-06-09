@@ -83,14 +83,26 @@ export default {
           '0%': { transform: 'rotateY(0deg)' },
           '100%': { transform: 'rotateY(180deg)' },
         },
-        'card-reveal': { // This might be removed or unused if stack reveal is primary
+        'card-reveal': { 
           '0%': { transform: 'scale(0.5) translateY(50px)', opacity: '0' },
           '100%': { transform: 'scale(1) translateY(0)', opacity: '1' },
         },
-         'pack-shake': {
-          '0%, 100%': { transform: 'translateX(0)' },
-          '10%, 30%, 50%, 70%, 90%': { transform: 'translateX(-5px)' },
-          '20%, 40%, 60%, 80%': { transform: 'translateX(5px)' },
+         'pack-shake': { // Used for hover on initial page
+          '0%, 100%': { transform: 'translateX(0) rotate(0deg)' },
+          '10%, 30%, 50%': { transform: 'translateX(-5px) rotate(-2deg)' },
+          '20%, 40%, 60%': { transform: 'translateX(5px) rotate(2deg)' },
+          '70%, 90%': { transform: 'translateX(-3px) rotate(-1deg)' },
+          '80%': { transform: 'translateX(3px) rotate(1deg)' },
+        },
+        'opening-pack-burst': {
+          '0%': { transform: 'scale(1) rotate(0deg)' },
+          '15%': { transform: 'scale(1.03) rotate(-2deg) translateX(-3px)' },
+          '30%': { transform: 'scale(1.03) rotate(2deg) translateX(3px)' },
+          '45%': { transform: 'scale(1.08) rotate(-3deg)' },
+          '60%': { transform: 'scale(1.08) rotate(3deg)' },
+          '75%': { transform: 'scale(1.12) rotate(-1deg)' },
+          '90%': { transform: 'scale(1.12) rotate(1deg)' },
+          '100%': { transform: 'scale(1.15) rotate(0deg)', opacity: '0.9' },
         },
         'rarity-glow-common': {
           '0%, 100%': { boxShadow: '0 0 5px rgba(200, 200, 200, 0.5)' },
@@ -116,19 +128,25 @@ export default {
           '0%': { transform: 'translateX(0) rotate(0deg)', opacity: '1' },
           '100%': { transform: 'translateX(150%) rotate(15deg)', opacity: '0' },
         },
+        'holo-bg-shimmer': {
+          '0%': { backgroundPosition: '200% 0%' }, /* Start from further left */
+          '100%': { backgroundPosition: '-200% 0%' }, /* Move to further right */
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'card-flip': 'card-flip 0.6s ease-in-out',
         'card-reveal': 'card-reveal 0.5s ease-out forwards',
-        'pack-shake': 'pack-shake 0.5s ease-in-out',
+        'pack-shake': 'pack-shake 0.6s ease-in-out infinite', // For hover
+        'opening-pack-burst': 'opening-pack-burst 0.9s ease-in-out forwards', // For the opening sequence
         'rarity-glow-common': 'rarity-glow-common 2s infinite ease-in-out',
         'rarity-glow-uncommon': 'rarity-glow-uncommon 2s infinite ease-in-out',
         'rarity-glow-rare': 'rarity-glow-rare 2s infinite ease-in-out',
         'rarity-glow-holo': 'rarity-glow-holo 2.5s infinite alternate ease-in-out',
         'swipe-out-left': 'swipe-out-left 0.5s ease-in-out forwards',
         'swipe-out-right': 'swipe-out-right 0.5s ease-in-out forwards',
+        'holo-bg-shimmer': 'holo-bg-shimmer 10s linear infinite',
       },
     },
   },

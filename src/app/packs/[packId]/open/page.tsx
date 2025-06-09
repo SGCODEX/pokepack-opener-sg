@@ -30,6 +30,7 @@ export default function PackOpeningPage() {
 
   const [currentStackIndex, setCurrentStackIndex] = useState(0);
   const [currentSwipingCard, setCurrentSwipingCard] = useState<{ id: string, direction: 'left' | 'right' } | null>(null);
+  const [hasHolo, setHasHolo] = useState(false);
 
 
   useEffect(() => {
@@ -50,6 +51,7 @@ export default function PackOpeningPage() {
     setOpenedCards([]);
     setCurrentStackIndex(0);
     setCurrentSwipingCard(null);
+    setHasHolo(false);
 
     setTimeout(() => {
       const packCards: PokemonCard[] = [];
@@ -102,7 +104,9 @@ export default function PackOpeningPage() {
         attempts++;
       }
 
-      // Sort cards by rarity: Common -> Uncommon -> Rare -> Holo Rare for reveal order
+      const isHoloPulled = packCards.some(card => card.rarity === 'Holo Rare');
+      setHasHolo(isHoloPulled);
+
       const raritySortOrder: Record<CardRarity, number> = {
         'Common': 0,
         'Uncommon': 1,
@@ -114,7 +118,7 @@ export default function PackOpeningPage() {
       setOpenedCards(packCards);
       addCardsToCollection(packCards.map(c => c.id)); 
       setStage('stack-reveal');
-    }, 1000);
+    }, 1000); // Duration of opening-pack-burst animation is 0.9s, so 1s timeout is good.
   }, [packData, addCardsToCollection, pokedexLoaded, allCards]);
 
   const handleRevealNextCard = () => {
@@ -150,6 +154,7 @@ export default function PackOpeningPage() {
     setOpenedCards([]);
     setCurrentStackIndex(0);
     setCurrentSwipingCard(null);
+    setHasHolo(false);
   }
 
   if (!pokedexLoaded || !packData) {
@@ -162,11 +167,14 @@ export default function PackOpeningPage() {
   }
 
   return (
-    <div className="space-y-8 text-center">
-      <Button variant="outline" onClick={() => router.push('/')} className="absolute top-24 left-4 md:left-8">
+    <div className={cn(
+        "space-y-8 text-center transition-colors duration-1000",
+        hasHolo && (stage === 'stack-reveal' || stage === 'all-revealed') && "holo-background-active animate-holo-bg-shimmer"
+      )}>
+      <Button variant="outline" onClick={() => router.push('/')} className="absolute top-24 left-4 md:left-8 z-10">
         <ArrowLeft className="mr-2 h-4 w-4" /> Back to Packs
       </Button>
-      <header>
+      <header className="relative z-5">
         <h1 className="text-4xl font-headline font-bold text-primary-foreground mb-2">Opening: {packData.name}</h1>
         <p className="text-lg text-muted-foreground">{packData.series}</p>
       </header>
@@ -195,7 +203,7 @@ export default function PackOpeningPage() {
             alt="Opening pack"
             width={250}
             height={350}
-            className="object-cover rounded-lg shadow-xl border-4 border-accent animate-pack-shake"
+            className="object-cover rounded-lg shadow-xl border-4 border-accent animate-opening-pack-burst"
             data-ai-hint={packData.dataAiHint || packData.name}
             priority
           />
@@ -275,7 +283,7 @@ export default function PackOpeningPage() {
       )}
 
       {(stage === 'all-revealed' || (stage === 'stack-reveal' && currentStackIndex >= openedCards.length)) && (
-        <div className="mt-8 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
+        <div className="mt-8 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 relative z-5">
           <Button size="lg" onClick={resetPackOpening} variant="outline">
             <Shuffle className="mr-2 h-5 w-5" /> Open Another {packData?.name}
           </Button>
@@ -295,4 +303,3 @@ export default function PackOpeningPage() {
     </div>
   );
 }
-

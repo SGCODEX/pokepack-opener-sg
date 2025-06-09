@@ -93,3 +93,18 @@ body {
     @apply font-headline;
   }
 }
+
+@layer utilities {
+  .holo-background-active {
+    background: linear-gradient(
+      270deg,
+      hsl(var(--primary) / 0.6), /* Electric Yellow */
+      hsl(var(--accent) / 0.6),   /* Fiery Orange */
+      hsl(300 100% 50% / 0.5), /* Vibrant Pink/Magenta */
+      hsl(180 100% 50% / 0.5), /* Vibrant Cyan/Aqua */
+      hsl(60 100% 50% / 0.6),  /* Bright Yellow */
+      hsl(var(--primary) / 0.6)
+    );
+    background-size: 400% 400%; /* Needs to be larger for smooth animation */
+  }
+}
