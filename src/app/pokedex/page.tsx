@@ -14,7 +14,7 @@ import { AlertTriangle, Search } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 
-const cardTypes = ["All", "Fire", "Water", "Grass", "Lightning", "Psychic", "Fighting", "Colorless", "Darkness", "Metal", "Dragon", "Fairy"];
+const cardTypes = ["All", "Fire", "Water", "Grass", "Lightning", "Psychic", "Fighting", "Colorless", "Darkness", "Metal", "Dragon", "Fairy", "Trainer", "Energy"];
 const rarities = ["All", "Common", "Uncommon", "Rare", "Holo Rare"];
 
 export default function PokedexPage() {
@@ -37,15 +37,8 @@ export default function PokedexPage() {
   };
 
   const filteredAndSortedCards = useMemo(() => {
-    // Assign Pokedex numbers before filtering and sorting if not already present
-    // This ensures consistent numbering based on the *full* `allCards` list.
-    // The `pokemon-data.ts` now pre-assigns these, so this is mainly a safeguard or for dynamic scenarios.
-    const cardsWithPokedexNumbers = allCards.map((card, index) => ({
-      ...card,
-      pokedexDisplayNumber: card.pokedexNumber || index + 1,
-    }));
-
-    const filtered = cardsWithPokedexNumbers.filter(card => {
+    // allCards is already sorted by pokedexNumber in pokemon-data.ts
+    const filtered = allCards.filter(card => {
       const nameMatch = card.name.toLowerCase().includes(searchTerm.toLowerCase());
       const typeMatch = filterType === 'All' || card.type === filterType;
       const rarityMatch = filterRarity === 'All' || card.rarity === filterRarity;
@@ -53,8 +46,7 @@ export default function PokedexPage() {
       return nameMatch && typeMatch && rarityMatch && collectedMatch;
     });
     
-    // Sort by the pre-assigned Pokedex number for display consistency
-    return filtered.sort((a, b) => (a.pokedexDisplayNumber || 0) - (b.pokedexDisplayNumber || 0));
+    return filtered; // Already sorted by pokedexNumber from source
   }, [searchTerm, filterType, filterRarity, showCollectedOnly, isCollected]);
 
 
@@ -119,14 +111,16 @@ export default function PokedexPage() {
       
       {filteredAndSortedCards.length > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-4 gap-y-8 justify-items-center">
-          {filteredAndSortedCards.map((card) => (
+          {filteredAndSortedCards.map((card, index) => ( // `index` can be used for priority if needed
             <CardComponent
               key={card.id}
               card={card}
               onClick={() => handleCardClick(card)}
               isCollected={isCollected(card.id)}
               viewContext="pokedex"
-              pokedexNumber={card.pokedexDisplayNumber} 
+              // Pass the card's actual pokedexNumber string for display if available
+              // The sorting is now done on the allCards array itself.
+              pokedexNumber={card.pokedexNumber} 
             />
           ))}
         </div>

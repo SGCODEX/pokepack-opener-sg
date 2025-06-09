@@ -10,7 +10,9 @@ export type PokemonType =
   | 'Darkness'
   | 'Metal'
   | 'Dragon'
-  | 'Fairy';
+  | 'Fairy'
+  | 'Trainer' // Added for Trainer cards
+  | 'Energy'; // Added for Energy cards
 
 export type CardRarity = 'Common' | 'Uncommon' | 'Rare' | 'Holo Rare';
 
@@ -21,24 +23,9 @@ export interface PokemonCard {
   dataAiHint?: string; // For actual image generation hint
   rarity: CardRarity;
   type: PokemonType;
-  hp: number;
-  attacks: {
-    name: string;
-    damage: string;
-    description: string;
-  }[];
-  weaknesses: {
-    type: PokemonType;
-    value: string;
-  }[];
-  resistances?: {
-    type: PokemonType;
-    value: string;
-  }[];
-  retreatCost: number;
-  description: string; // A short flavor text or description
   series: string; // e.g., "Base Set", "Jungle"
-  pokedexNumber?: number; // Optional Pokedex number for display
+  pokedexNumber?: number | string; // Pokedex number or card number like "80/102" for Trainers/Energy
+  // Removed: hp, attacks, weaknesses, resistances, retreatCost, description
 }
 
 export interface PokemonPack {
@@ -52,6 +39,7 @@ export interface PokemonPack {
     common: number;
     uncommon: number;
     rareSlot: number; // Number of cards that can be rare or holo rare
+    // Potentially add energy slot if we want to guarantee energy cards
   };
   possibleCards: string[]; // Array of card IDs that can be in this pack
 }
