@@ -59,7 +59,7 @@ export function CardDetailModal({ card, isOpen, onClose }: CardDetailModalProps)
                 alt={card.name}
                 width={300}
                 height={420}
-                className="rounded-lg shadow-xl border-4 border-primary mb-4"
+                className="object-cover rounded-lg shadow-xl border-4 border-primary mb-4"
                 data-ai-hint={card.dataAiHint || card.name}
               />
             </div>

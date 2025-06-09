@@ -55,7 +55,7 @@ export function CardComponent({ card, onClick, isCollected, className, isReveali
           alt={card.name}
           width={240}
           height={336}
-          className="object-cover w-full h-auto transition-transform duration-300 group-hover:scale-105"
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
           data-ai-hint={card.dataAiHint || card.name}
           priority // Prioritize loading card images
         />

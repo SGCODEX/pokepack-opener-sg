@@ -16,9 +16,8 @@ export function PackItem({ pack }: PackItemProps) {
         <Image
           src={pack.image}
           alt={pack.name}
-          layout="fill"
-          objectFit="cover"
-          className="transition-transform duration-300 group-hover:scale-105"
+          fill={true}
+          className="object-cover transition-transform duration-300 group-hover:scale-105"
           data-ai-hint={pack.dataAiHint || pack.name}
         />
       </CardHeader>

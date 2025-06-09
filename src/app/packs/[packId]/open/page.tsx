@@ -152,7 +152,7 @@ export default function PackOpeningPage() {
             alt={packData.name}
             width={250}
             height={350}
-            className="rounded-lg shadow-xl border-4 border-primary hover:animate-pack-shake"
+            className="object-cover rounded-lg shadow-xl border-4 border-primary hover:animate-pack-shake"
             data-ai-hint={packData.dataAiHint || packData.name}
           />
           <Button size="lg" onClick={openPack} className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8 py-6">
@@ -168,7 +168,7 @@ export default function PackOpeningPage() {
             alt="Opening pack"
             width={250}
             height={350}
-            className="rounded-lg shadow-xl border-4 border-accent animate-pack-shake"
+            className="object-cover rounded-lg shadow-xl border-4 border-accent animate-pack-shake"
             data-ai-hint={packData.dataAiHint || packData.name}
           />
           <p className="text-2xl font-semibold text-primary-foreground animate-pulse">Opening Pack...</p>
