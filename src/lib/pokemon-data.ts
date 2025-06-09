@@ -6,7 +6,7 @@ export const allCards: PokemonCard[] = [
   {
     id: 'base-alakazam-001',
     name: 'Alakazam',
-    image: 'https://images.pokellector.com/cards/108/Alakazam.BS.1.png',
+    image: 'https://den-cards.pokellector.com/119/Alakazam.BS.1.png',
     dataAiHint: 'Alakazam psychic pokemon',
     rarity: 'Holo Rare',
     type: 'Psychic',
@@ -22,7 +22,7 @@ export const allCards: PokemonCard[] = [
   {
     id: 'base-blastoise-002',
     name: 'Blastoise',
-    image: 'https://images.pokellector.com/cards/108/Blastoise.BS.2.png',
+    image: 'https://den-cards.pokellector.com/119/Blastoise.BS.2.png',
     dataAiHint: 'Blastoise water turtle pokemon',
     rarity: 'Holo Rare',
     type: 'Water',
@@ -39,7 +39,7 @@ export const allCards: PokemonCard[] = [
   {
     id: 'base-chansey-003',
     name: 'Chansey',
-    image: 'https://images.pokellector.com/cards/108/Chansey.BS.3.png',
+    image: 'https://den-cards.pokellector.com/119/Chansey.BS.3.png',
     dataAiHint: 'Chansey egg pokemon',
     rarity: 'Holo Rare',
     type: 'Colorless',
@@ -57,7 +57,7 @@ export const allCards: PokemonCard[] = [
   {
     id: 'base-charizard-004',
     name: 'Charizard',
-    image: 'https://images.pokellector.com/cards/108/Charizard.BS.4.png',
+    image: 'https://den-cards.pokellector.com/119/Charizard.BS.4.png',
     dataAiHint: 'Charizard flying fire pokemon',
     rarity: 'Holo Rare',
     type: 'Fire',
@@ -75,10 +75,10 @@ export const allCards: PokemonCard[] = [
   {
     id: 'base-clefairy-005',
     name: 'Clefairy',
-    image: 'https://images.pokellector.com/cards/108/Clefairy.BS.5.png',
+    image: 'https://den-cards.pokellector.com/119/Clefairy.BS.5.png',
     dataAiHint: 'Clefairy fairy pokemon',
     rarity: 'Holo Rare',
-    type: 'Colorless', // Base set Clefairy was Colorless, Fairy type came later
+    type: 'Colorless', 
     hp: 40,
     attacks: [
       { name: 'Sing', damage: '', description: 'Flip a coin. If heads, the Defending Pokémon is now Asleep.' },
@@ -93,7 +93,7 @@ export const allCards: PokemonCard[] = [
   {
     id: 'base-gyarados-006',
     name: 'Gyarados',
-    image: 'https://images.pokellector.com/cards/108/Gyarados.BS.6.png',
+    image: 'https://den-cards.pokellector.com/119/Gyarados.BS.6.png',
     dataAiHint: 'Gyarados water flying pokemon',
     rarity: 'Holo Rare',
     type: 'Water',
@@ -102,7 +102,7 @@ export const allCards: PokemonCard[] = [
       { name: 'Dragon Rage', damage: '50', description: '' },
       { name: 'Bubblebeam', damage: '40', description: 'Flip a coin. If heads, the Defending Pokémon is now Paralyzed.' }
     ],
-    weaknesses: [{ type: 'Grass', value: 'x2' }], // Note: Base Set Gyarados weak to Grass, not Lightning
+    weaknesses: [{ type: 'Grass', value: 'x2' }], 
     resistances: [{ type: 'Fighting', value: '-30' }],
     retreatCost: 3,
     description: 'Rarely seen in the wild. Huge and vicious, it is capable of destroying entire cities in a rage.',
@@ -111,7 +111,7 @@ export const allCards: PokemonCard[] = [
   {
     id: 'base-hitmonchan-007',
     name: 'Hitmonchan',
-    image: 'https://images.pokellector.com/cards/108/Hitmonchan.BS.7.png',
+    image: 'https://den-cards.pokellector.com/119/Hitmonchan.BS.7.png',
     dataAiHint: 'Hitmonchan fighting pokemon',
     rarity: 'Holo Rare',
     type: 'Fighting',
@@ -126,26 +126,43 @@ export const allCards: PokemonCard[] = [
     series: 'Base Set',
   },
   {
+    id: 'base-machamp-008',
+    name: 'Machamp',
+    image: 'https://den-cards.pokellector.com/119/Machamp.BS.8.png',
+    dataAiHint: 'Machamp fighting pokemon',
+    rarity: 'Holo Rare',
+    type: 'Fighting',
+    hp: 100,
+    attacks: [
+        { name: 'Strikes Back', damage: '', description: 'Whenever your opponent\'s attack damages Machamp (even if Machamp is Knocked Out), this power does 10 damage to the attacking Pokémon. (Don\'t apply Weakness and Resistance.) This power can\'t be used if Machamp is Asleep, Confused, or Paralyzed.' },
+        { name: 'Seismic Toss', damage: '60', description: '' }
+    ],
+    weaknesses: [{ type: 'Psychic', value: 'x2' }],
+    retreatCost: 3,
+    description: 'Using its heavy muscles, it throws powerful punches that can send the victim clear over the horizon.',
+    series: 'Base Set',
+  },
+  {
     id: 'base-magneton-009',
     name: 'Magneton',
-    image: 'https://images.pokellector.com/cards/108/Magneton.BS.9.png',
+    image: 'https://den-cards.pokellector.com/119/Magneton.BS.9.png',
     dataAiHint: 'Magneton electric steel pokemon',
     rarity: 'Holo Rare',
-    type: 'Lightning', // Base set Magneton was pure Lightning
-    hp: 60, // Base set HP was 60, not 80
+    type: 'Lightning', 
+    hp: 60, 
     attacks: [
       { name: 'Thunder Wave', damage: '30', description: 'Flip a coin. If heads, the Defending Pokémon is now Paralyzed.' },
       { name: 'Selfdestruct', damage: '100', description: 'Does 20 damage to each Pokémon on each player\'s Bench. (Don\'t apply Weakness and Resistance for Benched Pokémon.) Magneton does 100 damage to itself.' }
     ],
     weaknesses: [{ type: 'Fighting', value: 'x2' }],
-    retreatCost: 1, // Base set retreat was 1
+    retreatCost: 1, 
     description: 'Formed by several Magnemites linked together. They frequently appear when sunspots flare up.',
     series: 'Base Set',
   },
   {
     id: 'base-mewtwo-010',
     name: 'Mewtwo',
-    image: 'https://images.pokellector.com/cards/108/Mewtwo.BS.10.png',
+    image: 'https://den-cards.pokellector.com/119/Mewtwo.BS.10.png',
     dataAiHint: 'Mewtwo legendary psychic pokemon',
     rarity: 'Holo Rare',
     type: 'Psychic',
@@ -162,10 +179,10 @@ export const allCards: PokemonCard[] = [
   {
     id: 'base-nidoking-011',
     name: 'Nidoking',
-    image: 'https://images.pokellector.com/cards/108/Nidoking.BS.11.png',
+    image: 'https://den-cards.pokellector.com/119/Nidoking.BS.11.png',
     dataAiHint: 'Nidoking poison ground pokemon',
     rarity: 'Holo Rare',
-    type: 'Grass', // Base set Nidoking was Grass type due to Poison typing convention
+    type: 'Grass', 
     hp: 90,
     attacks: [
       { name: 'Thrash', damage: '30+', description: 'Flip a coin. If heads, this attack does 30 damage plus 10 more damage; if tails, this attack does 30 damage and Nidoking does 10 damage to itself.' },
@@ -179,7 +196,7 @@ export const allCards: PokemonCard[] = [
   {
     id: 'base-ninetales-012',
     name: 'Ninetales',
-    image: 'https://images.pokellector.com/cards/108/Ninetales.BS.12.png',
+    image: 'https://den-cards.pokellector.com/119/Ninetales.BS.12.png',
     dataAiHint: 'Ninetales fire fox pokemon',
     rarity: 'Holo Rare',
     type: 'Fire',
@@ -196,7 +213,7 @@ export const allCards: PokemonCard[] = [
   {
     id: 'base-poliwrath-013',
     name: 'Poliwrath',
-    image: 'https://images.pokellector.com/cards/108/Poliwrath.BS.13.png',
+    image: 'https://den-cards.pokellector.com/119/Poliwrath.BS.13.png',
     dataAiHint: 'Poliwrath water fighting pokemon',
     rarity: 'Holo Rare',
     type: 'Water',
@@ -205,7 +222,7 @@ export const allCards: PokemonCard[] = [
       { name: 'Water Gun', damage: '30+', description: 'Does 30 damage plus 10 more damage for each Water Energy attached to Poliwrath but not used to pay for this attack\'s Energy cost. Extra Water Energy after the 2nd doesn\'t count.' },
       { name: 'Whirlpool', damage: '40', description: 'If the Defending Pokémon has any Energy cards attached to it, choose 1 of them and discard it.' }
     ],
-    weaknesses: [{ type: 'Grass', value: 'x2' }], // Poliwrath was weak to Grass in Base Set
+    weaknesses: [{ type: 'Grass', value: 'x2' }], 
     retreatCost: 3,
     description: 'An adept swimmer at both the front crawl and breaststroke. Easily overtakes the best human swimmers.',
     series: 'Base Set',
@@ -213,7 +230,7 @@ export const allCards: PokemonCard[] = [
   {
     id: 'base-raichu-014',
     name: 'Raichu',
-    image: 'https://images.pokellector.com/cards/108/Raichu.BS.14.png',
+    image: 'https://den-cards.pokellector.com/119/Raichu.BS.14.png',
     dataAiHint: 'Raichu electric mouse pokemon',
     rarity: 'Holo Rare',
     type: 'Lightning',
@@ -230,7 +247,7 @@ export const allCards: PokemonCard[] = [
   {
     id: 'base-venusaur-015',
     name: 'Venusaur',
-    image: 'https://images.pokellector.com/cards/108/Venusaur.BS.15.png',
+    image: 'https://den-cards.pokellector.com/119/Venusaur.BS.15.png',
     dataAiHint: 'Venusaur flower pokemon',
     rarity: 'Holo Rare',
     type: 'Grass',
@@ -247,7 +264,7 @@ export const allCards: PokemonCard[] = [
   {
     id: 'base-zapdos-016',
     name: 'Zapdos',
-    image: 'https://images.pokellector.com/cards/108/Zapdos.BS.16.png',
+    image: 'https://den-cards.pokellector.com/119/Zapdos.BS.16.png',
     dataAiHint: 'Zapdos legendary electric bird',
     rarity: 'Holo Rare',
     type: 'Lightning',
@@ -256,7 +273,7 @@ export const allCards: PokemonCard[] = [
       { name: 'Thunder', damage: '60', description: 'Flip a coin. If tails, Zapdos does 30 damage to itself.' },
       { name: 'Thunderbolt', damage: '100', description: 'Discard all Energy cards attached to Zapdos in order to use this attack.' }
     ],
-    weaknesses: [], // Zapdos had no weakness in Base Set
+    weaknesses: [], 
     resistances: [{ type: 'Fighting', value: '-30' }],
     retreatCost: 3,
     description: 'A legendary bird Pokémon that is said to appear from clouds while dropping enormous lightning bolts.',
@@ -267,7 +284,7 @@ export const allCards: PokemonCard[] = [
   {
     id: 'base-beedrill-017',
     name: 'Beedrill',
-    image: 'https://images.pokellector.com/cards/108/Beedrill.BS.17.png',
+    image: 'https://den-cards.pokellector.com/119/Beedrill.BS.17.png',
     dataAiHint: 'Beedrill poison bee pokemon',
     rarity: 'Rare',
     type: 'Grass',
@@ -285,10 +302,10 @@ export const allCards: PokemonCard[] = [
   {
     id: 'base-dragonair-018',
     name: 'Dragonair',
-    image: 'https://images.pokellector.com/cards/108/Dragonair.BS.18.png',
+    image: 'https://den-cards.pokellector.com/119/Dragonair.BS.18.png',
     dataAiHint: 'Dragonair dragon pokemon',
     rarity: 'Rare',
-    type: 'Colorless', // Dragonair was Colorless in Base Set
+    type: 'Colorless', 
     hp: 80,
     attacks: [
       { name: 'Slam', damage: '30x', description: 'Flip 2 coins. This attack does 30 damage times the number of heads.' },
@@ -303,7 +320,7 @@ export const allCards: PokemonCard[] = [
    {
     id: 'base-dugtrio-019',
     name: 'Dugtrio',
-    image: 'https://images.pokellector.com/cards/108/Dugtrio.BS.19.png',
+    image: 'https://den-cards.pokellector.com/119/Dugtrio.BS.19.png',
     dataAiHint: 'Dugtrio ground pokemon',
     rarity: 'Rare',
     type: 'Fighting',
@@ -321,7 +338,7 @@ export const allCards: PokemonCard[] = [
   {
     id: 'base-electabuzz-020',
     name: 'Electabuzz',
-    image: 'https://images.pokellector.com/cards/108/Electabuzz.BS.20.png',
+    image: 'https://den-cards.pokellector.com/119/Electabuzz.BS.20.png',
     dataAiHint: 'Electabuzz electric pokemon',
     rarity: 'Rare',
     type: 'Lightning',
@@ -335,13 +352,82 @@ export const allCards: PokemonCard[] = [
     description: 'Normally found near power plants, they can wander away and cause major blackouts in cities.',
     series: 'Base Set',
   },
+  {
+    id: 'base-pidgeotto-022',
+    name: 'Pidgeotto',
+    image: 'https://den-cards.pokellector.com/119/Pidgeotto.BS.22.png',
+    dataAiHint: 'Pidgeotto bird pokemon',
+    rarity: 'Rare',
+    type: 'Colorless',
+    hp: 60,
+    attacks: [
+        { name: 'Whirlwind', damage: '20', description: 'If your opponent has any Benched Pokémon, he or she chooses 1 of them and switches it with the Defending Pokémon. (Do the damage before switching the Pokémon.)' },
+        { name: 'Mirror Move', damage: '', description: 'If Pidgeotto was attacked last turn, and the attack wasn\'t Mirror Move, Pidgeotto attacks with the same attack.' }
+    ],
+    weaknesses: [{ type: 'Lightning', value: 'x2' }],
+    resistances: [{ type: 'Fighting', value: '-30' }],
+    retreatCost: 1,
+    description: 'Very protective of its sprawling territorial area, this Pokémon will fiercely peck at any intruder.',
+    series: 'Base Set',
+  },
 
 
   // Uncommons from Base Set
   {
+    id: 'base-arcanine-023',
+    name: 'Arcanine',
+    image: 'https://den-cards.pokellector.com/119/Arcanine.BS.23.png',
+    dataAiHint: 'Arcanine legendary fire dog',
+    rarity: 'Uncommon',
+    type: 'Fire',
+    hp: 100,
+    attacks: [
+        { name: 'Flamethrower', damage: '50', description: 'Discard 1 Fire Energy card attached to Arcanine in order to use this attack.' },
+        { name: 'Take Down', damage: '80', description: 'Arcanine does 30 damage to itself.' }
+    ],
+    weaknesses: [{ type: 'Water', value: 'x2' }],
+    retreatCost: 3,
+    description: 'A Pokémon that has been admired since the past for its beauty. It runs agilely as if on wings.',
+    series: 'Base Set',
+  },
+  {
+    id: 'base-charmeleon-024',
+    name: 'Charmeleon',
+    image: 'https://den-cards.pokellector.com/119/Charmeleon.BS.24.png',
+    dataAiHint: 'Charmeleon fire pokemon',
+    rarity: 'Uncommon',
+    type: 'Fire',
+    hp: 80,
+    attacks: [
+      { name: 'Slash', damage: '30', description: '' },
+      { name: 'Flamethrower', damage: '50', description: 'Discard 1 Fire Energy card attached to Charmeleon in order to use this attack.' }
+    ],
+    weaknesses: [{ type: 'Water', value: 'x2' }],
+    retreatCost: 1, 
+    description: 'When it swings its burning tail, it elevates the temperature to unbearably high levels.',
+    series: 'Base Set',
+  },
+  {
+    id: 'base-dewgong-025',
+    name: 'Dewgong',
+    image: 'https://den-cards.pokellector.com/119/Dewgong.BS.25.png',
+    dataAiHint: 'Dewgong water ice sea lion',
+    rarity: 'Uncommon',
+    type: 'Water',
+    hp: 80,
+    attacks: [
+        { name: 'Aurora Beam', damage: '50', description: '' },
+        { name: 'Ice Beam', damage: '30', description: 'Flip a coin. If heads, the Defending Pokémon is now Paralyzed.' }
+    ],
+    weaknesses: [{ type: 'Lightning', value: 'x2' }],
+    retreatCost: 3,
+    description: 'Stores thermal energy in its body. Swims at a steady 8 knots even in intensely cold waters.',
+    series: 'Base Set',
+  },
+  {
     id: 'base-ivysaur-030',
     name: 'Ivysaur',
-    image: 'https://images.pokellector.com/cards/108/Ivysaur.BS.30.png',
+    image: 'https://den-cards.pokellector.com/119/Ivysaur.BS.30.png',
     dataAiHint: 'Ivysaur bud pokemon',
     rarity: 'Uncommon',
     type: 'Grass',
@@ -356,43 +442,9 @@ export const allCards: PokemonCard[] = [
     series: 'Base Set',
   },
   {
-    id: 'base-charmeleon-024',
-    name: 'Charmeleon',
-    image: 'https://images.pokellector.com/cards/108/Charmeleon.BS.24.png',
-    dataAiHint: 'Charmeleon fire pokemon',
-    rarity: 'Uncommon',
-    type: 'Fire',
-    hp: 80, // Corrected HP for Base Set Charmeleon is 80
-    attacks: [
-      { name: 'Slash', damage: '30', description: '' },
-      { name: 'Flamethrower', damage: '50', description: 'Discard 1 Fire Energy card attached to Charmeleon in order to use this attack.' }
-    ],
-    weaknesses: [{ type: 'Water', value: 'x2' }],
-    retreatCost: 1, // Corrected Retreat Cost
-    description: 'When it swings its burning tail, it elevates the temperature to unbearably high levels.',
-    series: 'Base Set',
-  },
-  {
-    id: 'base-wartortle-042',
-    name: 'Wartortle',
-    image: 'https://images.pokellector.com/cards/108/Wartortle.BS.42.png',
-    dataAiHint: 'Wartortle turtle pokemon',
-    rarity: 'Uncommon',
-    type: 'Water',
-    hp: 70,
-    attacks: [
-      { name: 'Withdraw', damage: '', description: 'Flip a coin. If heads, prevent all damage done to Wartortle during your opponent\'s next turn. (Any other effects of attacks still happen.)' },
-      { name: 'Bite', damage: '40', description: '' }
-    ],
-    weaknesses: [{ type: 'Lightning', value: 'x2' }],
-    retreatCost: 1,
-    description: 'Often hides in water to stalk unwary prey. For swimming fast, it moves its ears to maintain balance.',
-    series: 'Base Set',
-  },
-  {
     id: 'base-kakuna-033',
     name: 'Kakuna',
-    image: 'https://images.pokellector.com/cards/108/Kakuna.BS.33.png',
+    image: 'https://den-cards.pokellector.com/119/Kakuna.BS.33.png',
     dataAiHint: 'Kakuna cocoon pokemon',
     rarity: 'Uncommon',
     type: 'Grass',
@@ -406,30 +458,46 @@ export const allCards: PokemonCard[] = [
     description: 'Able to move only slightly. When endangered, it may stick out its stinger and poison its enemy.',
     series: 'Base Set',
   },
+  {
+    id: 'base-wartortle-042',
+    name: 'Wartortle',
+    image: 'https://den-cards.pokellector.com/119/Wartortle.BS.42.png',
+    dataAiHint: 'Wartortle turtle pokemon',
+    rarity: 'Uncommon',
+    type: 'Water',
+    hp: 70,
+    attacks: [
+      { name: 'Withdraw', damage: '', description: 'Flip a coin. If heads, prevent all damage done to Wartortle during your opponent\'s next turn. (Any other effects of attacks still happen.)' },
+      { name: 'Bite', damage: '40', description: '' }
+    ],
+    weaknesses: [{ type: 'Lightning', value: 'x2' }],
+    retreatCost: 1,
+    description: 'Often hides in water to stalk unwary prey. For swimming fast, it moves its ears to maintain balance.',
+    series: 'Base Set',
+  },
 
 
   // Commons from Base Set
   {
-    id: 'base-pikachu-058',
-    name: 'Pikachu',
-    image: 'https://images.pokellector.com/cards/108/Pikachu.BS.58.png',
-    dataAiHint: 'Pikachu electric pokemon',
+    id: 'base-abra-043',
+    name: 'Abra',
+    image: 'https://den-cards.pokellector.com/119/Abra.BS.43.png',
+    dataAiHint: 'Abra psychic pokemon',
     rarity: 'Common',
-    type: 'Lightning',
-    hp: 40,
+    type: 'Psychic',
+    hp: 30,
     attacks: [
-      { name: 'Gnaw', damage: '10', description: '' },
-      { name: 'Thunder Jolt', damage: '30', description: 'Flip a coin. If tails, Pikachu does 10 damage to itself.' }
+        { name: 'Psyshock', damage: '10', description: 'Flip a coin. If heads, the Defending Pokémon is now Paralyzed.' }
     ],
-    weaknesses: [{ type: 'Fighting', value: 'x2' }],
-    retreatCost: 1,
-    description: 'When several of these Pokémon gather, their electricity could build and cause lightning storms.',
+    weaknesses: [{ type: 'Psychic', value: 'x2' }],
+    retreatCost: 0,
+    description: 'Using its ability to read minds, it will identify impending danger and Teleport to safety.',
     series: 'Base Set',
   },
   {
     id: 'base-bulbasaur-044',
     name: 'Bulbasaur',
-    image: 'https://images.pokellector.com/cards/108/Bulbasaur.BS.44.png',
+    image: 'https://den-cards.pokellector.com/119/Bulbasaur.BS.44.png',
     dataAiHint: 'Bulbasaur seed pokemon',
     rarity: 'Common',
     type: 'Grass',
@@ -443,9 +511,25 @@ export const allCards: PokemonCard[] = [
     series: 'Base Set',
   },
   {
+    id: 'base-caterpie-045',
+    name: 'Caterpie',
+    image: 'https://den-cards.pokellector.com/119/Caterpie.BS.45.png',
+    dataAiHint: 'Caterpie worm pokemon',
+    rarity: 'Common',
+    type: 'Grass',
+    hp: 40,
+    attacks: [
+      { name: 'String Shot', damage: '10', description: 'Flip a coin. If heads, the Defending Pokémon is now Paralyzed.' }
+    ],
+    weaknesses: [{ type: 'Fire', value: 'x2' }],
+    retreatCost: 1,
+    description: 'Its short feet are tipped with suction pads that enable it to tirelessly climb slopes and walls.',
+    series: 'Base Set',
+  },
+  {
     id: 'base-charmander-046',
     name: 'Charmander',
-    image: 'https://images.pokellector.com/cards/108/Charmander.BS.46.png',
+    image: 'https://den-cards.pokellector.com/119/Charmander.BS.46.png',
     dataAiHint: 'Charmander flame pokemon',
     rarity: 'Common',
     type: 'Fire',
@@ -460,58 +544,79 @@ export const allCards: PokemonCard[] = [
     series: 'Base Set',
   },
   {
-    id: 'base-squirtle-063',
-    name: 'Squirtle',
-    image: 'https://images.pokellector.com/cards/108/Squirtle.BS.63.png',
-    dataAiHint: 'Squirtle shell pokemon',
+    id: 'base-diglett-047',
+    name: 'Diglett',
+    image: 'https://den-cards.pokellector.com/119/Diglett.BS.47.png',
+    dataAiHint: 'Diglett mole pokemon',
     rarity: 'Common',
-    type: 'Water',
-    hp: 40,
+    type: 'Fighting',
+    hp: 30,
     attacks: [
-      { name: 'Bubble', damage: '10', description: 'Flip a coin. If heads, the Defending Pokémon is now Paralyzed.' },
-      { name: 'Withdraw', damage: '', description: 'Flip a coin. If heads, prevent all damage done to Squirtle during your opponent\'s next turn. (Any other effects of attacks still happen.)' }
+        { name: 'Dig', damage: '10', description: '' },
+        { name: 'Mud Slap', damage: '20', description: '' }
     ],
-    weaknesses: [{ type: 'Lightning', value: 'x2' }],
+    weaknesses: [{ type: 'Grass', value: 'x2' }],
+    resistances: [{ type: 'Lightning', value: '-30' }],
     retreatCost: 1,
-    description: 'After birth, its back swells and hardens into a shell. Powerfully sprays foam from its mouth.',
+    description: 'Lives about one yard underground where it feeds on plant roots. It sometimes appears above ground.',
     series: 'Base Set',
   },
   {
-    id: 'base-caterpie-045',
-    name: 'Caterpie',
-    image: 'https://images.pokellector.com/cards/108/Caterpie.BS.45.png',
-    dataAiHint: 'Caterpie worm pokemon',
+    id: 'base-drowzee-049',
+    name: 'Drowzee',
+    image: 'https://den-cards.pokellector.com/119/Drowzee.BS.49.png',
+    dataAiHint: 'Drowzee hypnosis pokemon',
     rarity: 'Common',
-    type: 'Grass',
-    hp: 40,
+    type: 'Psychic',
+    hp: 50,
     attacks: [
-      { name: 'String Shot', damage: '10', description: 'Flip a coin. If heads, the Defending Pokémon is now Paralyzed.' }
+        { name: 'Pound', damage: '10', description: '' },
+        { name: 'Confuse Ray', damage: '10', description: 'Flip a coin. If heads, the Defending Pokémon is now Confused.' }
     ],
-    weaknesses: [{ type: 'Fire', value: 'x2' }],
+    weaknesses: [{ type: 'Psychic', value: 'x2' }],
     retreatCost: 1,
-    description: 'Its short feet are tipped with suction pads that enable it to tirelessly climb slopes and walls.',
+    description: 'Puts enemies to sleep then eats their dreams. Occasionally gets sick from eating bad dreams.',
     series: 'Base Set',
   },
   {
-    id: 'base-weedle-069',
-    name: 'Weedle',
-    image: 'https://images.pokellector.com/cards/108/Weedle.BS.69.png',
-    dataAiHint: 'Weedle hairy bug pokemon',
+    id: 'base-gastly-050',
+    name: 'Gastly',
+    image: 'https://den-cards.pokellector.com/119/Gastly.BS.50.png',
+    dataAiHint: 'Gastly gas pokemon',
     rarity: 'Common',
-    type: 'Grass',
+    type: 'Psychic',
+    hp: 30,
+    attacks: [
+        { name: 'Sleeping Gas', damage: '', description: 'Flip a coin. If heads, the Defending Pokémon is now Asleep.' },
+        { name: 'Destiny Bond', damage: '', description: 'Discard 1 Psychic Energy card attached to Gastly in order to use this attack. If a Pokémon Knocks Out Gastly during your opponent\'s next turn, Knock Out that Pokémon.' }
+    ],
+    weaknesses: [],
+    resistances: [{ type: 'Fighting', value: '-30' }],
+    retreatCost: 0,
+    description: 'Almost invisible, this gaseous Pokémon cloaks the target and puts it to sleep without notice.',
+    series: 'Base Set',
+  },
+  {
+    id: 'base-pikachu-058',
+    name: 'Pikachu',
+    image: 'https://den-cards.pokellector.com/119/Pikachu.BS.58.png',
+    dataAiHint: 'Pikachu electric pokemon',
+    rarity: 'Common',
+    type: 'Lightning',
     hp: 40,
     attacks: [
-      { name: 'Poison Sting', damage: '10', description: 'Flip a coin. If heads, the Defending Pokémon is now Poisoned.' }
+      { name: 'Gnaw', damage: '10', description: '' },
+      { name: 'Thunder Jolt', damage: '30', description: 'Flip a coin. If tails, Pikachu does 10 damage to itself.' }
     ],
-    weaknesses: [{ type: 'Fire', value: 'x2' }],
+    weaknesses: [{ type: 'Fighting', value: 'x2' }],
     retreatCost: 1,
-    description: 'Often found in forests, eating leaves. It has a sharp venomous stinger on its head.',
+    description: 'When several of these Pokémon gather, their electricity could build and cause lightning storms.',
     series: 'Base Set',
   },
   {
     id: 'base-pidgey-057',
     name: 'Pidgey',
-    image: 'https://images.pokellector.com/cards/108/Pidgey.BS.57.png',
+    image: 'https://den-cards.pokellector.com/119/Pidgey.BS.57.png',
     dataAiHint: 'Pidgey tiny bird pokemon',
     rarity: 'Common',
     type: 'Colorless',
@@ -528,7 +633,7 @@ export const allCards: PokemonCard[] = [
   {
     id: 'base-rattata-061',
     name: 'Rattata',
-    image: 'https://images.pokellector.com/cards/108/Rattata.BS.61.png',
+    image: 'https://den-cards.pokellector.com/119/Rattata.BS.61.png',
     dataAiHint: 'Rattata mouse pokemon',
     rarity: 'Common',
     type: 'Colorless',
@@ -540,6 +645,39 @@ export const allCards: PokemonCard[] = [
     resistances: [{ type: 'Psychic', value: '-30' }],
     retreatCost: 0,
     description: 'Bites anything when it attacks. Small and very quick, it is a common sight in many places.',
+    series: 'Base Set',
+  },
+  {
+    id: 'base-squirtle-063',
+    name: 'Squirtle',
+    image: 'https://den-cards.pokellector.com/119/Squirtle.BS.63.png',
+    dataAiHint: 'Squirtle shell pokemon',
+    rarity: 'Common',
+    type: 'Water',
+    hp: 40,
+    attacks: [
+      { name: 'Bubble', damage: '10', description: 'Flip a coin. If heads, the Defending Pokémon is now Paralyzed.' },
+      { name: 'Withdraw', damage: '', description: 'Flip a coin. If heads, prevent all damage done to Squirtle during your opponent\'s next turn. (Any other effects of attacks still happen.)' }
+    ],
+    weaknesses: [{ type: 'Lightning', value: 'x2' }],
+    retreatCost: 1,
+    description: 'After birth, its back swells and hardens into a shell. Powerfully sprays foam from its mouth.',
+    series: 'Base Set',
+  },
+  {
+    id: 'base-weedle-069',
+    name: 'Weedle',
+    image: 'https://den-cards.pokellector.com/119/Weedle.BS.69.png',
+    dataAiHint: 'Weedle hairy bug pokemon',
+    rarity: 'Common',
+    type: 'Grass',
+    hp: 40,
+    attacks: [
+      { name: 'Poison Sting', damage: '10', description: 'Flip a coin. If heads, the Defending Pokémon is now Poisoned.' }
+    ],
+    weaknesses: [{ type: 'Fire', value: 'x2' }],
+    retreatCost: 1,
+    description: 'Often found in forests, eating leaves. It has a sharp venomous stinger on its head.',
     series: 'Base Set',
   },
 ];
@@ -555,15 +693,14 @@ export const allPacks: PokemonPack[] = [
     id: 'base-set-booster-001',
     name: 'Base Set Booster Pack',
     series: 'Base Set',
-    image: 'https://product-images.tcgplayer.com/22754.jpg', // Charizard artwork pack
+    image: 'https://product-images.tcgplayer.com/22754.jpg', 
     dataAiHint: 'Base Set booster pack charizard',
-    cardsPerPack: 10,
+    cardsPerPack: 10, 
     rarityDistribution: {
-      common: 6,
-      uncommon: 3,
-      rareSlot: 1,
+      common: 6, 
+      uncommon: 3, 
+      rareSlot: 1, 
     },
-    // Ensure all cards from Base Set are included here
     possibleCards: allCards.filter(card => card.series === 'Base Set').map(card => card.id),
   },
 ];
