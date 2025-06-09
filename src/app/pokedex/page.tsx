@@ -47,7 +47,7 @@ export default function PokedexPage() {
     });
     
     return filtered;
-  }, [searchTerm, filterType, filterRarity, showCollectedOnly, isCollected, collectedCardIds]); // Added collectedCardIds dependency
+  }, [searchTerm, filterType, filterRarity, showCollectedOnly, isCollected, collectedCardIds]);
 
 
   if (!isLoaded) {
@@ -61,10 +61,15 @@ export default function PokedexPage() {
 
   return (
     <div className="space-y-8">
-      <header className="text-center">
-        <h1 className="text-4xl font-headline font-bold text-primary-foreground mb-2">Pokédex</h1>
+      <header className="text-center space-y-3">
+        <h1 className="text-4xl font-headline font-bold text-primary-foreground">Pokédex</h1>
         <p className="text-lg text-muted-foreground">Browse your collection and discover all available Pokémon cards.</p>
-        <p className="text-sm text-muted-foreground mt-1">You have collected {collectedCardIds.size} out of {allCards.length} cards.</p>
+        <div className="flex justify-center">
+          <div className="bg-card text-card-foreground px-4 py-2 rounded-lg shadow-md border border-border">
+            <span className="text-lg font-semibold">{collectedCardIds.size} / {allCards.length}</span>
+            <span className="text-sm text-muted-foreground ml-1">Collected</span>
+          </div>
+        </div>
       </header>
 
       <div className="p-4 bg-card rounded-lg shadow space-y-4 md:flex md:items-end md:justify-between md:space-y-0 md:space-x-4">
