@@ -6,8 +6,8 @@ export const allCards: PokemonCard[] = [
   {
     id: 'base-pika-001',
     name: 'Pikachu',
-    image: 'https://placehold.co/240x336.png',
-    dataAiHint: 'Pikachu electric',
+    image: 'https://images.pokellector.com/cards/108/Pikachu.BS.58.png',
+    dataAiHint: 'Pikachu electric pokemon',
     rarity: 'Common',
     type: 'Lightning',
     hp: 40,
@@ -23,8 +23,8 @@ export const allCards: PokemonCard[] = [
   {
     id: 'base-bulb-001',
     name: 'Bulbasaur',
-    image: 'https://placehold.co/240x336.png',
-    dataAiHint: 'Bulbasaur seed',
+    image: 'https://images.pokellector.com/cards/108/Bulbasaur.BS.44.png',
+    dataAiHint: 'Bulbasaur seed pokemon',
     rarity: 'Common',
     type: 'Grass',
     hp: 40,
@@ -39,8 +39,8 @@ export const allCards: PokemonCard[] = [
   {
     id: 'base-char-001',
     name: 'Charmander',
-    image: 'https://placehold.co/240x336.png',
-    dataAiHint: 'Charmander flame',
+    image: 'https://images.pokellector.com/cards/108/Charmander.BS.46.png',
+    dataAiHint: 'Charmander flame pokemon',
     rarity: 'Common',
     type: 'Fire',
     hp: 50,
@@ -56,8 +56,8 @@ export const allCards: PokemonCard[] = [
   {
     id: 'base-squi-001',
     name: 'Squirtle',
-    image: 'https://placehold.co/240x336.png',
-    dataAiHint: 'Squirtle shell',
+    image: 'https://images.pokellector.com/cards/108/Squirtle.BS.63.png',
+    dataAiHint: 'Squirtle shell pokemon',
     rarity: 'Common',
     type: 'Water',
     hp: 40,
@@ -75,8 +75,8 @@ export const allCards: PokemonCard[] = [
   {
     id: 'base-ivy-001',
     name: 'Ivysaur',
-    image: 'https://placehold.co/240x336.png',
-    dataAiHint: 'Ivysaur bud',
+    image: 'https://images.pokellector.com/cards/108/Ivysaur.BS.30.png',
+    dataAiHint: 'Ivysaur bud pokemon',
     rarity: 'Uncommon',
     type: 'Grass',
     hp: 60,
@@ -92,8 +92,8 @@ export const allCards: PokemonCard[] = [
   {
     id: 'base-charmeleon-001',
     name: 'Charmeleon',
-    image: 'https://placehold.co/240x336.png',
-    dataAiHint: 'Charmeleon fire',
+    image: 'https://images.pokellector.com/cards/108/Charmeleon.BS.24.png',
+    dataAiHint: 'Charmeleon fire pokemon',
     rarity: 'Uncommon',
     type: 'Fire',
     hp: 80,
@@ -107,13 +107,13 @@ export const allCards: PokemonCard[] = [
     series: 'Base Set',
   },
 
-  // Rare from Base Set
+  // Holo Rare from Base Set
   {
     id: 'base-venu-001',
     name: 'Venusaur',
-    image: 'https://placehold.co/240x336.png',
-    dataAiHint: 'Venusaur flower',
-    rarity: 'Rare',
+    image: 'https://images.pokellector.com/cards/108/Venusaur.BS.15.png',
+    dataAiHint: 'Venusaur flower pokemon',
+    rarity: 'Holo Rare', // Corrected from Rare
     type: 'Grass',
     hp: 100,
     attacks: [
@@ -124,13 +124,11 @@ export const allCards: PokemonCard[] = [
     description: 'This plant blooms when it is absorbing solar energy. It stays on the move to seek sunlight.',
     series: 'Base Set',
   },
-
-  // Holo Rare from Base Set
   {
     id: 'base-charizard-001',
     name: 'Charizard',
-    image: 'https://placehold.co/240x336.png',
-    dataAiHint: 'Charizard flying fire',
+    image: 'https://images.pokellector.com/cards/108/Charizard.BS.4.png',
+    dataAiHint: 'Charizard flying fire pokemon',
     rarity: 'Holo Rare',
     type: 'Fire',
     hp: 120,
@@ -150,13 +148,13 @@ export const allPacks: PokemonPack[] = [
     id: 'base-set-booster-001',
     name: 'Base Set Booster Pack',
     series: 'Base Set',
-    image: 'https://placehold.co/200x280.png',
-    dataAiHint: 'Base Set booster',
-    cardsPerPack: 7, // Example: 4 Common, 2 Uncommon, 1 Rare/Holo
+    image: 'https://product-images.tcgplayer.com/22754.jpg', // Charizard artwork pack
+    dataAiHint: 'Base Set booster pack charizard',
+    cardsPerPack: 7, 
     rarityDistribution: {
       common: 4,
       uncommon: 2,
-      rareSlot: 1, // This slot can be Rare or Holo Rare
+      rareSlot: 1, 
     },
     possibleCards: allCards.filter(card => card.series === 'Base Set').map(card => card.id),
   },
