@@ -46,8 +46,8 @@ export default function PokedexPage() {
       return nameMatch && typeMatch && rarityMatch && collectedMatch;
     });
     
-    return filtered; // Already sorted by pokedexNumber from source
-  }, [searchTerm, filterType, filterRarity, showCollectedOnly, isCollected]);
+    return filtered;
+  }, [searchTerm, filterType, filterRarity, showCollectedOnly, isCollected, collectedCardIds]); // Added collectedCardIds dependency
 
 
   if (!isLoaded) {
@@ -111,15 +111,13 @@ export default function PokedexPage() {
       
       {filteredAndSortedCards.length > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-4 gap-y-8 justify-items-center">
-          {filteredAndSortedCards.map((card, index) => ( // `index` can be used for priority if needed
+          {filteredAndSortedCards.map((card) => (
             <CardComponent
               key={card.id}
               card={card}
               onClick={() => handleCardClick(card)}
               isCollected={isCollected(card.id)}
               viewContext="pokedex"
-              // Pass the card's actual pokedexNumber string for display if available
-              // The sorting is now done on the allCards array itself.
               pokedexNumber={card.pokedexNumber} 
             />
           ))}
