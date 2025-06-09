@@ -1,8 +1,9 @@
+
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { getPackById, getCardById, allCards } from '@/lib/pokemon-data';
+import { getPackById, allCards } from '@/lib/pokemon-data'; // getCardById not used here
 import type { PokemonPack, PokemonCard, CardRarity } from '@/lib/types';
 import { CardComponent } from '@/components/card-component';
 import { Button } from '@/components/ui/button';
@@ -11,10 +12,12 @@ import { CardDetailModal } from '@/components/card-detail-modal';
 import { ArrowLeft, PackageOpen, Shuffle, Eye } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
+import { useAuth } from '@/contexts/auth-context';
 
 type PackOpeningStage = 'initial' | 'opening' | 'revealing' | 'revealed';
 
 export default function PackOpeningPage() {
+  const { user, loading: authLoading } = useAuth();
   const router = useRouter();
   const params = useParams();
   const packId = params.packId as string;
@@ -24,9 +27,15 @@ export default function PackOpeningPage() {
   const [stage, setStage] = useState<PackOpeningStage>('initial');
   const [revealedCount, setRevealedCount] = useState(0);
   
-  const { addCardsToCollection } = usePokedex();
+  const { addCardsToCollection, isLoaded: pokedexLoaded } = usePokedex();
   const [selectedCardForModal, setSelectedCardForModal] = useState<PokemonCard | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/login');
+    }
+  }, [user, authLoading, router]);
 
   useEffect(() => {
     if (packId) {
@@ -40,51 +49,73 @@ export default function PackOpeningPage() {
   }, [packId, router]);
 
   const openPack = useCallback(() => {
-    if (!packData) return;
+    if (!packData || !pokedexLoaded) return; // Ensure pokedex is loaded to avoid race conditions with collection update
 
     setStage('opening');
     setOpenedCards([]);
     setRevealedCount(0);
 
-    // Simulate pack opening animation delay
     setTimeout(() => {
       const packCards: PokemonCard[] = [];
       const availableCardsInPack = allCards.filter(card => packData.possibleCards.includes(card.id));
       
       const pullCardByRarity = (rarity: CardRarity, excludeIds: Set<string>): PokemonCard | undefined => {
         const potentialCards = availableCardsInPack.filter(c => c.rarity === rarity && !excludeIds.has(c.id));
-        if (potentialCards.length === 0) return undefined; // or pull any if specific rarity exhausted
+        if (potentialCards.length === 0) return undefined;
         return potentialCards[Math.floor(Math.random() * potentialCards.length)];
       };
       
       const pulledIds = new Set<string>();
 
-      // Pull commons
-      for (let i = 0; i < packData.rarityDistribution.common; i++) {
-        const card = pullCardByRarity('Common', pulledIds) || availableCardsInPack.filter(c => !pulledIds.has(c.id))[0]; // fallback
+      // Pull rare/holo rare for the rare slot
+      for (let i = 0; i < packData.rarityDistribution.rareSlot; i++) {
+        // ~1 in 3 chance for a Holo Rare from Base Set in the rare slot based on typical pull rates
+        // Wizards of the Coast era packs had roughly 1 holo per 3 packs.
+        // So, a rare slot has about a 1/3 chance of being holo if there are 16 holos and 16 non-holo rares.
+        // Actual odds are more complex based on print runs. Let's use a simpler 30% chance for holo.
+        const isHolo = Math.random() < 0.30; 
+        let card = pullCardByRarity(isHolo ? 'Holo Rare' : 'Rare', pulledIds);
+        if (!card) card = pullCardByRarity(isHolo ? 'Rare' : 'Holo Rare', pulledIds); // Try other if first fails
+        // Fallback to any rare type if specific is exhausted
+        if (!card) card = availableCardsInPack.find(c => (c.rarity === 'Rare' || c.rarity === 'Holo Rare') && !pulledIds.has(c.id));
+        // Final fallback to any card if still no rare found (shouldn't happen with enough cards)
+        if (!card) card = availableCardsInPack.find(c => !pulledIds.has(c.id));
+
+
         if (card) { packCards.push(card); pulledIds.add(card.id); }
       }
+
       // Pull uncommons
       for (let i = 0; i < packData.rarityDistribution.uncommon; i++) {
-        const card = pullCardByRarity('Uncommon', pulledIds) || availableCardsInPack.filter(c => !pulledIds.has(c.id) && c.rarity !== 'Common')[0]; // fallback
-        if (card) { packCards.push(card); pulledIds.add(card.id); }
-      }
-      // Pull rare/holo rare
-      for (let i = 0; i < packData.rarityDistribution.rareSlot; i++) {
-        const isHolo = Math.random() < 0.2; // 20% chance for Holo Rare in rare slot
-        const card = pullCardByRarity(isHolo ? 'Holo Rare' : 'Rare', pulledIds) 
-                     || pullCardByRarity(isHolo ? 'Rare' : 'Holo Rare', pulledIds) // try other rare type
-                     || availableCardsInPack.filter(c => !pulledIds.has(c.id) && (c.rarity === 'Rare' || c.rarity === 'Holo Rare'))[0]; // fallback
+        let card = pullCardByRarity('Uncommon', pulledIds);
+        if (!card) card = availableCardsInPack.find(c => c.rarity === 'Uncommon' && !pulledIds.has(c.id)); // Fallback if random fails
+        if (!card) card = availableCardsInPack.find(c => !pulledIds.has(c.id) && c.rarity !== 'Holo Rare' && c.rarity !== 'Rare'); // Broader fallback
+
         if (card) { packCards.push(card); pulledIds.add(card.id); }
       }
       
-      // Fill remaining slots if any, ensuring total cardsPerPack
-      while(packCards.length < packData.cardsPerPack && pulledIds.size < availableCardsInPack.length) {
-        const remainingCards = availableCardsInPack.filter(c => !pulledIds.has(c.id));
-        if(remainingCards.length === 0) break;
-        const card = remainingCards[Math.floor(Math.random() * remainingCards.length)];
-        packCards.push(card);
-        pulledIds.add(card.id);
+      // Pull commons (including basic energies/trainers which are common)
+      for (let i = 0; i < packData.rarityDistribution.common; i++) {
+        let card = pullCardByRarity('Common', pulledIds);
+         if (!card) card = availableCardsInPack.find(c => c.rarity === 'Common' && !pulledIds.has(c.id)); // Fallback
+         if (!card) card = availableCardsInPack.find(c => !pulledIds.has(c.id)); // Broadest fallback
+
+        if (card) { packCards.push(card); pulledIds.add(card.id); }
+      }
+      
+      // Fill remaining slots if any, ensuring total cardsPerPack, respecting rarity if possible
+      let attempts = 0; // safety break for infinite loop
+      while(packCards.length < packData.cardsPerPack && pulledIds.size < availableCardsInPack.length && attempts < 20) {
+        const remainingCardsForPool = availableCardsInPack.filter(c => !pulledIds.has(c.id));
+        if(remainingCardsForPool.length === 0) break;
+        // Try to pull commons first for remaining slots
+        let card = pullCardByRarity('Common', pulledIds) || pullCardByRarity('Uncommon', pulledIds) || remainingCardsForPool[Math.floor(Math.random() * remainingCardsForPool.length)];
+        
+        if (card) {
+          packCards.push(card);
+          pulledIds.add(card.id);
+        }
+        attempts++;
       }
 
       // Shuffle for reveal order
@@ -94,16 +125,16 @@ export default function PackOpeningPage() {
       }
 
       setOpenedCards(packCards);
-      addCardsToCollection(packCards.map(c => c.id));
+      addCardsToCollection(packCards.map(c => c.id)); // This is now async
       setStage('revealing');
-    }, 1000); // 1 sec delay for "opening" animation
-  }, [packData, addCardsToCollection]);
+    }, 1000);
+  }, [packData, addCardsToCollection, pokedexLoaded, allCards]);
 
   useEffect(() => {
     if (stage === 'revealing' && openedCards.length > 0 && revealedCount < openedCards.length) {
       const timer = setTimeout(() => {
         setRevealedCount(prev => prev + 1);
-      }, 600); // Stagger card reveal
+      }, 600);
       return () => clearTimeout(timer);
     } else if (stage === 'revealing' && revealedCount === openedCards.length && openedCards.length > 0) {
       setStage('revealed');
@@ -126,14 +157,16 @@ export default function PackOpeningPage() {
     setRevealedCount(0);
   }
 
-  if (!packData) {
-    return (
+  if (authLoading || !pokedexLoaded || !packData) {
+     return (
       <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
         <p className="ml-4 text-lg">Loading Pack...</p>
       </div>
     );
   }
+
+  if (!user) return null; // Should be redirected
 
   return (
     <div className="space-y-8 text-center">
@@ -154,6 +187,7 @@ export default function PackOpeningPage() {
             height={350}
             className="object-cover rounded-lg shadow-xl border-4 border-primary hover:animate-pack-shake"
             data-ai-hint={packData.dataAiHint || packData.name}
+            priority
           />
           <Button size="lg" onClick={openPack} className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8 py-6">
             <PackageOpen className="mr-2 h-6 w-6" /> Open This Pack!
@@ -170,6 +204,7 @@ export default function PackOpeningPage() {
             height={350}
             className="object-cover rounded-lg shadow-xl border-4 border-accent animate-pack-shake"
             data-ai-hint={packData.dataAiHint || packData.name}
+            priority
           />
           <p className="text-2xl font-semibold text-primary-foreground animate-pulse">Opening Pack...</p>
         </div>
@@ -181,12 +216,12 @@ export default function PackOpeningPage() {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-items-center">
             {openedCards.map((card, index) => (
               <CardComponent
-                key={card.id + '-' + index} // Ensure unique key if cards can repeat
+                key={card.id + '-' + index}
                 card={card}
                 onClick={() => handleCardClick(card)}
                 className={cn(index < revealedCount ? "opacity-100" : "opacity-0")}
-                isRevealing={index >= revealedCount -1 && stage==='revealing'} // Animate only the card currently being revealed
-                animationDelay={`${0}s`} // Cards reveal one by one based on revealedCount update
+                isRevealing={index >= revealedCount -1 && stage==='revealing'}
+                animationDelay={`${0}s`}
               />
             ))}
           </div>

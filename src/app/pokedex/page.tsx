@@ -1,7 +1,8 @@
 
 "use client";
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { allCards } from '@/lib/pokemon-data';
 import type { PokemonCard } from '@/lib/types';
 import { CardComponent } from '@/components/card-component';
@@ -13,18 +14,28 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { AlertTriangle, Search } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
+import { useAuth } from '@/contexts/auth-context';
 
 const cardTypes = ["All", "Fire", "Water", "Grass", "Lightning", "Psychic", "Fighting", "Colorless", "Darkness", "Metal", "Dragon", "Fairy", "Trainer", "Energy"];
 const rarities = ["All", "Common", "Uncommon", "Rare", "Holo Rare"];
 
 export default function PokedexPage() {
-  const { collectedCardIds, isCollected, isLoaded, resetPokedex } = usePokedex();
+  const { user, loading: authLoading } = useAuth();
+  const { collectedCardIds, isCollected, isLoaded: pokedexLoaded, resetPokedex } = usePokedex();
+  const router = useRouter();
+
   const [selectedCard, setSelectedCard] = useState<PokemonCard | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState('All');
   const [filterRarity, setFilterRarity] = useState('All');
   const [showCollectedOnly, setShowCollectedOnly] = useState(false);
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.push('/login');
+    }
+  }, [user, authLoading, router]);
 
   const handleCardClick = (card: PokemonCard) => {
     setSelectedCard(card);
@@ -37,7 +48,6 @@ export default function PokedexPage() {
   };
 
   const filteredAndSortedCards = useMemo(() => {
-    // allCards is already sorted by pokedexNumber in pokemon-data.ts
     const filtered = allCards.filter(card => {
       const nameMatch = card.name.toLowerCase().includes(searchTerm.toLowerCase());
       const typeMatch = filterType === 'All' || card.type === filterType;
@@ -45,12 +55,10 @@ export default function PokedexPage() {
       const collectedMatch = !showCollectedOnly || isCollected(card.id);
       return nameMatch && typeMatch && rarityMatch && collectedMatch;
     });
-    
-    return filtered;
+    return filtered; // allCards is already sorted by pokedexNumber
   }, [searchTerm, filterType, filterRarity, showCollectedOnly, isCollected, collectedCardIds]);
 
-
-  if (!isLoaded) {
+  if (authLoading || !pokedexLoaded) {
     return (
       <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
@@ -58,6 +66,8 @@ export default function PokedexPage() {
       </div>
     );
   }
+  
+  if (!user) return null; // Should be redirected, but as a fallback
 
   return (
     <div className="space-y-8">
@@ -145,7 +155,7 @@ export default function PokedexPage() {
       
       <div className="text-center mt-8">
         <Button variant="destructive" onClick={() => {
-          if (confirm('Are you sure you want to reset your Pokedex? This action cannot be undone.')) {
+          if (confirm('Are you sure you want to reset your Pokedex? This action cannot be undone and will clear your collected cards for this account.')) {
             resetPokedex();
           }
         }}>

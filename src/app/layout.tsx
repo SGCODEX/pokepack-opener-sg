@@ -1,8 +1,10 @@
+
 import type { Metadata } from 'next';
 import './globals.css';
 import { Navbar } from '@/components/layout/navbar';
 import { Toaster } from "@/components/ui/toaster";
 import { Container } from '@/components/layout/container';
+import { AuthProvider } from '@/contexts/auth-context';
 
 export const metadata: Metadata = {
   title: 'PokePack Opener',
@@ -23,18 +25,20 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
       </head>
       <body className="font-body antialiased min-h-screen flex flex-col">
-        <Navbar />
-        <main className="flex-grow">
-          <Container className="py-8">
-            {children}
-          </Container>
-        </main>
-        <Toaster />
-        <footer className="bg-primary/10 text-center py-4">
-          <Container>
-            <p className="text-sm text-foreground/80">&copy; {new Date().getFullYear()} PokePack Opener. Gotta open 'em all!</p>
-          </Container>
-        </footer>
+        <AuthProvider>
+          <Navbar />
+          <main className="flex-grow">
+            <Container className="py-8">
+              {children}
+            </Container>
+          </main>
+          <Toaster />
+          <footer className="bg-primary/10 text-center py-4">
+            <Container>
+              <p className="text-sm text-foreground/80">&copy; {new Date().getFullYear()} PokePack Opener. Gotta open 'em all!</p>
+            </Container>
+          </footer>
+        </AuthProvider>
       </body>
     </html>
   );
