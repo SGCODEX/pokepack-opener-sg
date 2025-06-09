@@ -12,12 +12,10 @@ import { CardDetailModal } from '@/components/card-detail-modal';
 import { ArrowLeft, PackageOpen, Shuffle, Eye } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
-// Removed useAuth
 
-type PackOpeningStage = 'initial' | 'opening' | 'revealing' | 'revealed';
+type PackOpeningStage = 'initial' | 'opening' | 'stack-reveal' | 'all-revealed';
 
 export default function PackOpeningPage() {
-  // Removed user, authLoading from useAuth
   const router = useRouter();
   const params = useParams();
   const packId = params.packId as string;
@@ -25,13 +23,14 @@ export default function PackOpeningPage() {
   const [packData, setPackData] = useState<PokemonPack | null>(null);
   const [openedCards, setOpenedCards] = useState<PokemonCard[]>([]);
   const [stage, setStage] = useState<PackOpeningStage>('initial');
-  const [revealedCount, setRevealedCount] = useState(0);
   
   const { addCardsToCollection, isLoaded: pokedexLoaded } = usePokedex();
   const [selectedCardForModal, setSelectedCardForModal] = useState<PokemonCard | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Removed useEffect for auth check
+  const [currentStackIndex, setCurrentStackIndex] = useState(0);
+  const [currentSwipingCard, setCurrentSwipingCard] = useState<{ id: string, direction: 'left' | 'right' } | null>(null);
+
 
   useEffect(() => {
     if (packId) {
@@ -49,7 +48,8 @@ export default function PackOpeningPage() {
 
     setStage('opening');
     setOpenedCards([]);
-    setRevealedCount(0);
+    setCurrentStackIndex(0);
+    setCurrentSwipingCard(null);
 
     setTimeout(() => {
       const packCards: PokemonCard[] = [];
@@ -66,9 +66,9 @@ export default function PackOpeningPage() {
       for (let i = 0; i < packData.rarityDistribution.rareSlot; i++) {
         const isHolo = Math.random() < 0.30; 
         let card = pullCardByRarity(isHolo ? 'Holo Rare' : 'Rare', pulledIds);
-        if (!card) card = pullCardByRarity(isHolo ? 'Rare' : 'Holo Rare', pulledIds);
-        if (!card) card = availableCardsInPack.find(c => (c.rarity === 'Rare' || c.rarity === 'Holo Rare') && !pulledIds.has(c.id));
-        if (!card) card = availableCardsInPack.find(c => !pulledIds.has(c.id));
+        if (!card) card = pullCardByRarity(isHolo ? 'Rare' : 'Holo Rare', pulledIds); // Try other if specific holo/non-holo rare not found
+        if (!card) card = availableCardsInPack.find(c => (c.rarity === 'Rare' || c.rarity === 'Holo Rare') && !pulledIds.has(c.id)); // Fallback to any rare
+        if (!card) card = availableCardsInPack.find(c => !pulledIds.has(c.id)); // Fallback to any card if still no rare
 
         if (card) { packCards.push(card); pulledIds.add(card.id); }
       }
@@ -109,22 +109,29 @@ export default function PackOpeningPage() {
 
       setOpenedCards(packCards);
       addCardsToCollection(packCards.map(c => c.id)); 
-      setStage('revealing');
+      setStage('stack-reveal');
     }, 1000);
-  }, [packData, addCardsToCollection, pokedexLoaded, allCards]); // allCards added to dependencies
+  }, [packData, addCardsToCollection, pokedexLoaded, allCards]);
 
-  useEffect(() => {
-    if (stage === 'revealing' && openedCards.length > 0 && revealedCount < openedCards.length) {
-      const timer = setTimeout(() => {
-        setRevealedCount(prev => prev + 1);
-      }, 600);
-      return () => clearTimeout(timer);
-    } else if (stage === 'revealing' && revealedCount === openedCards.length && openedCards.length > 0) {
-      setStage('revealed');
-    }
-  }, [stage, openedCards, revealedCount]);
+  const handleRevealNextCard = () => {
+    if (stage !== 'stack-reveal' || currentStackIndex >= openedCards.length || currentSwipingCard) return;
 
-  const handleCardClick = (card: PokemonCard) => {
+    const cardToSwipe = openedCards[currentStackIndex];
+    const swipeDirection = Math.random() < 0.5 ? 'left' : 'right';
+    setCurrentSwipingCard({ id: cardToSwipe.id, direction: swipeDirection });
+
+    setTimeout(() => {
+      const nextIndex = currentStackIndex + 1;
+      setCurrentStackIndex(nextIndex);
+      setCurrentSwipingCard(null);
+
+      if (nextIndex >= openedCards.length) {
+        setStage('all-revealed');
+      }
+    }, 500); // Match animation duration (0.5s)
+  };
+
+  const handleCardClickForModal = (card: PokemonCard) => {
     setSelectedCardForModal(card);
     setIsModalOpen(true);
   };
@@ -137,10 +144,11 @@ export default function PackOpeningPage() {
   const resetPackOpening = () => {
     setStage('initial');
     setOpenedCards([]);
-    setRevealedCount(0);
+    setCurrentStackIndex(0);
+    setCurrentSwipingCard(null);
   }
 
-  if (!pokedexLoaded || !packData) { // Simplified loading check
+  if (!pokedexLoaded || !packData) {
      return (
       <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
@@ -148,8 +156,6 @@ export default function PackOpeningPage() {
       </div>
     );
   }
-
-  // Removed !user check
 
   return (
     <div className="space-y-8 text-center">
@@ -193,28 +199,83 @@ export default function PackOpeningPage() {
         </div>
       )}
       
-      {(stage === 'revealing' || stage === 'revealed') && openedCards.length > 0 && (
+      {stage === 'stack-reveal' && openedCards.length > 0 && (
+        <div className="flex flex-col items-center space-y-6 py-6">
+          <h2 className="text-2xl font-headline font-semibold text-primary-foreground mb-4">Click the card to reveal the next one!</h2>
+          <div 
+            className="relative w-[240px] h-[336px] mx-auto cursor-pointer select-none" // Added select-none
+            onClick={!currentSwipingCard ? handleRevealNextCard : undefined}
+            role="button"
+            tabIndex={0}
+            onKeyPress={(e) => { if(e.key === 'Enter' || e.key === ' ') { if(!currentSwipingCard) handleRevealNextCard(); }}} // Accessibility
+            aria-label="Reveal next card"
+          >
+            {openedCards.map((card, index) => {
+              if (index < currentStackIndex && (!currentSwipingCard || currentSwipingCard.id !== card.id)) return null;
+
+              const isTopCardForInteraction = index === currentStackIndex && !currentSwipingCard;
+              const isBeingSwiped = currentSwipingCard && currentSwipingCard.id === card.id;
+              
+              let cardTransform = 'none';
+              let cardOpacity = 1;
+              const cardZIndex = openedCards.length - index; // Base z-index
+
+              if (!isBeingSwiped && index > currentStackIndex) {
+                const offset = (index - currentStackIndex) * 6; // px offset for cards underneath
+                const scale = 1 - (index - currentStackIndex) * 0.05;
+                cardTransform = `translateY(${offset}px) translateX(${offset/2}px) scale(${scale})`;
+                if (index > currentStackIndex + 3) { // Only show a few cards in stack, fade out deeper ones
+                    cardOpacity = Math.max(0, 1 - (index - (currentStackIndex + 3)) * 0.3);
+                }
+              }
+              
+              return (
+                <div
+                  key={card.id + '-stack-' + index}
+                  className={cn(
+                    "absolute top-0 left-0 w-[240px] h-[336px]", // Ensure div matches card dimensions
+                    "transition-all duration-300 ease-in-out", // Smooth transitions for stacking
+                    isBeingSwiped && currentSwipingCard?.direction === 'left' ? 'animate-swipe-out-left' : '',
+                    isBeingSwiped && currentSwipingCard?.direction === 'right' ? 'animate-swipe-out-right' : '',
+                  )}
+                  style={{
+                    transform: cardTransform,
+                    zIndex: isBeingSwiped ? openedCards.length + 1 : cardZIndex, // Swiping card on very top
+                    opacity: isBeingSwiped ? 1 : cardOpacity, // Swiping card is fully opaque
+                  }}
+                >
+                  <CardComponent
+                    card={card}
+                    // Prevent CardComponent's own onClick if it's not the top interactive card
+                    onClick={undefined} 
+                  />
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {stage === 'all-revealed' && (
         <>
           <h2 className="text-2xl font-headline font-semibold text-primary-foreground">Your Cards!</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-items-center">
             {openedCards.map((card, index) => (
               <CardComponent
-                key={card.id + '-' + index}
+                key={card.id + '-' + index + '-grid'}
                 card={card}
-                onClick={() => handleCardClick(card)}
-                className={cn(index < revealedCount ? "opacity-100" : "opacity-0")}
-                isRevealing={index >= revealedCount -1 && stage==='revealing'}
-                animationDelay={`${0}s`}
+                onClick={() => handleCardClickForModal(card)}
+                className="opacity-100" 
               />
             ))}
           </div>
         </>
       )}
 
-      {stage === 'revealed' && (
+      {(stage === 'all-revealed' || stage === 'stack-reveal' && currentStackIndex >= openedCards.length) && ( // Show buttons once all cards are revealed or stack done
         <div className="mt-8 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
           <Button size="lg" onClick={resetPackOpening} variant="outline">
-            <Shuffle className="mr-2 h-5 w-5" /> Open Another {packData.name}
+            <Shuffle className="mr-2 h-5 w-5" /> Open Another {packData?.name}
           </Button>
           <Button size="lg" onClick={() => router.push('/pokedex')} className="bg-primary hover:bg-primary/90 text-primary-foreground">
             <Eye className="mr-2 h-5 w-5" /> View Pokedex

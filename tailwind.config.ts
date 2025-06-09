@@ -1,3 +1,4 @@
+
 import type {Config} from 'tailwindcss';
 
 export default {
@@ -82,7 +83,7 @@ export default {
           '0%': { transform: 'rotateY(0deg)' },
           '100%': { transform: 'rotateY(180deg)' },
         },
-        'card-reveal': {
+        'card-reveal': { // This might be removed or unused if stack reveal is primary
           '0%': { transform: 'scale(0.5) translateY(50px)', opacity: '0' },
           '100%': { transform: 'scale(1) translateY(0)', opacity: '1' },
         },
@@ -107,6 +108,14 @@ export default {
           '0%, 100%': { boxShadow: '0 0 10px rgba(255, 105, 180, 0.8), 0 0 5px rgba(0, 255, 255, 0.8)' },
           '50%': { boxShadow: '0 0 25px rgba(255, 105, 180, 1), 0 0 15px rgba(0, 255, 255, 1)' },
         },
+        'swipe-out-left': {
+          '0%': { transform: 'translateX(0) rotate(0deg)', opacity: '1' },
+          '100%': { transform: 'translateX(-150%) rotate(-15deg)', opacity: '0' },
+        },
+        'swipe-out-right': {
+          '0%': { transform: 'translateX(0) rotate(0deg)', opacity: '1' },
+          '100%': { transform: 'translateX(150%) rotate(15deg)', opacity: '0' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -118,6 +127,8 @@ export default {
         'rarity-glow-uncommon': 'rarity-glow-uncommon 2s infinite ease-in-out',
         'rarity-glow-rare': 'rarity-glow-rare 2s infinite ease-in-out',
         'rarity-glow-holo': 'rarity-glow-holo 2.5s infinite alternate ease-in-out',
+        'swipe-out-left': 'swipe-out-left 0.5s ease-in-out forwards',
+        'swipe-out-right': 'swipe-out-right 0.5s ease-in-out forwards',
       },
     },
   },
