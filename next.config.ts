@@ -21,7 +21,7 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'images.pokellector.com',
         port: '',
-        pathname: '/**',
+        pathname: '/cards/**', // Made this path more specific
       },
       {
         protocol: 'https',
