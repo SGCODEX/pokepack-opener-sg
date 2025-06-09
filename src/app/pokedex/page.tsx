@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+// Removed useRouter
 import { allCards } from '@/lib/pokemon-data';
 import type { PokemonCard } from '@/lib/types';
 import { CardComponent } from '@/components/card-component';
@@ -14,15 +14,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { AlertTriangle, Search } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { useAuth } from '@/contexts/auth-context';
+// Removed useAuth
 
 const cardTypes = ["All", "Fire", "Water", "Grass", "Lightning", "Psychic", "Fighting", "Colorless", "Darkness", "Metal", "Dragon", "Fairy", "Trainer", "Energy"];
 const rarities = ["All", "Common", "Uncommon", "Rare", "Holo Rare"];
 
 export default function PokedexPage() {
-  const { user, loading: authLoading } = useAuth();
+  // Removed user, authLoading from useAuth and router
   const { collectedCardIds, isCollected, isLoaded: pokedexLoaded, resetPokedex } = usePokedex();
-  const router = useRouter();
+  // Removed router redirection logic
 
   const [selectedCard, setSelectedCard] = useState<PokemonCard | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,11 +31,7 @@ export default function PokedexPage() {
   const [filterRarity, setFilterRarity] = useState('All');
   const [showCollectedOnly, setShowCollectedOnly] = useState(false);
 
-  useEffect(() => {
-    if (!authLoading && !user) {
-      router.push('/login');
-    }
-  }, [user, authLoading, router]);
+  // Removed useEffect for auth check
 
   const handleCardClick = (card: PokemonCard) => {
     setSelectedCard(card);
@@ -55,10 +51,10 @@ export default function PokedexPage() {
       const collectedMatch = !showCollectedOnly || isCollected(card.id);
       return nameMatch && typeMatch && rarityMatch && collectedMatch;
     });
-    return filtered; // allCards is already sorted by pokedexNumber
-  }, [searchTerm, filterType, filterRarity, showCollectedOnly, isCollected, collectedCardIds]);
+    return filtered; 
+  }, [searchTerm, filterType, filterRarity, showCollectedOnly, isCollected, collectedCardIds]); // Added collectedCardIds dependency
 
-  if (authLoading || !pokedexLoaded) {
+  if (!pokedexLoaded) { // Simplified loading check
     return (
       <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
@@ -67,7 +63,7 @@ export default function PokedexPage() {
     );
   }
   
-  if (!user) return null; // Should be redirected, but as a fallback
+  // Removed !user check
 
   return (
     <div className="space-y-8">
@@ -155,7 +151,7 @@ export default function PokedexPage() {
       
       <div className="text-center mt-8">
         <Button variant="destructive" onClick={() => {
-          if (confirm('Are you sure you want to reset your Pokedex? This action cannot be undone and will clear your collected cards for this account.')) {
+          if (confirm('Are you sure you want to reset your Pokedex? This action cannot be undone and will clear your collected cards.')) {
             resetPokedex();
           }
         }}>

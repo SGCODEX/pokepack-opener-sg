@@ -3,7 +3,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { getPackById, allCards } from '@/lib/pokemon-data'; // getCardById not used here
+import { getPackById, allCards } from '@/lib/pokemon-data';
 import type { PokemonPack, PokemonCard, CardRarity } from '@/lib/types';
 import { CardComponent } from '@/components/card-component';
 import { Button } from '@/components/ui/button';
@@ -12,12 +12,12 @@ import { CardDetailModal } from '@/components/card-detail-modal';
 import { ArrowLeft, PackageOpen, Shuffle, Eye } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
-import { useAuth } from '@/contexts/auth-context';
+// Removed useAuth
 
 type PackOpeningStage = 'initial' | 'opening' | 'revealing' | 'revealed';
 
 export default function PackOpeningPage() {
-  const { user, loading: authLoading } = useAuth();
+  // Removed user, authLoading from useAuth
   const router = useRouter();
   const params = useParams();
   const packId = params.packId as string;
@@ -31,11 +31,7 @@ export default function PackOpeningPage() {
   const [selectedCardForModal, setSelectedCardForModal] = useState<PokemonCard | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    if (!authLoading && !user) {
-      router.push('/login');
-    }
-  }, [user, authLoading, router]);
+  // Removed useEffect for auth check
 
   useEffect(() => {
     if (packId) {
@@ -43,13 +39,13 @@ export default function PackOpeningPage() {
       if (pack) {
         setPackData(pack);
       } else {
-        router.push('/'); // Redirect if pack not found
+        router.push('/'); 
       }
     }
   }, [packId, router]);
 
   const openPack = useCallback(() => {
-    if (!packData || !pokedexLoaded) return; // Ensure pokedex is loaded to avoid race conditions with collection update
+    if (!packData || !pokedexLoaded) return; 
 
     setStage('opening');
     setOpenedCards([]);
@@ -67,48 +63,36 @@ export default function PackOpeningPage() {
       
       const pulledIds = new Set<string>();
 
-      // Pull rare/holo rare for the rare slot
       for (let i = 0; i < packData.rarityDistribution.rareSlot; i++) {
-        // ~1 in 3 chance for a Holo Rare from Base Set in the rare slot based on typical pull rates
-        // Wizards of the Coast era packs had roughly 1 holo per 3 packs.
-        // So, a rare slot has about a 1/3 chance of being holo if there are 16 holos and 16 non-holo rares.
-        // Actual odds are more complex based on print runs. Let's use a simpler 30% chance for holo.
         const isHolo = Math.random() < 0.30; 
         let card = pullCardByRarity(isHolo ? 'Holo Rare' : 'Rare', pulledIds);
-        if (!card) card = pullCardByRarity(isHolo ? 'Rare' : 'Holo Rare', pulledIds); // Try other if first fails
-        // Fallback to any rare type if specific is exhausted
+        if (!card) card = pullCardByRarity(isHolo ? 'Rare' : 'Holo Rare', pulledIds);
         if (!card) card = availableCardsInPack.find(c => (c.rarity === 'Rare' || c.rarity === 'Holo Rare') && !pulledIds.has(c.id));
-        // Final fallback to any card if still no rare found (shouldn't happen with enough cards)
         if (!card) card = availableCardsInPack.find(c => !pulledIds.has(c.id));
 
-
         if (card) { packCards.push(card); pulledIds.add(card.id); }
       }
 
-      // Pull uncommons
       for (let i = 0; i < packData.rarityDistribution.uncommon; i++) {
         let card = pullCardByRarity('Uncommon', pulledIds);
-        if (!card) card = availableCardsInPack.find(c => c.rarity === 'Uncommon' && !pulledIds.has(c.id)); // Fallback if random fails
-        if (!card) card = availableCardsInPack.find(c => !pulledIds.has(c.id) && c.rarity !== 'Holo Rare' && c.rarity !== 'Rare'); // Broader fallback
+        if (!card) card = availableCardsInPack.find(c => c.rarity === 'Uncommon' && !pulledIds.has(c.id));
+        if (!card) card = availableCardsInPack.find(c => !pulledIds.has(c.id) && c.rarity !== 'Holo Rare' && c.rarity !== 'Rare'); 
 
         if (card) { packCards.push(card); pulledIds.add(card.id); }
       }
       
-      // Pull commons (including basic energies/trainers which are common)
       for (let i = 0; i < packData.rarityDistribution.common; i++) {
         let card = pullCardByRarity('Common', pulledIds);
-         if (!card) card = availableCardsInPack.find(c => c.rarity === 'Common' && !pulledIds.has(c.id)); // Fallback
-         if (!card) card = availableCardsInPack.find(c => !pulledIds.has(c.id)); // Broadest fallback
+         if (!card) card = availableCardsInPack.find(c => c.rarity === 'Common' && !pulledIds.has(c.id));
+         if (!card) card = availableCardsInPack.find(c => !pulledIds.has(c.id)); 
 
         if (card) { packCards.push(card); pulledIds.add(card.id); }
       }
       
-      // Fill remaining slots if any, ensuring total cardsPerPack, respecting rarity if possible
-      let attempts = 0; // safety break for infinite loop
+      let attempts = 0; 
       while(packCards.length < packData.cardsPerPack && pulledIds.size < availableCardsInPack.length && attempts < 20) {
         const remainingCardsForPool = availableCardsInPack.filter(c => !pulledIds.has(c.id));
         if(remainingCardsForPool.length === 0) break;
-        // Try to pull commons first for remaining slots
         let card = pullCardByRarity('Common', pulledIds) || pullCardByRarity('Uncommon', pulledIds) || remainingCardsForPool[Math.floor(Math.random() * remainingCardsForPool.length)];
         
         if (card) {
@@ -118,17 +102,16 @@ export default function PackOpeningPage() {
         attempts++;
       }
 
-      // Shuffle for reveal order
       for (let i = packCards.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [packCards[i], packCards[j]] = [packCards[j], packCards[i]];
       }
 
       setOpenedCards(packCards);
-      addCardsToCollection(packCards.map(c => c.id)); // This is now async
+      addCardsToCollection(packCards.map(c => c.id)); 
       setStage('revealing');
     }, 1000);
-  }, [packData, addCardsToCollection, pokedexLoaded, allCards]);
+  }, [packData, addCardsToCollection, pokedexLoaded, allCards]); // allCards added to dependencies
 
   useEffect(() => {
     if (stage === 'revealing' && openedCards.length > 0 && revealedCount < openedCards.length) {
@@ -157,7 +140,7 @@ export default function PackOpeningPage() {
     setRevealedCount(0);
   }
 
-  if (authLoading || !pokedexLoaded || !packData) {
+  if (!pokedexLoaded || !packData) { // Simplified loading check
      return (
       <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
@@ -166,7 +149,7 @@ export default function PackOpeningPage() {
     );
   }
 
-  if (!user) return null; // Should be redirected
+  // Removed !user check
 
   return (
     <div className="space-y-8 text-center">
