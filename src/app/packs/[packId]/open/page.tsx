@@ -3,14 +3,14 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { getPackById } from '@/lib/pack-data'; // Updated import
-import { allCards } from '@/lib/pokemon-data'; // Still needed for card details
+import { getPackById } from '@/lib/pack-data';
+import { allCards } from '@/lib/pokemon-data';
 import type { PokemonPack, PokemonCard, CardRarity } from '@/lib/types';
 import { CardComponent } from '@/components/card-component';
 import { Button } from '@/components/ui/button';
-import { usePokedex } from '@/hooks/use-pokedex'; // Hook for Pokedex
+import { usePokedex } from '@/hooks/use-pokedex';
 import { CardDetailModal } from '@/components/card-detail-modal';
-import { ArrowLeft, PackageOpen, Shuffle, Eye } from 'lucide-react';
+import { ArrowLeft, PackageOpen, Shuffle, Eye, PackagePlus, Package } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
@@ -33,9 +33,14 @@ export default function PackOpeningPage() {
 
   const [currentStackIndex, setCurrentStackIndex] = useState(0);
   const [currentSwipingCard, setCurrentSwipingCard] = useState<{ id: string, direction: 'left' | 'right' } | null>(null);
+  
   const [hasHolo, setHasHolo] = useState(false);
   const [hasRareNonHolo, setHasRareNonHolo] = useState(false);
   const [currentBurstRarity, setCurrentBurstRarity] = useState<CardRarity | null>(null);
+
+  const [isBulkOpeningInProgress, setIsBulkOpeningInProgress] = useState(false);
+  const [bulkOpenProgressCount, setBulkOpenProgressCount] = useState(0);
+  const [totalPacksInCurrentBulk, setTotalPacksInCurrentBulk] = useState(0);
 
 
   useEffect(() => {
@@ -49,129 +54,167 @@ export default function PackOpeningPage() {
     }
   }, [packId, router]);
 
-  const openPack = useCallback(() => {
+  const pullCardsForOnePack = useCallback((): PokemonCard[] => {
+    if (!packData) return [];
+
+    const packCards: PokemonCard[] = [];
+    const availableCardsInPack = allCards.filter(card => packData.possibleCards.includes(card.id));
+    
+    const pullCardByRarity = (rarity: CardRarity, excludeIds: Set<string>): PokemonCard | undefined => {
+      const potentialCards = availableCardsInPack.filter(c => c.rarity === rarity && !excludeIds.has(c.id));
+      if (potentialCards.length === 0) return undefined;
+      return potentialCards[Math.floor(Math.random() * potentialCards.length)];
+    };
+    
+    const pulledIds = new Set<string>();
+
+    let rareSlotCard: PokemonCard | undefined;
+    const isHoloAttempt = Math.random() < 0.30; 
+    if (isHoloAttempt) {
+      rareSlotCard = pullCardByRarity('Holo Rare', pulledIds);
+    }
+    if (!rareSlotCard) { 
+      rareSlotCard = pullCardByRarity('Rare', pulledIds);
+    }
+    if (!rareSlotCard) {
+        rareSlotCard = availableCardsInPack.find(c => (c.rarity === 'Holo Rare' || c.rarity === 'Rare') && !pulledIds.has(c.id));
+    }
+    if (rareSlotCard) {
+      packCards.push(rareSlotCard);
+      pulledIds.add(rareSlotCard.id);
+    }
+
+    for (let i = 0; i < packData.rarityDistribution.uncommon; i++) {
+      let card = pullCardByRarity('Uncommon', pulledIds);
+      if (!card) card = availableCardsInPack.find(c => c.rarity === 'Uncommon' && !pulledIds.has(c.id));
+      if (!card) card = availableCardsInPack.find(c => !pulledIds.has(c.id) && c.rarity !== 'Holo Rare' && c.rarity !== 'Rare');
+      if (card) { packCards.push(card); pulledIds.add(card.id); }
+    }
+    
+    const commonsToPull = packData.cardsPerPack - packCards.length;
+    for (let i = 0; i < commonsToPull; i++) {
+      let card = pullCardByRarity('Common', pulledIds);
+       if (!card) card = availableCardsInPack.find(c => c.rarity === 'Common' && !pulledIds.has(c.id));
+       if (!card) card = availableCardsInPack.find(c => !pulledIds.has(c.id));
+      if (card) { packCards.push(card); pulledIds.add(card.id); }
+    }
+    
+    let attempts = 0; 
+    while(packCards.length < packData.cardsPerPack && pulledIds.size < availableCardsInPack.length && attempts < 20) {
+      const remainingCardsForPool = availableCardsInPack.filter(c => !pulledIds.has(c.id));
+      if(remainingCardsForPool.length === 0) break;
+      let card = pullCardByRarity('Common', pulledIds) || pullCardByRarity('Uncommon', pulledIds) || remainingCardsForPool[Math.floor(Math.random() * remainingCardsForPool.length)];
+      
+      if (card) {
+        packCards.push(card);
+        pulledIds.add(card.id);
+      }
+      attempts++;
+    }
+    return packCards;
+  }, [packData]);
+
+
+  const initiatePackOpeningSequence = useCallback(async (numPacksToOpen: number) => {
     if (!packData || !pokedexLoaded) return; 
 
     setStage('opening');
     setOpenedCards([]);
     setCurrentStackIndex(0);
     setCurrentSwipingCard(null);
-    setHasHolo(false);
+    // Reset overall holo status for the entire operation initially
+    setHasHolo(false); 
     setHasRareNonHolo(false);
     setCurrentBurstRarity(null);
+    
+    setIsBulkOpeningInProgress(numPacksToOpen > 1);
+    setTotalPacksInCurrentBulk(numPacksToOpen);
 
-    setTimeout(() => {
-      const packCards: PokemonCard[] = [];
-      const availableCardsInPack = allCards.filter(card => packData.possibleCards.includes(card.id));
+    let allPulledCardsAccumulator: PokemonCard[] = [];
+    let finalOverallHasHolo = false;
+    let finalOverallHasRareNonHolo = false;
+
+    for (let i = 0; i < numPacksToOpen; i++) {
+      setBulkOpenProgressCount(i + 1);
       
-      const pullCardByRarity = (rarity: CardRarity, excludeIds: Set<string>): PokemonCard | undefined => {
-        const potentialCards = availableCardsInPack.filter(c => c.rarity === rarity && !excludeIds.has(c.id));
-        if (potentialCards.length === 0) return undefined;
-        return potentialCards[Math.floor(Math.random() * potentialCards.length)];
-      };
-      
-      const pulledIds = new Set<string>();
+      // Simulate pack opening visual (e.g. pack art flash or animation for THIS pack)
+      // For now, the "Opening pack X of Y" text and background change are the main feedback
+      const currentSinglePackCards = pullCardsForOnePack();
 
-      // Ensure rareSlot logic considers pack's rarity distribution for number of rares/holos
-      // For Base Set, it's 1 rare slot that can be Holo or Non-Holo Rare
-      let rareSlotCard: PokemonCard | undefined;
-      const isHoloAttempt = Math.random() < 0.30; // 30% chance for the rare slot to be Holo (adjust as needed)
-      if (isHoloAttempt) {
-        rareSlotCard = pullCardByRarity('Holo Rare', pulledIds);
-      }
-      if (!rareSlotCard) { // If Holo attempt failed or no Holo available, try for Non-Holo Rare
-        rareSlotCard = pullCardByRarity('Rare', pulledIds);
-      }
-       // Fallback if specific rarities are exhausted (less likely with a large pool)
-      if (!rareSlotCard) {
-          rareSlotCard = availableCardsInPack.find(c => (c.rarity === 'Holo Rare' || c.rarity === 'Rare') && !pulledIds.has(c.id));
-      }
-      if (rareSlotCard) {
-        packCards.push(rareSlotCard);
-        pulledIds.add(rareSlotCard.id);
-      }
-
-      // Pull Uncommons
-      for (let i = 0; i < packData.rarityDistribution.uncommon; i++) {
-        let card = pullCardByRarity('Uncommon', pulledIds);
-        if (!card) card = availableCardsInPack.find(c => c.rarity === 'Uncommon' && !pulledIds.has(c.id)); // Fallback
-        if (!card) card = availableCardsInPack.find(c => !pulledIds.has(c.id) && c.rarity !== 'Holo Rare' && c.rarity !== 'Rare'); // Broader fallback
-        if (card) { packCards.push(card); pulledIds.add(card.id); }
+      if (currentSinglePackCards.length === 0) {
+        console.warn(`Could not pull cards for pack ${i + 1} of ${numPacksToOpen}`);
+        if (i < numPacksToOpen - 1) await new Promise(resolve => setTimeout(resolve, 100)); // Shorter delay if pack error
+        continue; // Skip to next pack if this one failed
       }
       
-      // Pull Commons to fill the rest of the pack
-      const commonsToPull = packData.cardsPerPack - packCards.length;
-      for (let i = 0; i < commonsToPull; i++) {
-        let card = pullCardByRarity('Common', pulledIds);
-         if (!card) card = availableCardsInPack.find(c => c.rarity === 'Common' && !pulledIds.has(c.id)); // Fallback
-         if (!card) card = availableCardsInPack.find(c => !pulledIds.has(c.id)); // Broadest fallback
-        if (card) { packCards.push(card); pulledIds.add(card.id); }
-      }
-      
-      // Safety fill if pack isn't full (e.g., due to limited availableCards or strict rarity pulling)
-      let attempts = 0; 
-      while(packCards.length < packData.cardsPerPack && pulledIds.size < availableCardsInPack.length && attempts < 20) {
-        const remainingCardsForPool = availableCardsInPack.filter(c => !pulledIds.has(c.id));
-        if(remainingCardsForPool.length === 0) break;
-        // Prioritize common/uncommon for filling, then any remaining
-        let card = pullCardByRarity('Common', pulledIds) || pullCardByRarity('Uncommon', pulledIds) || remainingCardsForPool[Math.floor(Math.random() * remainingCardsForPool.length)];
-        
-        if (card) {
-          packCards.push(card);
-          pulledIds.add(card.id);
-        }
-        attempts++;
+      allPulledCardsAccumulator = [...allPulledCardsAccumulator, ...currentSinglePackCards];
+      addCardsToCollection(currentSinglePackCards.map(c => c.id)); 
+
+      // Determine rarity for THIS pack's background effect
+      const currentPackHasHolo = currentSinglePackCards.some(card => card.rarity === 'Holo Rare');
+      const currentPackHasRare = currentSinglePackCards.some(card => card.rarity === 'Rare');
+
+      if (currentPackHasHolo) {
+        setHasHolo(true);
+        setHasRareNonHolo(false);
+        finalOverallHasHolo = true; // Track overall for final state
+      } else if (currentPackHasRare) {
+        setHasHolo(false);
+        setHasRareNonHolo(true);
+        if (!finalOverallHasHolo) finalOverallHasRareNonHolo = true; // Track overall
+      } else {
+        setHasHolo(false); // No special background for this specific pack if not holo/rare
+        setHasRareNonHolo(false);
       }
 
-      const isHoloPulled = packCards.some(card => card.rarity === 'Holo Rare');
-      setHasHolo(isHoloPulled);
-      if (!isHoloPulled) {
-        const isRarePulled = packCards.some(card => card.rarity === 'Rare');
-        setHasRareNonHolo(isRarePulled);
+      if (i < numPacksToOpen - 1) {
+        await new Promise(resolve => setTimeout(resolve, 1000)); // 1 sec delay between packs
       }
+    }
+    
+    // Set final background based on the highest rarity found across ALL packs
+    setHasHolo(finalOverallHasHolo);
+    setHasRareNonHolo(!finalOverallHasHolo && finalOverallHasRareNonHolo);
 
-      // Sort cards: commons first, then uncommons, then rares/holos at the back of the "stack" to be revealed last
-      const raritySortOrder: Record<CardRarity, number> = {
-        'Common': 0,
-        'Uncommon': 1,
-        'Rare': 2,
-        'Holo Rare': 3,
-      };
-      packCards.sort((a, b) => raritySortOrder[a.rarity] - raritySortOrder[b.rarity]);
+    const raritySortOrder: Record<CardRarity, number> = {
+      'Common': 0,
+      'Uncommon': 1,
+      'Rare': 2,
+      'Holo Rare': 3,
+    };
+    allPulledCardsAccumulator.sort((a, b) => raritySortOrder[a.rarity] - raritySortOrder[b.rarity]);
 
-      setOpenedCards(packCards);
-      addCardsToCollection(packCards.map(c => c.id)); 
-      setStage('stack-reveal');
-    }, 1000); // Simulate pack opening delay
-  }, [packData, addCardsToCollection, pokedexLoaded]);
+    setOpenedCards(allPulledCardsAccumulator);
+    setStage('stack-reveal');
+    setIsBulkOpeningInProgress(false);
+    setBulkOpenProgressCount(0);
+  }, [packData, addCardsToCollection, pokedexLoaded, pullCardsForOnePack]);
+
 
   const handleRevealNextCard = () => {
     if (stage !== 'stack-reveal' || currentStackIndex >= openedCards.length || currentSwipingCard || currentBurstRarity) return;
 
     const cardToSwipe = openedCards[currentStackIndex];
     
-    // Trigger burst effect for Rare or Holo Rare cards
     if (cardToSwipe.rarity === 'Rare' || cardToSwipe.rarity === 'Holo Rare') {
       setCurrentBurstRarity(cardToSwipe.rarity);
       setTimeout(() => {
-        setCurrentBurstRarity(null); // Clear burst after animation duration
-      }, 1000); // Duration of burst animation
+        setCurrentBurstRarity(null);
+      }, 1000); 
     }
 
-    // Determine swipe direction randomly
     const swipeDirection = Math.random() < 0.5 ? 'left' : 'right';
     setCurrentSwipingCard({ id: cardToSwipe.id, direction: swipeDirection });
 
-    // After swipe animation, move to next card or stage
     setTimeout(() => {
       const nextIndex = currentStackIndex + 1;
       setCurrentStackIndex(nextIndex);
-      setCurrentSwipingCard(null); // Clear swiping card
+      setCurrentSwipingCard(null); 
 
       if (nextIndex >= openedCards.length) {
         setStage('all-revealed');
       }
-    }, 500); // Duration of swipe animation
+    }, 500); 
   };
 
   const handleCardClickForModal = (card: PokemonCard) => {
@@ -184,7 +227,7 @@ export default function PackOpeningPage() {
     setSelectedCardForModal(null);
   };
   
-  const resetPackOpening = () => {
+  const resetPackOpening = (numPacks: number = 1) => {
     setStage('initial');
     setOpenedCards([]);
     setCurrentStackIndex(0);
@@ -192,9 +235,13 @@ export default function PackOpeningPage() {
     setHasHolo(false);
     setHasRareNonHolo(false);
     setCurrentBurstRarity(null);
+    setIsBulkOpeningInProgress(false);
+    setBulkOpenProgressCount(0);
+    // Optionally, directly initiate next opening if desired, or let user click again
+    // if (numPacks > 0) initiatePackOpeningSequence(numPacks); 
   }
 
-  if (!pokedexLoaded || !packData) { // Ensure pokedex (and thus localStorage) is loaded
+  if (!pokedexLoaded || !packData) {
      return (
       <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
@@ -203,8 +250,8 @@ export default function PackOpeningPage() {
     );
   }
   
-  const showHoloBackground = hasHolo && (stage === 'stack-reveal' || stage === 'all-revealed');
-  const showRareBackground = !hasHolo && hasRareNonHolo && (stage === 'stack-reveal' || stage === 'all-revealed');
+  const showHoloBackground = hasHolo && (stage === 'opening' || stage === 'stack-reveal' || stage === 'all-revealed');
+  const showRareBackground = !hasHolo && hasRareNonHolo && (stage === 'opening' || stage === 'stack-reveal' || stage === 'all-revealed');
 
   return (
     <div className={cn(
@@ -230,9 +277,14 @@ export default function PackOpeningPage() {
             data-ai-hint={packData.dataAiHint || packData.name}
             priority
           />
-          <Button size="lg" onClick={openPack} className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8 py-6">
-            <PackageOpen className="mr-2 h-6 w-6" /> Open This Pack!
-          </Button>
+          <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
+            <Button size="lg" onClick={() => initiatePackOpeningSequence(1)} className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8 py-6">
+              <Package className="mr-2 h-6 w-6" /> Open 1 Booster Pack
+            </Button>
+            <Button size="lg" onClick={() => initiatePackOpeningSequence(10)} className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-6">
+              <PackagePlus className="mr-2 h-6 w-6" /> Open 10 Booster Packs
+            </Button>
+          </div>
         </div>
       )}
 
@@ -247,32 +299,36 @@ export default function PackOpeningPage() {
             data-ai-hint={packData.dataAiHint || packData.name}
             priority
           />
-          <p className="text-2xl font-semibold text-primary-foreground dark:text-foreground animate-pulse">Opening Pack...</p>
+          {isBulkOpeningInProgress ? (
+            <p className="text-2xl font-semibold text-primary-foreground dark:text-foreground animate-pulse">
+              Opening pack {bulkOpenProgressCount} of {totalPacksInCurrentBulk}...
+            </p>
+          ) : (
+            <p className="text-2xl font-semibold text-primary-foreground dark:text-foreground animate-pulse">Opening Pack...</p>
+          )}
         </div>
       )}
       
       {stage === 'stack-reveal' && openedCards.length > 0 && (
         <div className="flex flex-col items-center justify-center flex-grow relative"> 
-          {/* Burst Particle Effect Container */}
           {currentBurstRarity && (
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-              {/* This div is just a reference point for the particles to burst from */}
               <div className="relative w-1 h-1">
                 {Array.from({ length: NUM_BURST_PARTICLES }).map((_, i) => {
                   const angle = (i / NUM_BURST_PARTICLES) * 360;
                   const particleColor = currentBurstRarity === 'Holo Rare' 
-                    ? ['bg-purple-400', 'bg-pink-400', 'bg-cyan-300', 'bg-yellow-300'][i % 4] // Holo colors
-                    : ['bg-yellow-400', 'bg-orange-400'][i % 2]; // Rare colors
+                    ? ['bg-purple-400', 'bg-pink-400', 'bg-cyan-300', 'bg-yellow-300'][i % 4] 
+                    : ['bg-yellow-400', 'bg-orange-400'][i % 2]; 
                   return (
                     <div
                       key={`burst-${i}`}
                       className={cn(
-                        "absolute w-4 h-4 rounded-full animate-star-fly-out", // Increased size
+                        "absolute w-4 h-4 rounded-full animate-star-fly-out",
                         particleColor
                       )}
                       style={{
-                        transform: `rotate(${angle}deg) translateX(0px)`, // Start at center, rotated
-                        animationDelay: `${Math.random() * 0.1}s`, // Randomize start for a more natural burst
+                        transform: `rotate(${angle}deg) translateX(0px)`, 
+                        animationDelay: `${Math.random() * 0.1}s`,
                       }}
                     />
                   );
@@ -280,40 +336,35 @@ export default function PackOpeningPage() {
               </div>
             </div>
           )}
-          {/* Card Stack */}
           <div 
-            className="relative w-[240px] h-[336px] mx-auto cursor-pointer select-none z-10" 
-            onClick={!currentSwipingCard && !currentBurstRarity ? handleRevealNextCard : undefined} // Prevent click during burst
+            className="relative w-[240px] h-[336px] mx-auto cursor-pointer select-none z-10 animate-stack-arrive" 
+            onClick={!currentSwipingCard && !currentBurstRarity ? handleRevealNextCard : undefined}
             role="button"
             tabIndex={0}
             onKeyPress={(e) => { if(e.key === 'Enter' || e.key === ' ') { if(!currentSwipingCard && !currentBurstRarity) handleRevealNextCard(); }}} 
             aria-label="Reveal next card"
           >
             {openedCards.map((card, index) => {
-              // Only render the top cards of the stack for performance + visual effect
-              // and the card being swiped out
               if (index < currentStackIndex && (!currentSwipingCard || currentSwipingCard.id !== card.id)) return null;
 
               const isBeingSwiped = currentSwipingCard && currentSwipingCard.id === card.id;
               
               let cardTransform = 'none';
               let cardOpacity = 1;
-              const cardZIndex = openedCards.length - index; // Higher index = lower in stack = lower z-index
+              const cardZIndex = openedCards.length - index; 
 
-              // Apply stacking effect for cards not being swiped and below the top card
               if (!isBeingSwiped && index > currentStackIndex) {
-                const offset = (index - currentStackIndex) * 6; // How much each underlying card is offset
+                const offset = (index - currentStackIndex) * 6; 
                 const scale = 1 - (index - currentStackIndex) * 0.05;
                 cardTransform = `translateY(${offset}px) translateX(${offset/2}px) scale(${scale})`;
-                // Fade out cards further down the stack
-                if (index > currentStackIndex + 3) { // Start fading after 3 cards
+                if (index > currentStackIndex + 3) { 
                     cardOpacity = Math.max(0, 1 - (index - (currentStackIndex + 3)) * 0.3);
                 }
               }
               
               return (
                 <div
-                  key={card.id + '-stack-' + index}
+                  key={card.id + '-stack-' + index + '-' + Math.random()} // Added random to ensure key uniqueness if same card appears multiple times
                   className={cn(
                     "absolute top-0 left-0 w-[240px] h-[336px]", 
                     "transition-all duration-300 ease-in-out", 
@@ -322,14 +373,14 @@ export default function PackOpeningPage() {
                   )}
                   style={{
                     transform: cardTransform,
-                    zIndex: isBeingSwiped ? openedCards.length + 1 : cardZIndex, // Swiped card on top
-                    opacity: isBeingSwiped ? 1 : cardOpacity, // Ensure swiped card is fully opaque
+                    zIndex: isBeingSwiped ? openedCards.length + 1 : cardZIndex, 
+                    opacity: isBeingSwiped ? 1 : cardOpacity, 
                   }}
                 >
                   <CardComponent
                     card={card}
-                    onClick={undefined} // Not clickable individually in stack
-                    showDetails={false} // Hide name/rarity during stack reveal
+                    onClick={undefined} 
+                    showDetails={false} 
                   />
                 </div>
               );
@@ -340,14 +391,17 @@ export default function PackOpeningPage() {
 
       {stage === 'all-revealed' && (
         <div className="flex-grow flex flex-col items-center justify-center">
-          <h2 className="text-2xl font-headline font-semibold text-primary-foreground dark:text-foreground mb-4">Your Cards!</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-items-center">
+          <h2 className="text-2xl font-headline font-semibold text-primary-foreground dark:text-foreground mb-4">
+            Your {openedCards.length > packData.cardsPerPack ? `${totalPacksInCurrentBulk} Packs Yielded`: 'Cards!'}
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-4 justify-items-center">
             {openedCards.map((card, index) => (
               <CardComponent
-                key={card.id + '-' + index + '-grid'}
+                key={card.id + '-' + index + '-grid' + Math.random()} // Ensure unique key for multiple same cards
                 card={card}
                 onClick={() => handleCardClickForModal(card)}
-                showDetails={true} // Show details in the grid view
+                showDetails={true}
+                collectedCount={1} // In grid, collected count isn't relevant for *this* opening
               />
             ))}
           </div>
@@ -356,9 +410,14 @@ export default function PackOpeningPage() {
 
       {(stage === 'all-revealed' || (stage === 'stack-reveal' && currentStackIndex >= openedCards.length)) && (
         <div className="mt-auto py-6 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 relative z-5">
-          <Button size="lg" onClick={resetPackOpening} variant="outline">
-            <Shuffle className="mr-2 h-5 w-5" /> Open Another {packData?.name}
+          <Button size="lg" onClick={() => resetPackOpening(1)} variant="outline">
+            <Package className="mr-2 h-5 w-5" /> Open Another Pack
           </Button>
+          {packData && packData.cardsPerPack * 10 <= allCards.length && ( // Only show if 10 packs are possible
+             <Button size="lg" onClick={() => resetPackOpening(10)} variant="outline">
+                <PackagePlus className="mr-2 h-5 w-5" /> Open 10 More Packs
+            </Button>
+          )}
           <Button size="lg" onClick={() => router.push('/pokedex')} className="bg-primary hover:bg-primary/90 text-primary-foreground">
             <Eye className="mr-2 h-5 w-5" /> View Pokedex
           </Button>
@@ -375,4 +434,6 @@ export default function PackOpeningPage() {
     </div>
   );
 }
+    
+
     

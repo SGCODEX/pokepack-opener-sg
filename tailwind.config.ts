@@ -140,6 +140,10 @@ export default {
             opacity: '0',
           },
         },
+        'stack-arrive': {
+          '0%': { transform: 'translateY(100%) scale(0.8)', opacity: '0' },
+          '100%': { transform: 'translateY(0) scale(1)', opacity: '1' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -154,8 +158,12 @@ export default {
         'holo-blue-wave-shimmer': 'holo-blue-wave-shimmer 7s ease-in-out infinite',
         'rare-gold-shimmer': 'rare-gold-shimmer 8s ease-in-out infinite',
         'star-fly-out': 'star-fly-out 0.8s ease-out forwards',
+        'stack-arrive': 'stack-arrive 0.7s ease-out forwards',
       },
     },
   },
   plugins: [require('tailwindcss-animate')],
 } satisfies Config;
+
+
+    
