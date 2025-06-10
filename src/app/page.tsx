@@ -1,3 +1,4 @@
+
 import { allPacks } from '@/lib/pokemon-data';
 import { PackItem } from '@/components/pack-item';
 
@@ -5,8 +6,8 @@ export default function PackSelectionPage() {
   return (
     <div className="space-y-8">
       <header className="text-center">
-        <h1 className="text-4xl font-headline font-bold text-primary-foreground mb-2">Choose Your Adventure!</h1>
-        <p className="text-lg text-muted-foreground">Select a Pokémon card pack to open and see what treasures await.</p>
+        <h1 className="text-4xl font-headline font-bold text-primary-foreground dark:text-foreground mb-2">Choose Your Adventure!</h1>
+        <p className="text-lg text-muted-foreground dark:text-foreground/80">Select a Pokémon card pack to open and see what treasures await.</p>
       </header>
       
       {allPacks.length > 0 ? (
