@@ -67,16 +67,14 @@ export default function PackOpeningPage() {
       
       const pulledIds = new Set<string>();
 
-      // Pull for the rare slot (can be Holo Rare or Rare)
       let rareSlotCard: PokemonCard | undefined;
-      const isHoloAttempt = Math.random() < 0.30; // 30% chance for the rare slot to be Holo if possible
+      const isHoloAttempt = Math.random() < 0.30; 
       if (isHoloAttempt) {
         rareSlotCard = pullCardByRarity('Holo Rare', pulledIds);
       }
       if (!rareSlotCard) {
         rareSlotCard = pullCardByRarity('Rare', pulledIds);
       }
-      // Fallback if specific rarity isn't available or if Holo attempt failed
       if (!rareSlotCard) {
           rareSlotCard = availableCardsInPack.find(c => (c.rarity === 'Holo Rare' || c.rarity === 'Rare') && !pulledIds.has(c.id));
       }
@@ -85,8 +83,6 @@ export default function PackOpeningPage() {
         pulledIds.add(rareSlotCard.id);
       }
 
-
-      // Pull Uncommons
       for (let i = 0; i < packData.rarityDistribution.uncommon; i++) {
         let card = pullCardByRarity('Uncommon', pulledIds);
         if (!card) card = availableCardsInPack.find(c => c.rarity === 'Uncommon' && !pulledIds.has(c.id));
@@ -94,7 +90,6 @@ export default function PackOpeningPage() {
         if (card) { packCards.push(card); pulledIds.add(card.id); }
       }
       
-      // Pull Commons (fill remaining slots, ensure total cardsPerPack)
       const commonsToPull = packData.cardsPerPack - packCards.length;
       for (let i = 0; i < commonsToPull; i++) {
         let card = pullCardByRarity('Common', pulledIds);
@@ -103,7 +98,6 @@ export default function PackOpeningPage() {
         if (card) { packCards.push(card); pulledIds.add(card.id); }
       }
       
-      // Ensure pack is full if possible
       let attempts = 0; 
       while(packCards.length < packData.cardsPerPack && pulledIds.size < availableCardsInPack.length && attempts < 20) {
         const remainingCardsForPool = availableCardsInPack.filter(c => !pulledIds.has(c.id));
@@ -124,14 +118,12 @@ export default function PackOpeningPage() {
         setHasRareNonHolo(isRarePulled);
       }
 
-
       const raritySortOrder: Record<CardRarity, number> = {
         'Common': 0,
         'Uncommon': 1,
         'Rare': 2,
         'Holo Rare': 3,
       };
-      // Sort so commons appear first in the array, holos last for stack reveal
       packCards.sort((a, b) => raritySortOrder[a.rarity] - raritySortOrder[b.rarity]);
 
       setOpenedCards(packCards);
@@ -191,20 +183,19 @@ export default function PackOpeningPage() {
 
   return (
     <div className={cn(
-        "space-y-8 text-center transition-colors duration-1000",
+        "text-center transition-colors duration-1000 flex flex-col min-h-[calc(100vh-10rem)]", // Adjusted min-height & added flex
         showHoloBackground && "holo-blue-wave-background-active animate-holo-blue-wave-shimmer",
         showRareBackground && "bg-blue-600" 
       )}>
       <Button variant="outline" onClick={() => router.push('/')} className="absolute top-24 left-4 md:left-8 z-10">
         <ArrowLeft className="mr-2 h-4 w-4" /> Back to Packs
       </Button>
-      <header className="relative z-5">
-        <h1 className="text-4xl font-headline font-bold text-primary-foreground dark:text-foreground mb-2">Opening: {packData.name}</h1>
-        <p className="text-lg text-muted-foreground dark:text-foreground/80">{packData.series}</p>
+      <header className="relative z-5 pt-8 pb-4"> {/* Adjusted padding */}
+        <h1 className="text-4xl font-headline font-bold text-primary-foreground dark:text-foreground">{packData.name}</h1>
       </header>
 
       {stage === 'initial' && (
-        <div className="flex flex-col items-center space-y-6">
+        <div className="flex flex-col items-center space-y-6 flex-grow justify-center"> {/* Added flex-grow and justify-center */}
           <Image
             src={packData.image}
             alt={packData.name}
@@ -221,7 +212,7 @@ export default function PackOpeningPage() {
       )}
 
       {stage === 'opening' && (
-         <div className="flex flex-col items-center space-y-6 py-10">
+         <div className="flex flex-col items-center space-y-6 py-10 flex-grow justify-center"> {/* Added flex-grow and justify-center */}
           <Image
             src={packData.image}
             alt="Opening pack"
@@ -236,8 +227,7 @@ export default function PackOpeningPage() {
       )}
       
       {stage === 'stack-reveal' && openedCards.length > 0 && (
-        <div className="flex flex-col items-center space-y-6 py-6">
-          <h2 className="text-2xl font-headline font-semibold text-primary-foreground dark:text-foreground mb-4">Click the card to reveal the next one!</h2>
+        <div className="flex flex-col items-center justify-center flex-grow py-6"> {/* Added flex-grow and justify-center */}
           <div 
             className="relative w-[240px] h-[336px] mx-auto cursor-pointer select-none" 
             onClick={!currentSwipingCard ? handleRevealNextCard : undefined}
@@ -291,8 +281,8 @@ export default function PackOpeningPage() {
       )}
 
       {stage === 'all-revealed' && (
-        <>
-          <h2 className="text-2xl font-headline font-semibold text-primary-foreground dark:text-foreground">Your Cards!</h2>
+        <div className="flex-grow flex flex-col items-center justify-center py-6"> {/* Added flex-grow justify-center */}
+          <h2 className="text-2xl font-headline font-semibold text-primary-foreground dark:text-foreground mb-4">Your Cards!</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-items-center">
             {openedCards.map((card, index) => (
               <CardComponent
@@ -303,11 +293,11 @@ export default function PackOpeningPage() {
               />
             ))}
           </div>
-        </>
+        </div>
       )}
 
       {(stage === 'all-revealed' || (stage === 'stack-reveal' && currentStackIndex >= openedCards.length)) && (
-        <div className="mt-8 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 relative z-5">
+        <div className="mt-auto py-6 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 relative z-5"> {/* Changed mt-8 to mt-auto and added py-6 */}
           <Button size="lg" onClick={resetPackOpening} variant="outline">
             <Shuffle className="mr-2 h-5 w-5" /> Open Another {packData?.name}
           </Button>
