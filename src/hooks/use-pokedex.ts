@@ -1,55 +1,58 @@
 
 "use client";
 import { useState, useEffect, useCallback } from 'react';
-import type { PokemonCard } from '@/lib/types'; // Assuming this type is still relevant
-import { allCards } from '@/lib/pokemon-data'; // To get total card count
+import { allCards } from '@/lib/pokemon-data'; 
 
-const POKEDEX_STORAGE_KEY = 'collected_pokemon_cards';
+const POKEDEX_STORAGE_KEY = 'collected_pokemon_cards_map'; // Updated key
 
 export function usePokedex() {
-  const [collectedCardIds, setCollectedCardIds] = useState<Set<string>>(new Set());
-  const [isLoaded, setIsLoaded] = useState(false); // Tracks if Pokedex data from localStorage is loaded
+  const [collectedCardsMap, setCollectedCardsMap] = useState<Record<string, number>>({});
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  // Load from localStorage on initial mount
   useEffect(() => {
     try {
       const storedData = localStorage.getItem(POKEDEX_STORAGE_KEY);
       if (storedData) {
-        setCollectedCardIds(new Set(JSON.parse(storedData)));
+        const parsedData = JSON.parse(storedData);
+        if (typeof parsedData === 'object' && parsedData !== null) {
+          setCollectedCardsMap(parsedData);
+        } else {
+          setCollectedCardsMap({}); // Fallback for invalid data
+        }
       }
     } catch (error) {
       console.error("Error loading Pokedex data from localStorage:", error);
-      // Initialize with an empty set if there's an error or no data
-      setCollectedCardIds(new Set());
+      setCollectedCardsMap({});
     }
     setIsLoaded(true);
   }, []);
 
-  // Save to localStorage whenever collectedCardIds changes
   useEffect(() => {
-    if (isLoaded) { // Only save after initial load to prevent overwriting with empty set
+    if (isLoaded) {
       try {
-        localStorage.setItem(POKEDEX_STORAGE_KEY, JSON.stringify(Array.from(collectedCardIds)));
+        localStorage.setItem(POKEDEX_STORAGE_KEY, JSON.stringify(collectedCardsMap));
       } catch (error) {
         console.error("Error saving Pokedex data to localStorage:", error);
       }
     }
-  }, [collectedCardIds, isLoaded]);
+  }, [collectedCardsMap, isLoaded]);
 
   const addCardsToCollection = useCallback((cardIds: string[]) => {
-    setCollectedCardIds(prevIds => {
-      const newIds = new Set(prevIds);
-      cardIds.forEach(id => newIds.add(id));
-      return newIds;
+    setCollectedCardsMap(prevMap => {
+      const newMap = { ...prevMap };
+      cardIds.forEach(id => {
+        newMap[id] = (newMap[id] || 0) + 1;
+      });
+      return newMap;
     });
   }, []);
 
-  const isCollected = useCallback((cardId: string): boolean => {
-    return collectedCardIds.has(cardId);
-  }, [collectedCardIds]);
+  const getCollectedCount = useCallback((cardId: string): number => {
+    return collectedCardsMap[cardId] || 0;
+  }, [collectedCardsMap]);
 
   const resetPokedex = useCallback(() => {
-    setCollectedCardIds(new Set());
+    setCollectedCardsMap({});
     try {
       localStorage.removeItem(POKEDEX_STORAGE_KEY);
     } catch (error) {
@@ -57,12 +60,15 @@ export function usePokedex() {
     }
   }, []);
 
+  const totalUniqueCollected = Object.keys(collectedCardsMap).length;
+
   return {
-    collectedCardIds,
+    collectedCardsMap,
     addCardsToCollection,
-    isCollected,
-    isLoaded, // Pokedex is considered loaded once we've attempted to read from localStorage
+    getCollectedCount,
+    isLoaded,
     resetPokedex,
-    totalCards: allCards.length, // Expose total cards count for UI
+    totalCards: allCards.length,
+    totalUniqueCollected,
   };
 }

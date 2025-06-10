@@ -5,29 +5,32 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { PokemonTypeIcon } from './pokemon-type-icon';
 import { cn } from '@/lib/utils';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface CardComponentProps {
   card: PokemonCard;
   onClick?: () => void;
-  isCollected?: boolean;
+  isCollected?: boolean; // Maintained for general visual cue if needed elsewhere, or can be derived from collectedCount
   className?: string;
   isRevealing?: boolean;
   animationDelay?: string;
   viewContext?: 'pokedex' | 'default';
   pokedexNumber?: number | string; 
-  showDetails?: boolean; // New prop
+  showDetails?: boolean;
+  collectedCount?: number; // New prop for quantity
 }
 
 export function CardComponent({ 
   card, 
   onClick, 
-  isCollected, 
+  isCollected, // Will now be driven by collectedCount > 0 in Pokedex context
   className, 
   isRevealing, 
   animationDelay,
   viewContext = 'default',
   pokedexNumber,
-  showDetails = true, // Default to true
+  showDetails = true,
+  collectedCount = 0, // Default to 0
 }: CardComponentProps) {
   const rarityColorClass = () => {
     switch (card.rarity) {
@@ -49,50 +52,63 @@ export function CardComponent({
     }
   };
 
+  const actualIsCollected = viewContext === 'pokedex' ? collectedCount > 0 : isCollected;
+
   if (viewContext === 'pokedex') {
     const displayPokedexNumber = card.pokedexNumber || '?';
 
     return (
-      <div
-        className={cn(
-          "flex flex-col items-center group",
-          onClick ? "cursor-pointer" : "",
-          className
-        )}
-        onClick={onClick}
-        aria-label={`Pokemon card: ${card.name}`}
-      >
-        <div className={cn(
-          "relative w-[150px] h-[210px] sm:w-[180px] sm:h-[252px] rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-200 ease-in-out transform hover:-translate-y-1",
-          isCollected === false ? "grayscale" : "",
-           rarityColorClass() 
-        )}>
-          <Image
-            src={card.image}
-            alt={card.name}
-            fill
-            className="object-cover"
-            data-ai-hint={card.dataAiHint || card.name}
-            priority={typeof pokedexNumber === 'number' && pokedexNumber <= 12} 
-          />
-           {card.rarity === 'Holo Rare' && isCollected !== false && (
-            <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-lg">
-              <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity duration-300" 
-                   style={{
-                     background: 'linear-gradient(45deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%)',
-                     transform: 'skewY(-10deg) scale(1.5)',
-                     animation: 'holoShine 5s infinite linear'
-                   }}>
+      <TooltipProvider delayDuration={100}>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div
+              className={cn(
+                "flex flex-col items-center group",
+                onClick ? "cursor-pointer" : "",
+                className
+              )}
+              onClick={onClick}
+              aria-label={`Pokemon card: ${card.name}`}
+            >
+              <div className={cn(
+                "relative w-[150px] h-[210px] sm:w-[180px] sm:h-[252px] rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-200 ease-in-out transform hover:-translate-y-1",
+                !actualIsCollected ? "grayscale" : "", // Use actualIsCollected
+                 rarityColorClass() 
+              )}>
+                <Image
+                  src={card.image}
+                  alt={card.name}
+                  fill
+                  className="object-cover"
+                  data-ai-hint={card.dataAiHint || card.name}
+                  priority={typeof pokedexNumber === 'number' && pokedexNumber <= 12} 
+                />
+                 {card.rarity === 'Holo Rare' && actualIsCollected && (
+                  <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-lg">
+                    <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity duration-300" 
+                         style={{
+                           background: 'linear-gradient(45deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%)',
+                           transform: 'skewY(-10deg) scale(1.5)',
+                           animation: 'holoShine 5s infinite linear'
+                         }}>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className="mt-2 w-[150px] sm:w-[180px] bg-foreground text-background text-center py-1 px-2 rounded-md shadow">
+                <p className="text-xs sm:text-sm font-semibold truncate" title={card.name}>
+                  #{displayPokedexNumber} - {card.name}
+                </p>
               </div>
             </div>
+          </TooltipTrigger>
+          {actualIsCollected && (
+            <TooltipContent>
+              <p>Quantity: x{collectedCount}</p>
+            </TooltipContent>
           )}
-        </div>
-        <div className="mt-2 w-[150px] sm:w-[180px] bg-foreground text-background text-center py-1 px-2 rounded-md shadow">
-          <p className="text-xs sm:text-sm font-semibold truncate" title={card.name}>
-            #{displayPokedexNumber} - {card.name}
-          </p>
-        </div>
-      </div>
+        </Tooltip>
+      </TooltipProvider>
     );
   }
 
@@ -102,7 +118,7 @@ export function CardComponent({
       className={cn(
         "w-[240px] overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 group",
         onClick ? "cursor-pointer" : "",
-        isCollected === false && viewContext !== 'pokedex' ? "opacity-50 grayscale" : "opacity-100",
+        actualIsCollected === false && viewContext !== 'pokedex' ? "opacity-50 grayscale" : "opacity-100", // Consider if actualIsCollected is needed here or original isCollected
         rarityColorClass(),
         isRevealing ? "animate-card-reveal opacity-0" : "",
         className
@@ -121,8 +137,8 @@ export function CardComponent({
           data-ai-hint={card.dataAiHint || card.name}
           priority 
         />
-        {isCollected && showDetails && ( 
-           <Badge variant="default" className="absolute top-2 right-2 bg-accent text-accent-foreground">Collected</Badge>
+        {actualIsCollected && showDetails && ( 
+           <Badge variant="default" className="absolute top-2 right-2 bg-accent text-accent-foreground">Collected x{collectedCount}</Badge>
         )}
       </CardHeader>
       {showDetails && (
@@ -150,4 +166,3 @@ export function CardComponent({
     </Card>
   );
 }
-    

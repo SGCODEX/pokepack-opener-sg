@@ -2,7 +2,6 @@
 "use client";
 
 import { useState, useMemo, useEffect } from 'react';
-// Removed useRouter
 import { allCards } from '@/lib/pokemon-data';
 import type { PokemonCard } from '@/lib/types';
 import { CardComponent } from '@/components/card-component';
@@ -14,15 +13,18 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { AlertTriangle, Search } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-// Removed useAuth
 
 const cardTypes = ["All", "Fire", "Water", "Grass", "Lightning", "Psychic", "Fighting", "Colorless", "Darkness", "Metal", "Dragon", "Fairy", "Trainer", "Energy"];
 const rarities = ["All", "Common", "Uncommon", "Rare", "Holo Rare"];
 
 export default function PokedexPage() {
-  // Removed user, authLoading from useAuth and router
-  const { collectedCardIds, isCollected, isLoaded: pokedexLoaded, resetPokedex } = usePokedex();
-  // Removed router redirection logic
+  const { 
+    getCollectedCount, 
+    isLoaded: pokedexLoaded, 
+    resetPokedex,
+    totalUniqueCollected, // Use this for the count of unique cards
+    totalCards // Total available cards
+  } = usePokedex();
 
   const [selectedCard, setSelectedCard] = useState<PokemonCard | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -30,8 +32,6 @@ export default function PokedexPage() {
   const [filterType, setFilterType] = useState('All');
   const [filterRarity, setFilterRarity] = useState('All');
   const [showCollectedOnly, setShowCollectedOnly] = useState(false);
-
-  // Removed useEffect for auth check
 
   const handleCardClick = (card: PokemonCard) => {
     setSelectedCard(card);
@@ -48,23 +48,21 @@ export default function PokedexPage() {
       const nameMatch = card.name.toLowerCase().includes(searchTerm.toLowerCase());
       const typeMatch = filterType === 'All' || card.type === filterType;
       const rarityMatch = filterRarity === 'All' || card.rarity === filterRarity;
-      const collectedMatch = !showCollectedOnly || isCollected(card.id);
+      const collectedMatch = !showCollectedOnly || getCollectedCount(card.id) > 0;
       return nameMatch && typeMatch && rarityMatch && collectedMatch;
     });
     return filtered; 
-  }, [searchTerm, filterType, filterRarity, showCollectedOnly, isCollected, collectedCardIds]); // Added collectedCardIds dependency
+  }, [searchTerm, filterType, filterRarity, showCollectedOnly, getCollectedCount, collectedCardsMap]); // Add collectedCardsMap from usePokedex if directly used or rely on getCollectedCount to update
 
-  if (!pokedexLoaded) { // Simplified loading check
+  if (!pokedexLoaded) {
     return (
       <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-        <p className="ml-4 text-lg">Loading Pokedex...</p>
+        <p className="ml-4 text-lg dark:text-foreground">Loading Pokedex...</p>
       </div>
     );
   }
   
-  // Removed !user check
-
   return (
     <div className="space-y-8">
       <header className="text-center space-y-3">
@@ -72,8 +70,8 @@ export default function PokedexPage() {
         <p className="text-lg text-muted-foreground dark:text-foreground/80">Browse your collection and discover all available Pokémon cards.</p>
         <div className="flex justify-center">
           <div className="bg-card text-card-foreground px-4 py-2 rounded-lg shadow-md border border-border">
-            <span className="text-lg font-semibold">{collectedCardIds.size} / {allCards.length}</span>
-            <span className="text-sm text-muted-foreground ml-1">Collected</span>
+            <span className="text-lg font-semibold">{totalUniqueCollected} / {totalCards}</span>
+            <span className="text-sm text-muted-foreground ml-1">Unique Cards Collected</span>
           </div>
         </div>
       </header>
@@ -122,16 +120,20 @@ export default function PokedexPage() {
       
       {filteredAndSortedCards.length > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-4 gap-y-8 justify-items-center">
-          {filteredAndSortedCards.map((card) => (
-            <CardComponent
-              key={card.id}
-              card={card}
-              onClick={() => handleCardClick(card)}
-              isCollected={isCollected(card.id)}
-              viewContext="pokedex"
-              pokedexNumber={card.pokedexNumber} 
-            />
-          ))}
+          {filteredAndSortedCards.map((card) => {
+            const count = getCollectedCount(card.id);
+            return (
+              <CardComponent
+                key={card.id}
+                card={card}
+                onClick={() => handleCardClick(card)}
+                viewContext="pokedex"
+                pokedexNumber={card.pokedexNumber} 
+                collectedCount={count}
+                // isCollected prop is now implicitly handled by collectedCount > 0 in CardComponent for Pokedex view
+              />
+            );
+          })}
         </div>
       ) : (
         <div className="text-center py-10">
