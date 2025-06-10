@@ -30,6 +30,11 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'loosepacks.com',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'img.tradera.net',
+        pathname: '/**',
       }
     ],
   },

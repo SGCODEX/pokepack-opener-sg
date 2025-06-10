@@ -7,7 +7,7 @@ export const allPacks: PokemonPack[] = [
     id: 'base-set-booster-001',
     name: 'Base Set Booster Pack',
     series: 'Base Set',
-    image: 'https://loosepacks.com/cdn/shop/files/Myproject-1-2023-07-19T003944.506.png?v=1738292631',
+    image: 'https://img.tradera.net/large-fit/742/561209742_da1a2bc3-0d7e-489e-80e8-8ad8bda9d671.jpg',
     dataAiHint: 'Base Set booster pack charizard',
     cardsPerPack: 10,
     rarityDistribution: {
@@ -23,3 +23,4 @@ export const allPacks: PokemonPack[] = [
 export const getPackById = (id: string): PokemonPack | undefined => {
   return allPacks.find(pack => pack.id === id);
 };
+
