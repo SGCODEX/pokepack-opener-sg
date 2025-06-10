@@ -18,7 +18,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'den-cards.pokellector.com', // Updated hostname
+        hostname: 'den-cards.pokellector.com',
         pathname: '/**',
       },
       {
