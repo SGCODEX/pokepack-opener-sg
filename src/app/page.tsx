@@ -1,5 +1,5 @@
 
-import { allPacks } from '@/lib/pokemon-data';
+import { allPacks } from '@/lib/pack-data'; // Updated import
 import { PackItem } from '@/components/pack-item';
 
 export default function PackSelectionPage() {

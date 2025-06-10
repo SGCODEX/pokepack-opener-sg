@@ -3,7 +3,8 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
-import { getPackById, allCards } from '@/lib/pokemon-data';
+import { getPackById } from '@/lib/pack-data'; // Updated import
+import { allCards } from '@/lib/pokemon-data'; // Still needed for card details
 import type { PokemonPack, PokemonCard, CardRarity } from '@/lib/types';
 import { CardComponent } from '@/components/card-component';
 import { Button } from '@/components/ui/button';
