@@ -104,18 +104,6 @@ export default {
           '90%': { transform: 'scale(1.12) rotate(1deg)' },
           '100%': { transform: 'scale(1.15) rotate(0deg)', opacity: '0.9' },
         },
-        'rarity-glow-common': {
-          '0%, 100%': { boxShadow: '0 0 5px rgba(200, 200, 200, 0.5)' },
-          '50%': { boxShadow: '0 0 15px rgba(200, 200, 200, 0.8)' },
-        },
-        'rarity-glow-uncommon': {
-          '0%, 100%': { boxShadow: '0 0 5px rgba(100, 150, 255, 0.5)' },
-          '50%': { boxShadow: '0 0 15px rgba(100, 150, 255, 0.8)' },
-        },
-        'rarity-glow-rare': {
-          '0%, 100%': { boxShadow: '0 0 8px rgba(255, 215, 0, 0.7)' },
-          '50%': { boxShadow: '0 0 20px rgba(255, 215, 0, 1)' },
-        },
         'rarity-glow-holo': {
           '0%, 100%': { boxShadow: '0 0 10px rgba(255, 105, 180, 0.8), 0 0 5px rgba(0, 255, 255, 0.8)' },
           '50%': { boxShadow: '0 0 25px rgba(255, 105, 180, 1), 0 0 15px rgba(0, 255, 255, 1)' },
@@ -133,7 +121,10 @@ export default {
           '50%': { backgroundPosition: '100% 50%' },
           '100%': { backgroundPosition: '0% 50%' },
         },
-        /* Removed rare-glow-bg keyframes as it's a solid color now */
+        'star-fly-out': {
+          '0%': { transform: 'translate(0, 0) scale(0.5)', opacity: '1' },
+          '100%': { transform: 'translate(var(--tx, 0px), var(--ty, 0px)) scale(1.2)', opacity: '0' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -142,16 +133,14 @@ export default {
         'card-reveal': 'card-reveal 0.5s ease-out forwards',
         'pack-shake': 'pack-shake 0.6s ease-in-out infinite', 
         'opening-pack-burst': 'opening-pack-burst 0.9s ease-in-out forwards', 
-        'rarity-glow-common': 'rarity-glow-common 2s infinite ease-in-out',
-        'rarity-glow-uncommon': 'rarity-glow-uncommon 2s infinite ease-in-out',
-        'rarity-glow-rare': 'rarity-glow-rare 2s infinite ease-in-out',
         'rarity-glow-holo': 'rarity-glow-holo 2.5s infinite alternate ease-in-out',
         'swipe-out-left': 'swipe-out-left 0.5s ease-in-out forwards',
         'swipe-out-right': 'swipe-out-right 0.5s ease-in-out forwards',
         'holo-blue-wave-shimmer': 'holo-blue-wave-shimmer 7s ease-in-out infinite',
-         /* Removed rare-glow-bg animation as it's a solid color now */
+        'star-fly-out': 'star-fly-out 0.8s ease-out forwards',
       },
     },
   },
   plugins: [require('tailwindcss-animate')],
 } satisfies Config;
+

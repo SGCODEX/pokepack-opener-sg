@@ -15,6 +15,8 @@ import { cn } from '@/lib/utils';
 
 type PackOpeningStage = 'initial' | 'opening' | 'stack-reveal' | 'all-revealed';
 
+const NUM_BURST_PARTICLES = 12;
+
 export default function PackOpeningPage() {
   const router = useRouter();
   const params = useParams();
@@ -32,6 +34,7 @@ export default function PackOpeningPage() {
   const [currentSwipingCard, setCurrentSwipingCard] = useState<{ id: string, direction: 'left' | 'right' } | null>(null);
   const [hasHolo, setHasHolo] = useState(false);
   const [hasRareNonHolo, setHasRareNonHolo] = useState(false);
+  const [currentBurstRarity, setCurrentBurstRarity] = useState<CardRarity | null>(null);
 
 
   useEffect(() => {
@@ -54,6 +57,7 @@ export default function PackOpeningPage() {
     setCurrentSwipingCard(null);
     setHasHolo(false);
     setHasRareNonHolo(false);
+    setCurrentBurstRarity(null);
 
     setTimeout(() => {
       const packCards: PokemonCard[] = [];
@@ -133,9 +137,17 @@ export default function PackOpeningPage() {
   }, [packData, addCardsToCollection, pokedexLoaded]);
 
   const handleRevealNextCard = () => {
-    if (stage !== 'stack-reveal' || currentStackIndex >= openedCards.length || currentSwipingCard) return;
+    if (stage !== 'stack-reveal' || currentStackIndex >= openedCards.length || currentSwipingCard || currentBurstRarity) return;
 
     const cardToSwipe = openedCards[currentStackIndex];
+    
+    if (cardToSwipe.rarity === 'Rare' || cardToSwipe.rarity === 'Holo Rare') {
+      setCurrentBurstRarity(cardToSwipe.rarity);
+      setTimeout(() => {
+        setCurrentBurstRarity(null);
+      }, 1000); // Duration of burst animation
+    }
+
     const swipeDirection = Math.random() < 0.5 ? 'left' : 'right';
     setCurrentSwipingCard({ id: cardToSwipe.id, direction: swipeDirection });
 
@@ -167,13 +179,14 @@ export default function PackOpeningPage() {
     setCurrentSwipingCard(null);
     setHasHolo(false);
     setHasRareNonHolo(false);
+    setCurrentBurstRarity(null);
   }
 
   if (!pokedexLoaded || !packData) {
      return (
       <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-        <p className="ml-4 text-lg">Loading Pack...</p>
+        <p className="ml-4 text-lg dark:text-foreground">Loading Pack...</p>
       </div>
     );
   }
@@ -212,7 +225,7 @@ export default function PackOpeningPage() {
       )}
 
       {stage === 'opening' && (
-         <div className="flex flex-col items-center space-y-6 py-10 flex-grow justify-center">
+         <div className="flex flex-col items-center space-y-6 flex-grow justify-center">
           <Image
             src={packData.image}
             alt="Opening pack"
@@ -227,13 +240,38 @@ export default function PackOpeningPage() {
       )}
       
       {stage === 'stack-reveal' && openedCards.length > 0 && (
-        <div className="flex flex-col items-center justify-center flex-grow"> 
+        <div className="flex flex-col items-center justify-center flex-grow relative"> 
+          {currentBurstRarity && (
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+              <div className="relative w-1 h-1">
+                {Array.from({ length: NUM_BURST_PARTICLES }).map((_, i) => {
+                  const angle = (i / NUM_BURST_PARTICLES) * 360;
+                  const particleColor = currentBurstRarity === 'Holo Rare' 
+                    ? ['bg-purple-400', 'bg-pink-400', 'bg-cyan-300', 'bg-yellow-300'][i % 4]
+                    : ['bg-yellow-400', 'bg-orange-400'][i % 2];
+                  return (
+                    <div
+                      key={`burst-${i}`}
+                      className={cn(
+                        "absolute w-3 h-3 rounded-full animate-star-fly-out",
+                        particleColor
+                      )}
+                      style={{
+                        transform: `rotate(${angle}deg) translateX(0px)`, 
+                        animationDelay: `${Math.random() * 0.1}s`, 
+                      }}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          )}
           <div 
-            className="relative w-[240px] h-[336px] mx-auto cursor-pointer select-none" 
-            onClick={!currentSwipingCard ? handleRevealNextCard : undefined}
+            className="relative w-[240px] h-[336px] mx-auto cursor-pointer select-none z-10" 
+            onClick={!currentSwipingCard && !currentBurstRarity ? handleRevealNextCard : undefined}
             role="button"
             tabIndex={0}
-            onKeyPress={(e) => { if(e.key === 'Enter' || e.key === ' ') { if(!currentSwipingCard) handleRevealNextCard(); }}} 
+            onKeyPress={(e) => { if(e.key === 'Enter' || e.key === ' ') { if(!currentSwipingCard && !currentBurstRarity) handleRevealNextCard(); }}} 
             aria-label="Reveal next card"
           >
             {openedCards.map((card, index) => {
@@ -282,7 +320,7 @@ export default function PackOpeningPage() {
       )}
 
       {stage === 'all-revealed' && (
-        <div className="flex-grow flex flex-col items-center justify-center py-6">
+        <div className="flex-grow flex flex-col items-center justify-center">
           <h2 className="text-2xl font-headline font-semibold text-primary-foreground dark:text-foreground mb-4">Your Cards!</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-items-center">
             {openedCards.map((card, index) => (
@@ -290,7 +328,6 @@ export default function PackOpeningPage() {
                 key={card.id + '-' + index + '-grid'}
                 card={card}
                 onClick={() => handleCardClickForModal(card)}
-                className="opacity-100"
                 showDetails={true}
               />
             ))}
