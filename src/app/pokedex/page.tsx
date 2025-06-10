@@ -68,8 +68,8 @@ export default function PokedexPage() {
   return (
     <div className="space-y-8">
       <header className="text-center space-y-3">
-        <h1 className="text-4xl font-headline font-bold text-primary-foreground">Pokédex</h1>
-        <p className="text-lg text-muted-foreground">Browse your collection and discover all available Pokémon cards.</p>
+        <h1 className="text-4xl font-headline font-bold text-primary-foreground dark:text-foreground">Pokédex</h1>
+        <p className="text-lg text-muted-foreground dark:text-foreground/80">Browse your collection and discover all available Pokémon cards.</p>
         <div className="flex justify-center">
           <div className="bg-card text-card-foreground px-4 py-2 rounded-lg shadow-md border border-border">
             <span className="text-lg font-semibold">{collectedCardIds.size} / {allCards.length}</span>
