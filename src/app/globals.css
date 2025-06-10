@@ -112,11 +112,11 @@ body {
   .rare-gold-holo-background-active {
     background: linear-gradient(
       135deg,
-      hsl(45 100% 60% / 0.7), /* Gold */
-      hsl(35 100% 70% / 0.75), /* Light Orange */
-      hsl(55 100% 80% / 0.7), /* Pale Yellow */
-      hsl(35 100% 70% / 0.75), /* Light Orange */
-      hsl(45 100% 60% / 0.7)  /* Gold */
+      hsl(50 100% 60% / 0.7), /* Rich Gold */
+      hsl(55 100% 75% / 0.75), /* Bright Yellow-Gold */
+      hsl(45 100% 50% / 0.7), /* Classic Gold */
+      hsl(55 100% 75% / 0.75), /* Bright Yellow-Gold */
+      hsl(50 100% 60% / 0.7)  /* Rich Gold */
     );
     background-size: 400% 400%;
   }
