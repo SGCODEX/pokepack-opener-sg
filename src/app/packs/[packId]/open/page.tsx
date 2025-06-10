@@ -198,7 +198,7 @@ export default function PackOpeningPage() {
     <div className={cn(
         "transition-colors duration-1000 flex flex-col min-h-[calc(100vh-10rem)]", 
         showHoloBackground && "holo-blue-wave-background-active animate-holo-blue-wave-shimmer",
-        showRareBackground && "bg-blue-600" 
+        showRareBackground && "rare-gold-holo-background-active animate-rare-gold-shimmer" 
       )}>
       <Button variant="outline" onClick={() => router.push('/')} className="absolute top-24 left-4 md:left-8 z-10">
         <ArrowLeft className="mr-2 h-4 w-4" /> Back to Packs
@@ -253,7 +253,7 @@ export default function PackOpeningPage() {
                     <div
                       key={`burst-${i}`}
                       className={cn(
-                        "absolute w-4 h-4 rounded-full animate-star-fly-out", // Increased size to w-4 h-4
+                        "absolute w-4 h-4 rounded-full animate-star-fly-out",
                         particleColor
                       )}
                       style={{

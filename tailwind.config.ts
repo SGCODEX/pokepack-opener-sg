@@ -121,17 +121,22 @@ export default {
           '50%': { backgroundPosition: '100% 50%' },
           '100%': { backgroundPosition: '0% 50%' },
         },
+        'rare-gold-shimmer': {
+          '0%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+          '100%': { backgroundPosition: '0% 50%' },
+        },
         'star-fly-out': {
           '0%': {
-            transform: 'translateX(0px) scale(0.6)', /* Start at its rotated center, slightly larger scale */
+            transform: 'translateX(0px) scale(0.6)',
             opacity: '1',
           },
           '70%': { 
-            transform: 'translateX(90px) scale(2)', /* Fly out much further, scale up significantly */
+            transform: 'translateX(90px) scale(2)', 
             opacity: '0.8',
           },
           '100%': {
-            transform: 'translateX(100px) scale(2.2)', /* Continue a bit more */
+            transform: 'translateX(100px) scale(2.2)', 
             opacity: '0',
           },
         },
@@ -147,10 +152,10 @@ export default {
         'swipe-out-left': 'swipe-out-left 0.5s ease-in-out forwards',
         'swipe-out-right': 'swipe-out-right 0.5s ease-in-out forwards',
         'holo-blue-wave-shimmer': 'holo-blue-wave-shimmer 7s ease-in-out infinite',
+        'rare-gold-shimmer': 'rare-gold-shimmer 8s ease-in-out infinite',
         'star-fly-out': 'star-fly-out 0.8s ease-out forwards',
       },
     },
   },
   plugins: [require('tailwindcss-animate')],
 } satisfies Config;
-
