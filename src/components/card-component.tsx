@@ -1,7 +1,7 @@
 
 import Image from 'next/image';
 import type { PokemonCard } from '@/lib/types';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'; // CardFooter might not be needed
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'; 
 import { Badge } from '@/components/ui/badge';
 import { PokemonTypeIcon } from './pokemon-type-icon';
 import { cn } from '@/lib/utils';
@@ -14,7 +14,8 @@ interface CardComponentProps {
   isRevealing?: boolean;
   animationDelay?: string;
   viewContext?: 'pokedex' | 'default';
-  pokedexNumber?: number | string; // Can be string like "80/102"
+  pokedexNumber?: number | string; 
+  showDetails?: boolean; // New prop
 }
 
 export function CardComponent({ 
@@ -25,7 +26,8 @@ export function CardComponent({
   isRevealing, 
   animationDelay,
   viewContext = 'default',
-  pokedexNumber // This will be the pre-calculated sort/display order number for Pokedex
+  pokedexNumber,
+  showDetails = true, // Default to true
 }: CardComponentProps) {
   const rarityColorClass = () => {
     switch (card.rarity) {
@@ -48,7 +50,6 @@ export function CardComponent({
   };
 
   if (viewContext === 'pokedex') {
-    // Use card.pokedexNumber which is now the string like "1/102"
     const displayPokedexNumber = card.pokedexNumber || '?';
 
     return (
@@ -95,7 +96,7 @@ export function CardComponent({
     );
   }
 
-  // Default view (for pack opening, modal image display primarily)
+  // Default view (for pack opening stack, grid, modal image display primarily)
   return (
     <Card
       className={cn(
@@ -115,25 +116,26 @@ export function CardComponent({
           src={card.image}
           alt={card.name}
           width={240}
-          height={336} // Standard Pokemon card aspect ratio
+          height={336} 
           className="object-cover transition-transform duration-300 group-hover:scale-105"
           data-ai-hint={card.dataAiHint || card.name}
           priority 
         />
-        {isCollected && ( // Show collected badge only if not in Pokedex view or if explicitly passed
+        {isCollected && showDetails && ( 
            <Badge variant="default" className="absolute top-2 right-2 bg-accent text-accent-foreground">Collected</Badge>
         )}
       </CardHeader>
-      <CardContent className="p-3 bg-card">
-        <div className="flex justify-between items-center mb-1">
-          <CardTitle className="text-lg font-headline truncate" title={card.name}>{card.name}</CardTitle>
-          {card.type !== 'Trainer' && card.type !== 'Energy' && <PokemonTypeIcon type={card.type} />}
-        </div>
-        <div className="flex justify-between items-center text-xs">
-          <p className={cn("font-semibold", rarityTextClass())}>{card.rarity}</p>
-          {/* HP removed as it's no longer in the simplified PokemonCard type */}
-        </div>
-      </CardContent>
+      {showDetails && (
+        <CardContent className="p-3 bg-card">
+          <div className="flex justify-between items-center mb-1">
+            <CardTitle className="text-lg font-headline truncate" title={card.name}>{card.name}</CardTitle>
+            {card.type !== 'Trainer' && card.type !== 'Energy' && <PokemonTypeIcon type={card.type} />}
+          </div>
+          <div className="flex justify-between items-center text-xs">
+            <p className={cn("font-semibold", rarityTextClass())}>{card.rarity}</p>
+          </div>
+        </CardContent>
+      )}
       {card.rarity === 'Holo Rare' && (
         <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-lg">
           <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity duration-300" 
@@ -148,3 +150,4 @@ export function CardComponent({
     </Card>
   );
 }
+    

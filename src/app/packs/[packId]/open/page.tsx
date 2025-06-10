@@ -183,19 +183,19 @@ export default function PackOpeningPage() {
 
   return (
     <div className={cn(
-        "text-center transition-colors duration-1000 flex flex-col min-h-[calc(100vh-10rem)]", // Adjusted min-height & added flex
+        "transition-colors duration-1000 flex flex-col min-h-[calc(100vh-10rem)]", 
         showHoloBackground && "holo-blue-wave-background-active animate-holo-blue-wave-shimmer",
         showRareBackground && "bg-blue-600" 
       )}>
       <Button variant="outline" onClick={() => router.push('/')} className="absolute top-24 left-4 md:left-8 z-10">
         <ArrowLeft className="mr-2 h-4 w-4" /> Back to Packs
       </Button>
-      <header className="relative z-5 pt-8 pb-4"> {/* Adjusted padding */}
+      <header className="relative z-5 pt-8 pb-4 text-center">
         <h1 className="text-4xl font-headline font-bold text-primary-foreground dark:text-foreground">{packData.name}</h1>
       </header>
 
       {stage === 'initial' && (
-        <div className="flex flex-col items-center space-y-6 flex-grow justify-center"> {/* Added flex-grow and justify-center */}
+        <div className="flex flex-col items-center space-y-6 flex-grow justify-center">
           <Image
             src={packData.image}
             alt={packData.name}
@@ -212,7 +212,7 @@ export default function PackOpeningPage() {
       )}
 
       {stage === 'opening' && (
-         <div className="flex flex-col items-center space-y-6 py-10 flex-grow justify-center"> {/* Added flex-grow and justify-center */}
+         <div className="flex flex-col items-center space-y-6 py-10 flex-grow justify-center">
           <Image
             src={packData.image}
             alt="Opening pack"
@@ -227,7 +227,7 @@ export default function PackOpeningPage() {
       )}
       
       {stage === 'stack-reveal' && openedCards.length > 0 && (
-        <div className="flex flex-col items-center justify-center flex-grow py-6"> {/* Added flex-grow and justify-center */}
+        <div className="flex flex-col items-center justify-center flex-grow"> 
           <div 
             className="relative w-[240px] h-[336px] mx-auto cursor-pointer select-none" 
             onClick={!currentSwipingCard ? handleRevealNextCard : undefined}
@@ -272,6 +272,7 @@ export default function PackOpeningPage() {
                   <CardComponent
                     card={card}
                     onClick={undefined} 
+                    showDetails={false}
                   />
                 </div>
               );
@@ -281,7 +282,7 @@ export default function PackOpeningPage() {
       )}
 
       {stage === 'all-revealed' && (
-        <div className="flex-grow flex flex-col items-center justify-center py-6"> {/* Added flex-grow justify-center */}
+        <div className="flex-grow flex flex-col items-center justify-center py-6">
           <h2 className="text-2xl font-headline font-semibold text-primary-foreground dark:text-foreground mb-4">Your Cards!</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-items-center">
             {openedCards.map((card, index) => (
@@ -289,7 +290,8 @@ export default function PackOpeningPage() {
                 key={card.id + '-' + index + '-grid'}
                 card={card}
                 onClick={() => handleCardClickForModal(card)}
-                className="opacity-100" 
+                className="opacity-100"
+                showDetails={true}
               />
             ))}
           </div>
@@ -297,7 +299,7 @@ export default function PackOpeningPage() {
       )}
 
       {(stage === 'all-revealed' || (stage === 'stack-reveal' && currentStackIndex >= openedCards.length)) && (
-        <div className="mt-auto py-6 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 relative z-5"> {/* Changed mt-8 to mt-auto and added py-6 */}
+        <div className="mt-auto py-6 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 relative z-5">
           <Button size="lg" onClick={resetPackOpening} variant="outline">
             <Shuffle className="mr-2 h-5 w-5" /> Open Another {packData?.name}
           </Button>
@@ -317,3 +319,4 @@ export default function PackOpeningPage() {
     </div>
   );
 }
+    
