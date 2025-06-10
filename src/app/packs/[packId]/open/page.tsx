@@ -253,7 +253,7 @@ export default function PackOpeningPage() {
                     <div
                       key={`burst-${i}`}
                       className={cn(
-                        "absolute w-3 h-3 rounded-full animate-star-fly-out",
+                        "absolute w-4 h-4 rounded-full animate-star-fly-out", // Increased size to w-4 h-4
                         particleColor
                       )}
                       style={{

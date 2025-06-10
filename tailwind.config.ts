@@ -122,8 +122,18 @@ export default {
           '100%': { backgroundPosition: '0% 50%' },
         },
         'star-fly-out': {
-          '0%': { transform: 'translate(0, 0) scale(0.5)', opacity: '1' },
-          '100%': { transform: 'translate(var(--tx, 0px), var(--ty, 0px)) scale(1.2)', opacity: '0' },
+          '0%': {
+            transform: 'translateX(0px) scale(0.6)', /* Start at its rotated center, slightly larger scale */
+            opacity: '1',
+          },
+          '70%': { 
+            transform: 'translateX(90px) scale(2)', /* Fly out much further, scale up significantly */
+            opacity: '0.8',
+          },
+          '100%': {
+            transform: 'translateX(100px) scale(2.2)', /* Continue a bit more */
+            opacity: '0',
+          },
         },
       },
       animation: {
