@@ -26,6 +26,11 @@ const nextConfig: NextConfig = {
         hostname: 'product-images.tcgplayer.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'loosepacks.com',
+        pathname: '/**',
+      }
     ],
   },
 };

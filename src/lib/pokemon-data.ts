@@ -1048,7 +1048,7 @@ export const allPacks: PokemonPack[] = [
     id: 'base-set-booster-001',
     name: 'Base Set Booster Pack',
     series: 'Base Set',
-    image: 'https://product-images.tcgplayer.com/22754.jpg',
+    image: 'https://loosepacks.com/cdn/shop/files/Myproject-1-2023-07-19T003944.506.png?v=1738292631',
     dataAiHint: 'Base Set booster pack charizard',
     cardsPerPack: 10, 
     rarityDistribution: {
