@@ -1,6 +1,6 @@
 
 "use client";
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { allCards } from '@/lib/pokemon-data'; 
 
 const POKEDEX_STORAGE_KEY = 'collected_pokemon_cards_map'; // Updated key
@@ -62,6 +62,10 @@ export function usePokedex() {
 
   const totalUniqueCollected = Object.keys(collectedCardsMap).length;
 
+  const totalCollectedIncludingDuplicates = useMemo(() => {
+    return Object.values(collectedCardsMap).reduce((sum, count) => sum + count, 0);
+  }, [collectedCardsMap]);
+
   return {
     collectedCardsMap,
     addCardsToCollection,
@@ -70,5 +74,6 @@ export function usePokedex() {
     resetPokedex,
     totalCards: allCards.length,
     totalUniqueCollected,
+    totalCollectedIncludingDuplicates,
   };
 }

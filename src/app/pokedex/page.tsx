@@ -10,7 +10,7 @@ import { usePokedex } from '@/hooks/use-pokedex';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { AlertTriangle, Search } from 'lucide-react';
+import { AlertTriangle, Search, BookCopy, Layers } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 
@@ -23,7 +23,8 @@ export default function PokedexPage() {
     isLoaded: pokedexLoaded, 
     resetPokedex,
     totalUniqueCollected, 
-    totalCards 
+    totalCards,
+    totalCollectedIncludingDuplicates
   } = usePokedex();
 
   const [selectedCard, setSelectedCard] = useState<PokemonCard | null>(null);
@@ -68,10 +69,20 @@ export default function PokedexPage() {
       <header className="text-center space-y-3">
         <h1 className="text-4xl font-headline font-bold text-primary-foreground dark:text-foreground">Pokédex</h1>
         <p className="text-lg text-muted-foreground dark:text-foreground/80">Browse your collection and discover all available Pokémon cards.</p>
-        <div className="flex justify-center">
-          <div className="bg-card text-card-foreground px-4 py-2 rounded-lg shadow-md border border-border">
-            <span className="text-lg font-semibold">{totalUniqueCollected} / {totalCards}</span>
-            <span className="text-sm text-muted-foreground ml-1">Unique Cards Collected</span>
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-4">
+          <div className="bg-card text-card-foreground px-4 py-2 rounded-lg shadow-md border border-border flex items-center gap-2">
+            <BookCopy className="h-5 w-5 text-primary" />
+            <div>
+                <span className="text-lg font-semibold">{totalUniqueCollected} / {totalCards}</span>
+                <span className="text-sm text-muted-foreground ml-1">Unique Cards</span>
+            </div>
+          </div>
+           <div className="bg-card text-card-foreground px-4 py-2 rounded-lg shadow-md border border-border flex items-center gap-2">
+            <Layers className="h-5 w-5 text-accent" />
+            <div>
+                <span className="text-lg font-semibold">{totalCollectedIncludingDuplicates}</span>
+                <span className="text-sm text-muted-foreground ml-1">Total Cards</span>
+            </div>
           </div>
         </div>
       </header>
