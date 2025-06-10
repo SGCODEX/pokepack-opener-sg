@@ -14,7 +14,7 @@ import { ArrowLeft, PackageOpen, Shuffle, Eye, PackagePlus, Package } from 'luci
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
-type PackOpeningStage = 'initial' | 'opening' | 'stack-reveal' | 'all-revealed';
+type PackOpeningStage = 'initial' | 'opening' | 'stack-reveal' | 'all-revealed' | 'transitioning';
 
 const NUM_BURST_PARTICLES = 12;
 
@@ -24,7 +24,12 @@ export default function PackOpeningPage() {
   const packId = params.packId as string;
   
   const [packData, setPackData] = useState<PokemonPack | null>(null);
-  const [openedCards, setOpenedCards] = useState<PokemonCard[]>([]);
+  
+  // Cards for the CURRENT individual stack being revealed
+  const [openedCards, setOpenedCards] = useState<PokemonCard[]>([]); 
+  // Accumulates all cards from all packs in the current session (single or bulk)
+  const [allOpenedCardsInSession, setAllOpenedCardsInSession] = useState<PokemonCard[]>([]);
+
   const [stage, setStage] = useState<PackOpeningStage>('initial');
   
   const { addCardsToCollection, isLoaded: pokedexLoaded } = usePokedex();
@@ -38,9 +43,11 @@ export default function PackOpeningPage() {
   const [hasRareNonHolo, setHasRareNonHolo] = useState(false);
   const [currentBurstRarity, setCurrentBurstRarity] = useState<CardRarity | null>(null);
 
-  const [isBulkOpeningInProgress, setIsBulkOpeningInProgress] = useState(false);
-  const [bulkOpenProgressCount, setBulkOpenProgressCount] = useState(0);
-  const [totalPacksInCurrentBulk, setTotalPacksInCurrentBulk] = useState(0);
+  // State for bulk opening management
+  const [isProcessingBulk, setIsProcessingBulk] = useState(false);
+  const [currentPackInBulkLoop, setCurrentPackInBulkLoop] = useState(0);
+  const [totalPacksInBulkLoop, setTotalPacksInBulkLoop] = useState(0);
+  const [displayPackCountText, setDisplayPackCountText] = useState("");
 
 
   useEffect(() => {
@@ -115,80 +122,71 @@ export default function PackOpeningPage() {
   }, [packData]);
 
 
-  const initiatePackOpeningSequence = useCallback(async (numPacksToOpen: number) => {
-    if (!packData || !pokedexLoaded) return; 
+  const processPackLoopIteration = useCallback(async () => {
+    if (!packData) return;
 
-    setStage('opening');
-    setOpenedCards([]);
+    if (currentPackInBulkLoop >= totalPacksInBulkLoop) {
+        // All packs in the loop are processed
+        setOpenedCards(allOpenedCardsInSession); // Set for final 'all-revealed' display
+        const finalHasHolo = allOpenedCardsInSession.some(card => card.rarity === 'Holo Rare');
+        const finalHasRare = allOpenedCardsInSession.some(card => card.rarity === 'Rare' && !finalHasHolo);
+        setHasHolo(finalHasHolo);
+        setHasRareNonHolo(finalHasRare);
+        setIsProcessingBulk(false);
+        setStage('all-revealed');
+        return;
+    }
+
+    setDisplayPackCountText(isProcessingBulk ? `Opening pack ${currentPackInBulkLoop + 1} of ${totalPacksInBulkLoop}...` : "Opening Pack...");
+    setStage('opening'); 
+    setCurrentStackIndex(0); 
+
+    const currentSinglePackCards = pullCardsForOnePack();
+    if (currentSinglePackCards.length === 0 && totalPacksInBulkLoop > 0) {
+      // Handle case where a pack might be empty, skip to next
+      console.warn(`Pack ${currentPackInBulkLoop + 1} was empty. Skipping.`);
+      setCurrentPackInBulkLoop(prev => prev + 1);
+      setTimeout(() => processPackLoopIteration(), 100); // Quickly try next
+      return;
+    }
+
+    setAllOpenedCardsInSession(prev => [...prev, ...currentSinglePackCards]);
+    if (pokedexLoaded) {
+      addCardsToCollection(currentSinglePackCards.map(c => c.id));
+    }
+
+    const currentPackHasHolo = currentSinglePackCards.some(card => card.rarity === 'Holo Rare');
+    const currentPackHasRare = currentSinglePackCards.some(card => card.rarity === 'Rare' && !currentPackHasHolo);
+    setHasHolo(currentPackHasHolo);
+    setHasRareNonHolo(currentPackHasRare);
+    
+    setOpenedCards(currentSinglePackCards);
+
+    await new Promise(resolve => setTimeout(resolve, 700)); // Delay for "Opening..." text & bg
+    
+    setStage('stack-reveal');
+
+  }, [currentPackInBulkLoop, totalPacksInBulkLoop, packData, pullCardsForOnePack, addCardsToCollection, allOpenedCardsInSession, isProcessingBulk, pokedexLoaded]);
+
+
+  const initiateOpeningProcess = useCallback(async (numPacksToOpen: number) => {
+    if (!packData || !pokedexLoaded || numPacksToOpen <= 0) return;
+
+    setStage('opening'); 
+    setIsProcessingBulk(numPacksToOpen > 1);
+    setTotalPacksInBulkLoop(numPacksToOpen);
+    setCurrentPackInBulkLoop(0);
+    setAllOpenedCardsInSession([]); 
+    setOpenedCards([]); // Clear previous display cards
     setCurrentStackIndex(0);
     setCurrentSwipingCard(null);
-    // Reset overall holo status for the entire operation initially
-    setHasHolo(false); 
+    setHasHolo(false);
     setHasRareNonHolo(false);
     setCurrentBurstRarity(null);
     
-    setIsBulkOpeningInProgress(numPacksToOpen > 1);
-    setTotalPacksInCurrentBulk(numPacksToOpen);
+    await processPackLoopIteration();
 
-    let allPulledCardsAccumulator: PokemonCard[] = [];
-    let finalOverallHasHolo = false;
-    let finalOverallHasRareNonHolo = false;
-
-    for (let i = 0; i < numPacksToOpen; i++) {
-      setBulkOpenProgressCount(i + 1);
-      
-      // Simulate pack opening visual (e.g. pack art flash or animation for THIS pack)
-      // For now, the "Opening pack X of Y" text and background change are the main feedback
-      const currentSinglePackCards = pullCardsForOnePack();
-
-      if (currentSinglePackCards.length === 0) {
-        console.warn(`Could not pull cards for pack ${i + 1} of ${numPacksToOpen}`);
-        if (i < numPacksToOpen - 1) await new Promise(resolve => setTimeout(resolve, 100)); // Shorter delay if pack error
-        continue; // Skip to next pack if this one failed
-      }
-      
-      allPulledCardsAccumulator = [...allPulledCardsAccumulator, ...currentSinglePackCards];
-      addCardsToCollection(currentSinglePackCards.map(c => c.id)); 
-
-      // Determine rarity for THIS pack's background effect
-      const currentPackHasHolo = currentSinglePackCards.some(card => card.rarity === 'Holo Rare');
-      const currentPackHasRare = currentSinglePackCards.some(card => card.rarity === 'Rare');
-
-      if (currentPackHasHolo) {
-        setHasHolo(true);
-        setHasRareNonHolo(false);
-        finalOverallHasHolo = true; // Track overall for final state
-      } else if (currentPackHasRare) {
-        setHasHolo(false);
-        setHasRareNonHolo(true);
-        if (!finalOverallHasHolo) finalOverallHasRareNonHolo = true; // Track overall
-      } else {
-        setHasHolo(false); // No special background for this specific pack if not holo/rare
-        setHasRareNonHolo(false);
-      }
-
-      if (i < numPacksToOpen - 1) {
-        await new Promise(resolve => setTimeout(resolve, 1000)); // 1 sec delay between packs
-      }
-    }
-    
-    // Set final background based on the highest rarity found across ALL packs
-    setHasHolo(finalOverallHasHolo);
-    setHasRareNonHolo(!finalOverallHasHolo && finalOverallHasRareNonHolo);
-
-    const raritySortOrder: Record<CardRarity, number> = {
-      'Common': 0,
-      'Uncommon': 1,
-      'Rare': 2,
-      'Holo Rare': 3,
-    };
-    allPulledCardsAccumulator.sort((a, b) => raritySortOrder[a.rarity] - raritySortOrder[b.rarity]);
-
-    setOpenedCards(allPulledCardsAccumulator);
-    setStage('stack-reveal');
-    setIsBulkOpeningInProgress(false);
-    setBulkOpenProgressCount(0);
-  }, [packData, addCardsToCollection, pokedexLoaded, pullCardsForOnePack]);
+  }, [packData, pokedexLoaded, processPackLoopIteration]);
 
 
   const handleRevealNextCard = () => {
@@ -211,8 +209,23 @@ export default function PackOpeningPage() {
       setCurrentStackIndex(nextIndex);
       setCurrentSwipingCard(null); 
 
-      if (nextIndex >= openedCards.length) {
-        setStage('all-revealed');
+      if (nextIndex >= openedCards.length) { // Current individual pack's stack is finished
+        if (isProcessingBulk) {
+            setHasHolo(false); 
+            setHasRareNonHolo(false);
+            setStage('transitioning'); // Brief stage to show normal background
+            setTimeout(() => {
+                setCurrentPackInBulkLoop(prev => prev + 1); // Increment before calling next iteration
+                processPackLoopIteration(); 
+            }, 2000); // 2-second delay before processing next pack
+        } else { 
+            // Single pack mode OR (this will be caught by loop condition in processPackLoopIteration)
+            // If it was a single pack, allOpenedCardsInSession already has these cards.
+            // The processPackLoopIteration will handle the transition to 'all-revealed'.
+            // This branch effectively handles the finalization for single pack,
+            // processPackLoopIteration handles it for bulk.
+             processPackLoopIteration(); // Call to finalize (check loop condition, then go to all-revealed)
+        }
       }
     }, 500); 
   };
@@ -230,16 +243,31 @@ export default function PackOpeningPage() {
   const resetPackOpening = (numPacks: number = 1) => {
     setStage('initial');
     setOpenedCards([]);
+    setAllOpenedCardsInSession([]);
     setCurrentStackIndex(0);
     setCurrentSwipingCard(null);
     setHasHolo(false);
     setHasRareNonHolo(false);
     setCurrentBurstRarity(null);
-    setIsBulkOpeningInProgress(false);
-    setBulkOpenProgressCount(0);
-    // Optionally, directly initiate next opening if desired, or let user click again
-    // if (numPacks > 0) initiatePackOpeningSequence(numPacks); 
+    
+    setIsProcessingBulk(false);
+    setCurrentPackInBulkLoop(0);
+    setTotalPacksInBulkLoop(0);
+    setDisplayPackCountText("");
+
+    if (numPacks > 0) {
+      // Delay slightly to ensure UI reset before starting new opening
+      setTimeout(() => initiateOpeningProcess(numPacks), 100);
+    }
   }
+
+  useEffect(() => {
+    // If currentPackInBulkLoop changes AND we are in bulk processing, trigger next iteration
+    // This is a failsafe / alternative trigger if the setTimeout in handleRevealNextCard is missed
+    // However, the primary trigger should be from handleRevealNextCard's completion.
+    // For now, let's rely on handleRevealNextCard's logic to call processPackLoopIteration.
+  }, [currentPackInBulkLoop, isProcessingBulk]);
+
 
   if (!pokedexLoaded || !packData) {
      return (
@@ -250,14 +278,16 @@ export default function PackOpeningPage() {
     );
   }
   
+  // Determine background based on `hasHolo` and `hasRareNonHolo` states
+  // These states are now updated per-pack during the loop, and finally for all-revealed.
   const showHoloBackground = hasHolo && (stage === 'opening' || stage === 'stack-reveal' || stage === 'all-revealed');
   const showRareBackground = !hasHolo && hasRareNonHolo && (stage === 'opening' || stage === 'stack-reveal' || stage === 'all-revealed');
 
   return (
     <div className={cn(
         "transition-colors duration-1000 flex flex-col min-h-[calc(100vh-10rem)]", 
-        showHoloBackground && "holo-blue-wave-background-active animate-holo-blue-wave-shimmer",
-        showRareBackground && "rare-gold-holo-background-active animate-rare-gold-shimmer" 
+        (showHoloBackground && stage !== 'transitioning') && "holo-blue-wave-background-active animate-holo-blue-wave-shimmer",
+        (showRareBackground && stage !== 'transitioning') && "rare-gold-holo-background-active animate-rare-gold-shimmer" 
       )}>
       <Button variant="outline" onClick={() => router.push('/')} className="absolute top-24 left-4 md:left-8 z-10">
         <ArrowLeft className="mr-2 h-4 w-4" /> Back to Packs
@@ -278,34 +308,33 @@ export default function PackOpeningPage() {
             priority
           />
           <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
-            <Button size="lg" onClick={() => initiatePackOpeningSequence(1)} className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8 py-6">
+            <Button size="lg" onClick={() => initiateOpeningProcess(1)} className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8 py-6">
               <Package className="mr-2 h-6 w-6" /> Open 1 Booster Pack
             </Button>
-            <Button size="lg" onClick={() => initiatePackOpeningSequence(10)} className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-6">
+            <Button size="lg" onClick={() => initiateOpeningProcess(10)} className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-6">
               <PackagePlus className="mr-2 h-6 w-6" /> Open 10 Booster Packs
             </Button>
           </div>
         </div>
       )}
 
-      {stage === 'opening' && (
+      {(stage === 'opening' || stage === 'transitioning') && (
          <div className="flex flex-col items-center space-y-6 flex-grow justify-center">
-          <Image
-            src={packData.image}
-            alt="Opening pack"
-            width={250}
-            height={350}
-            className="object-cover rounded-lg shadow-xl border-4 border-accent animate-opening-pack-burst"
-            data-ai-hint={packData.dataAiHint || packData.name}
-            priority
-          />
-          {isBulkOpeningInProgress ? (
-            <p className="text-2xl font-semibold text-primary-foreground dark:text-foreground animate-pulse">
-              Opening pack {bulkOpenProgressCount} of {totalPacksInCurrentBulk}...
-            </p>
-          ) : (
-            <p className="text-2xl font-semibold text-primary-foreground dark:text-foreground animate-pulse">Opening Pack...</p>
+          {!isProcessingBulk && stage === 'opening' && ( // Show pack art only for single pack opening's initial 'opening' stage
+            <Image
+              src={packData.image}
+              alt="Opening pack"
+              width={250}
+              height={350}
+              className="object-cover rounded-lg shadow-xl border-4 border-accent animate-opening-pack-burst"
+              data-ai-hint={packData.dataAiHint || packData.name}
+              priority
+            />
           )}
+          <p className="text-2xl font-semibold text-primary-foreground dark:text-foreground animate-pulse">
+            {displayPackCountText}
+            {stage === 'transitioning' && " Transitioning to next pack..."}
+          </p>
         </div>
       )}
       
@@ -364,7 +393,7 @@ export default function PackOpeningPage() {
               
               return (
                 <div
-                  key={card.id + '-stack-' + index + '-' + Math.random()} // Added random to ensure key uniqueness if same card appears multiple times
+                  key={card.id + '-stack-' + index + '-' + Math.random()}
                   className={cn(
                     "absolute top-0 left-0 w-[240px] h-[336px]", 
                     "transition-all duration-300 ease-in-out", 
@@ -392,28 +421,32 @@ export default function PackOpeningPage() {
       {stage === 'all-revealed' && (
         <div className="flex-grow flex flex-col items-center justify-center">
           <h2 className="text-2xl font-headline font-semibold text-primary-foreground dark:text-foreground mb-4">
-            Your {openedCards.length > packData.cardsPerPack ? `${totalPacksInCurrentBulk} Packs Yielded`: 'Cards!'}
+            {totalPacksInBulkLoop > 1 ? `Your ${totalPacksInBulkLoop} Packs Yielded`: (allOpenedCardsInSession.length > 0 ? 'Your Cards!' : 'No cards pulled!')}
           </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-4 justify-items-center">
-            {openedCards.map((card, index) => (
-              <CardComponent
-                key={card.id + '-' + index + '-grid' + Math.random()} // Ensure unique key for multiple same cards
-                card={card}
-                onClick={() => handleCardClickForModal(card)}
-                showDetails={true}
-                collectedCount={1} // In grid, collected count isn't relevant for *this* opening
-              />
-            ))}
-          </div>
+          {allOpenedCardsInSession.length > 0 ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-4 justify-items-center">
+              {allOpenedCardsInSession.map((card, index) => (
+                <CardComponent
+                  key={card.id + '-' + index + '-grid' + Math.random()} 
+                  card={card}
+                  onClick={() => handleCardClickForModal(card)}
+                  showDetails={true}
+                  collectedCount={1} 
+                />
+              ))}
+            </div>
+           ) : (
+            <p className="text-muted-foreground">Try opening some packs!</p>
+           )}
         </div>
       )}
 
-      {(stage === 'all-revealed' || (stage === 'stack-reveal' && currentStackIndex >= openedCards.length)) && (
+      {(stage === 'all-revealed' || (stage === 'stack-reveal' && currentStackIndex >= openedCards.length && !isProcessingBulk )) && (
         <div className="mt-auto py-6 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 relative z-5">
           <Button size="lg" onClick={() => resetPackOpening(1)} variant="outline">
             <Package className="mr-2 h-5 w-5" /> Open Another Pack
           </Button>
-          {packData && packData.cardsPerPack * 10 <= allCards.length && ( // Only show if 10 packs are possible
+          {packData && packData.cardsPerPack * 10 <= allCards.length && (
              <Button size="lg" onClick={() => resetPackOpening(10)} variant="outline">
                 <PackagePlus className="mr-2 h-5 w-5" /> Open 10 More Packs
             </Button>
@@ -436,4 +469,3 @@ export default function PackOpeningPage() {
 }
     
 
-    
