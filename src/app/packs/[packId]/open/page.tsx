@@ -25,9 +25,7 @@ export default function PackOpeningPage() {
   
   const [packData, setPackData] = useState<PokemonPack | null>(null);
   
-  // Cards for the CURRENT individual stack being revealed
   const [openedCards, setOpenedCards] = useState<PokemonCard[]>([]); 
-  // Accumulates all cards from all packs in the current session (single or bulk)
   const [allOpenedCardsInSession, setAllOpenedCardsInSession] = useState<PokemonCard[]>([]);
 
   const [stage, setStage] = useState<PackOpeningStage>('initial');
@@ -43,9 +41,8 @@ export default function PackOpeningPage() {
   const [hasRareNonHolo, setHasRareNonHolo] = useState(false);
   const [currentBurstRarity, setCurrentBurstRarity] = useState<CardRarity | null>(null);
 
-  // State for bulk opening management
   const [isProcessingBulk, setIsProcessingBulk] = useState(false);
-  const [currentPackInBulkLoop, setCurrentPackInBulkLoop] = useState(0); // 0-indexed
+  const [currentPackInBulkLoop, setCurrentPackInBulkLoop] = useState(0); 
   const [totalPacksInBulkLoop, setTotalPacksInBulkLoop] = useState(0);
   const [displayPackCountText, setDisplayPackCountText] = useState("");
 
@@ -84,7 +81,6 @@ export default function PackOpeningPage() {
       rareSlotCard = pullCardByRarity('Rare', pulledIds);
     }
     if (!rareSlotCard) {
-        // Fallback if specific rarity not found, try to get any rare/holo
         rareSlotCard = availableCardsInPack.find(c => (c.rarity === 'Holo Rare' || c.rarity === 'Rare') && !pulledIds.has(c.id));
     }
     if (rareSlotCard) {
@@ -95,7 +91,7 @@ export default function PackOpeningPage() {
     for (let i = 0; i < packData.rarityDistribution.uncommon; i++) {
       let card = pullCardByRarity('Uncommon', pulledIds);
       if (!card) card = availableCardsInPack.find(c => c.rarity === 'Uncommon' && !pulledIds.has(c.id));
-      if (!card) card = availableCardsInPack.find(c => !pulledIds.has(c.id) && c.rarity !== 'Holo Rare' && c.rarity !== 'Rare'); // Broader fallback
+      if (!card) card = availableCardsInPack.find(c => !pulledIds.has(c.id) && c.rarity !== 'Holo Rare' && c.rarity !== 'Rare'); 
       if (card) { packCards.push(card); pulledIds.add(card.id); }
     }
     
@@ -103,16 +99,14 @@ export default function PackOpeningPage() {
     for (let i = 0; i < commonsToPull; i++) {
       let card = pullCardByRarity('Common', pulledIds);
        if (!card) card = availableCardsInPack.find(c => c.rarity === 'Common' && !pulledIds.has(c.id));
-       if (!card) card = availableCardsInPack.find(c => !pulledIds.has(c.id)); // Broadest fallback
+       if (!card) card = availableCardsInPack.find(c => !pulledIds.has(c.id)); 
       if (card) { packCards.push(card); pulledIds.add(card.id); }
     }
     
-    // Fill remaining slots if any, respecting pulledIds and pack size
     let attempts = 0; 
     while(packCards.length < packData.cardsPerPack && pulledIds.size < availableCardsInPack.length && attempts < 20) {
       const remainingCardsForPool = availableCardsInPack.filter(c => !pulledIds.has(c.id));
       if(remainingCardsForPool.length === 0) break;
-      // Prioritize common, then uncommon, then any remaining
       let card = pullCardByRarity('Common', pulledIds) || pullCardByRarity('Uncommon', pulledIds) || remainingCardsForPool[Math.floor(Math.random() * remainingCardsForPool.length)];
       
       if (card) {
@@ -129,13 +123,8 @@ export default function PackOpeningPage() {
     if (!packData) return;
 
     if (currentPackInBulkLoop >= totalPacksInBulkLoop) {
-        // All packs in the loop are processed
-        // The `allOpenedCardsInSession` state will be used by the 'all-revealed' JSX directly.
-        // We set `openedCards` here mainly for consistency if any logic were to rely on it,
-        // but the grid view uses `allOpenedCardsInSession`.
         setOpenedCards(allOpenedCardsInSession); 
         
-        // Determine final background based on the entire session's cards
         const finalHasHolo = allOpenedCardsInSession.some(card => card.rarity === 'Holo Rare');
         const finalHasRare = allOpenedCardsInSession.some(card => card.rarity === 'Rare' && !finalHasHolo);
         setHasHolo(finalHasHolo);
@@ -146,7 +135,6 @@ export default function PackOpeningPage() {
         return;
     }
 
-    // Set text for the pack currently starting its processing
     setDisplayPackCountText(isProcessingBulk ? `Opening pack ${currentPackInBulkLoop + 1} of ${totalPacksInBulkLoop}...` : "Opening Pack...");
     setStage('opening'); 
     setCurrentStackIndex(0); 
@@ -164,19 +152,18 @@ export default function PackOpeningPage() {
       addCardsToCollection(currentSinglePackCards.map(c => c.id));
     }
 
-    // Background and holo states are for the *current individual pack*
     const currentPackHasHolo = currentSinglePackCards.some(card => card.rarity === 'Holo Rare');
     const currentPackHasRare = currentSinglePackCards.some(card => card.rarity === 'Rare' && !currentPackHasHolo);
     setHasHolo(currentPackHasHolo);
     setHasRareNonHolo(currentPackHasRare);
     
-    setOpenedCards(currentSinglePackCards); // Set cards for the current stack reveal
+    setOpenedCards(currentSinglePackCards); 
 
-    await new Promise(resolve => setTimeout(resolve, 700)); // Delay for "Opening..." text & bg
+    await new Promise(resolve => setTimeout(resolve, 700)); 
     
-    setStage('stack-reveal'); // Triggers stack arrival animation for currentSinglePackCards
+    setStage('stack-reveal');
 
-  }, [currentPackInBulkLoop, totalPacksInBulkLoop, packData, pullCardsForOnePack, addCardsToCollection, isProcessingBulk, pokedexLoaded]);
+  }, [currentPackInBulkLoop, totalPacksInBulkLoop, packData, pullCardsForOnePack, addCardsToCollection, isProcessingBulk, pokedexLoaded, allOpenedCardsInSession]);
 
 
   const initiateOpeningProcess = useCallback(async (numPacksToOpen: number) => {
@@ -228,7 +215,11 @@ export default function PackOpeningPage() {
                 processPackLoopIteration(); 
             }, 2000); 
         } else { 
-             processPackLoopIteration(); 
+            // Single pack opening is complete.
+            // allOpenedCardsInSession contains the single pack's cards.
+            // The background (hasHolo, hasRareNonHolo) for the single pack was set during its one pass through processPackLoopIteration.
+            setIsProcessingBulk(false); 
+            setStage('all-revealed');
         }
       }
     }, 500); 
@@ -266,7 +257,7 @@ export default function PackOpeningPage() {
 
   useEffect(() => {
     // This effect can be used for debugging or side effects related to currentPackInBulkLoop changes
-  }, [currentPackInBulkLoop, isProcessingBulk, processPackLoopIteration]);
+  }, [currentPackInBulkLoop, isProcessingBulk]);
 
 
   if (!pokedexLoaded || !packData) {
@@ -278,14 +269,15 @@ export default function PackOpeningPage() {
     );
   }
   
-  const showHoloBackground = hasHolo && (stage === 'opening' || stage === 'stack-reveal' || stage === 'all-revealed');
-  const showRareBackground = !hasHolo && hasRareNonHolo && (stage === 'opening' || stage === 'stack-reveal' || stage === 'all-revealed');
+  const showHoloBackground = hasHolo && (stage === 'opening' || stage === 'stack-reveal' || stage === 'all-revealed' || stage === 'transitioning');
+  const showRareBackground = !hasHolo && hasRareNonHolo && (stage === 'opening' || stage === 'stack-reveal' || stage === 'all-revealed' || stage === 'transitioning');
 
   return (
     <div className={cn(
         "transition-colors duration-1000 flex flex-col min-h-[calc(100vh-10rem)]", 
         (showHoloBackground && stage !== 'transitioning') && "holo-blue-wave-background-active animate-holo-blue-wave-shimmer",
-        (showRareBackground && stage !== 'transitioning') && "rare-gold-holo-background-active animate-rare-gold-shimmer" 
+        (showRareBackground && stage !== 'transitioning') && "rare-gold-holo-background-active animate-rare-gold-shimmer",
+        (stage === 'transitioning' && (showHoloBackground || showRareBackground)) && "bg-background" // Ensure normal bg during transition if holo/rare was active
       )}>
       <Button variant="outline" onClick={() => router.push('/')} className="absolute top-24 left-4 md:left-8 z-10">
         <ArrowLeft className="mr-2 h-4 w-4" /> Back to Packs
@@ -318,20 +310,23 @@ export default function PackOpeningPage() {
 
       {stage === 'opening' && (
          <div className="flex flex-col items-center space-y-6 flex-grow justify-center">
-          {!isProcessingBulk && ( 
-            <Image
-              src={packData.image}
-              alt="Opening pack"
-              width={250}
-              height={350}
-              className="object-cover rounded-lg shadow-xl border-4 border-accent animate-opening-pack-burst"
-              data-ai-hint={packData.dataAiHint || packData.name}
-              priority
-            />
+          {!isProcessingBulk && packData && ( 
+            <>
+              <Image
+                src={packData.image}
+                alt="Opening pack"
+                width={250}
+                height={350}
+                className="object-cover rounded-lg shadow-xl border-4 border-accent animate-opening-pack-burst"
+                data-ai-hint={packData.dataAiHint || packData.name}
+                priority
+              />
+              <p className="text-2xl font-semibold text-primary-foreground dark:text-foreground animate-pulse">
+                {displayPackCountText} {/* "Opening Pack..." */}
+              </p>
+            </>
           )}
-          <p className="text-2xl font-semibold text-primary-foreground dark:text-foreground animate-pulse">
-            {displayPackCountText}
-          </p>
+          {/* For bulk opening, this stage is now primarily a brief visual pause. Text is on stack-reveal. */}
         </div>
       )}
       
