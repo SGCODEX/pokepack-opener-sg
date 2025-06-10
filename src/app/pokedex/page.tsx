@@ -22,8 +22,8 @@ export default function PokedexPage() {
     getCollectedCount, 
     isLoaded: pokedexLoaded, 
     resetPokedex,
-    totalUniqueCollected, // Use this for the count of unique cards
-    totalCards // Total available cards
+    totalUniqueCollected, 
+    totalCards 
   } = usePokedex();
 
   const [selectedCard, setSelectedCard] = useState<PokemonCard | null>(null);
@@ -52,7 +52,7 @@ export default function PokedexPage() {
       return nameMatch && typeMatch && rarityMatch && collectedMatch;
     });
     return filtered; 
-  }, [searchTerm, filterType, filterRarity, showCollectedOnly, getCollectedCount, collectedCardsMap]); // Add collectedCardsMap from usePokedex if directly used or rely on getCollectedCount to update
+  }, [searchTerm, filterType, filterRarity, showCollectedOnly, getCollectedCount]);
 
   if (!pokedexLoaded) {
     return (
@@ -130,7 +130,6 @@ export default function PokedexPage() {
                 viewContext="pokedex"
                 pokedexNumber={card.pokedexNumber} 
                 collectedCount={count}
-                // isCollected prop is now implicitly handled by collectedCount > 0 in CardComponent for Pokedex view
               />
             );
           })}
