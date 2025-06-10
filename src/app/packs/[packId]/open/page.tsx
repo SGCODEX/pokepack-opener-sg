@@ -193,14 +193,14 @@ export default function PackOpeningPage() {
     <div className={cn(
         "space-y-8 text-center transition-colors duration-1000",
         showHoloBackground && "holo-blue-wave-background-active animate-holo-blue-wave-shimmer",
-        showRareBackground && "bg-blue-600" // Using direct Tailwind class for testing
+        showRareBackground && "bg-blue-600" 
       )}>
       <Button variant="outline" onClick={() => router.push('/')} className="absolute top-24 left-4 md:left-8 z-10">
         <ArrowLeft className="mr-2 h-4 w-4" /> Back to Packs
       </Button>
       <header className="relative z-5">
-        <h1 className="text-4xl font-headline font-bold text-primary-foreground mb-2">Opening: {packData.name}</h1>
-        <p className="text-lg text-muted-foreground">{packData.series}</p>
+        <h1 className="text-4xl font-headline font-bold text-primary-foreground dark:text-foreground mb-2">Opening: {packData.name}</h1>
+        <p className="text-lg text-muted-foreground dark:text-foreground/80">{packData.series}</p>
       </header>
 
       {stage === 'initial' && (
@@ -231,13 +231,13 @@ export default function PackOpeningPage() {
             data-ai-hint={packData.dataAiHint || packData.name}
             priority
           />
-          <p className="text-2xl font-semibold text-primary-foreground animate-pulse">Opening Pack...</p>
+          <p className="text-2xl font-semibold text-primary-foreground dark:text-foreground animate-pulse">Opening Pack...</p>
         </div>
       )}
       
       {stage === 'stack-reveal' && openedCards.length > 0 && (
         <div className="flex flex-col items-center space-y-6 py-6">
-          <h2 className="text-2xl font-headline font-semibold text-primary-foreground mb-4">Click the card to reveal the next one!</h2>
+          <h2 className="text-2xl font-headline font-semibold text-primary-foreground dark:text-foreground mb-4">Click the card to reveal the next one!</h2>
           <div 
             className="relative w-[240px] h-[336px] mx-auto cursor-pointer select-none" 
             onClick={!currentSwipingCard ? handleRevealNextCard : undefined}
@@ -292,7 +292,7 @@ export default function PackOpeningPage() {
 
       {stage === 'all-revealed' && (
         <>
-          <h2 className="text-2xl font-headline font-semibold text-primary-foreground">Your Cards!</h2>
+          <h2 className="text-2xl font-headline font-semibold text-primary-foreground dark:text-foreground">Your Cards!</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-items-center">
             {openedCards.map((card, index) => (
               <CardComponent
@@ -327,5 +327,3 @@ export default function PackOpeningPage() {
     </div>
   );
 }
-
-    
