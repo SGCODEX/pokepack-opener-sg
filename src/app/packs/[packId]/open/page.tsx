@@ -10,7 +10,7 @@ import { CardComponent } from '@/components/card-component';
 import { Button } from '@/components/ui/button';
 import { usePokedex } from '@/hooks/use-pokedex';
 import { CardDetailModal } from '@/components/card-detail-modal';
-import { ArrowLeft, PackageOpen, Shuffle, Eye, PackagePlus, Package } from 'lucide-react';
+import { ArrowLeft, PackageOpen, Eye, PackagePlus, Package, FastForward } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
@@ -47,6 +47,7 @@ export default function PackOpeningPage() {
   const [displayPackCountText, setDisplayPackCountText] = useState("");
   
   const [isReadyToProcessLoop, setIsReadyToProcessLoop] = useState(false);
+  const [isSkippingAnimations, setIsSkippingAnimations] = useState(false);
 
 
   useEffect(() => {
@@ -122,7 +123,7 @@ export default function PackOpeningPage() {
 
 
   const processPackLoopIteration = useCallback(async () => {
-    if (!packData) return;
+    if (isSkippingAnimations || !packData) return;
 
     if (currentPackInBulkLoop >= totalPacksInBulkLoop) {
         setOpenedCards(allOpenedCardsInSession); 
@@ -156,6 +157,7 @@ export default function PackOpeningPage() {
     setOpenedCards(currentSinglePackCards); 
 
     await new Promise(resolve => setTimeout(resolve, 700)); 
+    if (isSkippingAnimations) return; // Check again after delay
     
     setStage('stack-reveal'); 
 
@@ -167,7 +169,8 @@ export default function PackOpeningPage() {
     addCardsToCollection, 
     isProcessingBulk, 
     pokedexLoaded, 
-    allOpenedCardsInSession 
+    allOpenedCardsInSession,
+    isSkippingAnimations
   ]);
 
   const initiateOpeningProcess = useCallback((numPacksToOpen: number) => {
@@ -186,23 +189,25 @@ export default function PackOpeningPage() {
     setHasRareNonHolo(false);
     setCurrentBurstRarity(null);
     setDisplayPackCountText("");
+    setIsSkippingAnimations(false); // Reset skip flag
     
     setIsReadyToProcessLoop(true); 
 
   }, [packData, pokedexLoaded]);
 
   useEffect(() => {
-    if (isReadyToProcessLoop) {
+    if (isReadyToProcessLoop && !isSkippingAnimations) {
       const fn = async () => {
         await processPackLoopIteration();
       };
       fn();
       setIsReadyToProcessLoop(false); 
     }
-  }, [isReadyToProcessLoop, processPackLoopIteration]);
+  }, [isReadyToProcessLoop, processPackLoopIteration, isSkippingAnimations]);
 
 
   const handleRevealNextCard = () => {
+    if (isSkippingAnimations) return;
     if (stage !== 'stack-reveal' || currentStackIndex >= openedCards.length || currentSwipingCard || currentBurstRarity) {
       if (stage === 'stack-reveal' && currentStackIndex >= openedCards.length && openedCards.length === 0 && !isProcessingBulk && !currentSwipingCard && !currentBurstRarity) {
           setIsProcessingBulk(false); 
@@ -225,6 +230,7 @@ export default function PackOpeningPage() {
     setCurrentSwipingCard({ id: cardToSwipe.id, direction: swipeDirection });
 
     setTimeout(() => {
+      if (isSkippingAnimations) return; // Check before proceeding
       const nextIndex = currentStackIndex + 1;
       setCurrentStackIndex(nextIndex);
       setCurrentSwipingCard(null); 
@@ -235,6 +241,7 @@ export default function PackOpeningPage() {
             setHasRareNonHolo(false);
             setStage('transitioning'); 
             setTimeout(() => {
+                if (isSkippingAnimations) return; // Check before next iteration
                 setCurrentPackInBulkLoop(prev => prev + 1); 
                 setIsReadyToProcessLoop(true); 
             }, 2000); 
@@ -245,6 +252,40 @@ export default function PackOpeningPage() {
       }
     }, 500); 
   };
+
+  const handleSkipToResults = () => {
+    if (!isProcessingBulk || !packData || isSkippingAnimations) return;
+  
+    setIsSkippingAnimations(true);
+  
+    // Use a mutable variable to accumulate cards during the skip
+    let skippedCardsAccumulator = [...allOpenedCardsInSession];
+  
+    // Calculate how many packs are remaining to be processed "silently"
+    const remainingPacksToProcess = totalPacksInBulkLoop - currentPackInBulkLoop;
+  
+    for (let i = 0; i < remainingPacksToProcess; i++) {
+      const cardsFromSkippedPack = pullCardsForOnePack();
+      skippedCardsAccumulator.push(...cardsFromSkippedPack);
+      if (pokedexLoaded) {
+        addCardsToCollection(cardsFromSkippedPack.map(c => c.id));
+      }
+    }
+  
+    setAllOpenedCardsInSession(skippedCardsAccumulator);
+    setOpenedCards(skippedCardsAccumulator); // This will be used by 'all-revealed'
+  
+    const finalHasHolo = skippedCardsAccumulator.some(card => card.rarity === 'Holo Rare');
+    const finalHasRare = skippedCardsAccumulator.some(card => card.rarity === 'Rare' && !finalHasHolo);
+    setHasHolo(finalHasHolo);
+    setHasRareNonHolo(finalHasRare);
+  
+    setStage('all-revealed');
+    setIsProcessingBulk(false);
+    setCurrentPackInBulkLoop(totalPacksInBulkLoop); // Mark loop as complete
+    setIsSkippingAnimations(false); // Reset for future operations
+  };
+
 
   const handleCardClickForModal = (card: PokemonCard) => {
     setSelectedCardForModal(card);
@@ -271,6 +312,7 @@ export default function PackOpeningPage() {
     setTotalPacksInBulkLoop(0);
     setDisplayPackCountText("");
     setIsReadyToProcessLoop(false);
+    setIsSkippingAnimations(false);
 
     if (numPacks > 0) {
       setTimeout(() => initiateOpeningProcess(numPacks), 100);
@@ -305,6 +347,15 @@ export default function PackOpeningPage() {
       <Button variant="outline" onClick={() => router.push('/')} className="absolute top-24 left-4 md:left-8 z-10">
         <ArrowLeft className="mr-2 h-4 w-4" /> {backButtonText}
       </Button>
+      {isProcessingBulk && (stage === 'opening' || stage === 'stack-reveal' || stage === 'transitioning') && !isSkippingAnimations && (
+        <Button
+          variant="outline"
+          onClick={handleSkipToResults}
+          className="absolute top-24 right-4 md:right-8 z-10 bg-accent hover:bg-accent/90 text-accent-foreground"
+        >
+          <FastForward className="mr-2 h-4 w-4" /> Skip to Results
+        </Button>
+      )}
       <header className="relative z-5 pt-8 pb-4 text-center">
         <h1 className="text-4xl font-headline font-bold text-primary-foreground dark:text-foreground">{packData.name}</h1>
       </header>
@@ -525,3 +576,5 @@ export default function PackOpeningPage() {
     
 
   
+
+    
