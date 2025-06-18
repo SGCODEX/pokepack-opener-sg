@@ -7,17 +7,7 @@ import type { PokemonCard } from './types';
 
 export const mcDonaldsDragonDiscoveryCards: PokemonCard[] = [
   {
-    id: 'mcd-dragon-dratini-001', // Pokellector lists Dratini as 2/12, Dragonair as 1/12. Let's follow set order for ID.
-    name: 'Dratini',
-    image: 'https://den-cards.pokellector.com/MCD24/Dratini.MCD24.2.png',
-    dataAiHint: 'Dratini dragon pokemon',
-    rarity: 'Common',
-    type: 'Dragon',
-    series: "McDonald's Dragon Discovery",
-    pokedexNumber: '2/12',
-  },
-  {
-    id: 'mcd-dragon-dragonair-002',
+    id: 'mcd-dragon-dragonair-002', // Swapped ID with Dratini to match card number order better
     name: 'Dragonair',
     image: 'https://den-cards.pokellector.com/MCD24/Dragonair.MCD24.1.png',
     dataAiHint: 'Dragonair dragon blue',
@@ -25,6 +15,16 @@ export const mcDonaldsDragonDiscoveryCards: PokemonCard[] = [
     type: 'Dragon',
     series: "McDonald's Dragon Discovery",
     pokedexNumber: '1/12',
+  },
+  {
+    id: 'mcd-dragon-dratini-001',
+    name: 'Dratini',
+    image: 'https://den-cards.pokellector.com/MCD24/Dratini.MCD24.2.png',
+    dataAiHint: 'Dratini dragon pokemon',
+    rarity: 'Common',
+    type: 'Dragon',
+    series: "McDonald's Dragon Discovery",
+    pokedexNumber: '2/12',
   },
   {
     id: 'mcd-dragon-flaaffy-003',
@@ -61,7 +61,7 @@ export const mcDonaldsDragonDiscoveryCards: PokemonCard[] = [
     name: 'Latios',
     image: 'https://den-cards.pokellector.com/MCD24/Latios.MCD24.6.png',
     dataAiHint: 'Latios eon dragon',
-    rarity: 'Uncommon', // Made Uncommon for pack variety
+    rarity: 'Uncommon', 
     type: 'Dragon',
     series: "McDonald's Dragon Discovery",
     pokedexNumber: '6/12',
@@ -71,7 +71,7 @@ export const mcDonaldsDragonDiscoveryCards: PokemonCard[] = [
     name: 'Latias',
     image: 'https://den-cards.pokellector.com/MCD24/Latias.MCD24.7.png',
     dataAiHint: 'Latias eon dragon red',
-    rarity: 'Uncommon', // Made Uncommon for pack variety
+    rarity: 'Uncommon', 
     type: 'Dragon',
     series: "McDonald's Dragon Discovery",
     pokedexNumber: '7/12',
