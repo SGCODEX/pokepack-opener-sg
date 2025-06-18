@@ -1,7 +1,7 @@
 
 import type { PokemonCard } from './types';
 
-// McDonald's Dragon Discovery Expansion (Match Battle 2023 - MCDP1)
+// McDonald's Dragon Discovery Expansion (Pokellector source indicates Match Battle 2023 set - MCDP1)
 // Image URLs from Pokellector: https://den-cards.pokellector.com/MCDP1/{CardName}.MCDP1.{CardNumber}.thumb.png
 // Pokedex number is the card number X/15 in this specific set.
 
@@ -142,7 +142,7 @@ export const mcDonaldsDragonDiscoveryCards: PokemonCard[] = [
     image: 'https://den-cards.pokellector.com/MCDP1/Rayquaza.MCDP1.14.thumb.png',
     dataAiHint: 'Rayquaza sky dragon',
     rarity: 'Holo Rare',
-    type: 'Dragon', // Or Colorless, Dragon type fits well here
+    type: 'Dragon',
     series: "McDonald's Dragon Discovery",
     pokedexNumber: '14/15',
   },
