@@ -56,8 +56,13 @@ export default function PokedexPage() {
   }, [searchTerm, filterType, filterRarity, showCollectedOnly, getCollectedCount]);
 
   const handleResetPokedex = () => {
+    console.log("Reset Pokedex button clicked - handleResetPokedex function invoked.");
     if (window.confirm('Are you sure you want to reset your Pokedex? This action cannot be undone and will clear your collected cards.')) {
+      console.log("User confirmed reset.");
       resetPokedex();
+      console.log("resetPokedex function called from hook.");
+    } else {
+      console.log("User cancelled reset.");
     }
   };
 
@@ -168,10 +173,15 @@ export default function PokedexPage() {
       )}
       
       <div className="text-center mt-8">
-        <Button variant="destructive" onClick={handleResetPokedex}>
+        <Button 
+          variant="destructive" 
+          onClick={handleResetPokedex}
+        >
           Reset Pokedex Data
         </Button>
       </div>
     </div>
   );
 }
+
+    
