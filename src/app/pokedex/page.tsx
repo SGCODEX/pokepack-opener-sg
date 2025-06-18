@@ -163,7 +163,7 @@ export default function PokedexPage() {
       
       <div className="text-center mt-8">
         <Button variant="destructive" onClick={() => {
-          if (confirm('Are you sure you want to reset your Pokedex? This action cannot be undone and will clear your collected cards.')) {
+          if (window.confirm('Are you sure you want to reset your Pokedex? This action cannot be undone and will clear your collected cards.')) {
             resetPokedex();
           }
         }}>
