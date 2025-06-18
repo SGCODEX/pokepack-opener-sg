@@ -56,8 +56,6 @@ export default function PokedexPage() {
       const collectedMatch = !showCollectedOnly || getCollectedCount(card.id) > 0;
       return nameMatch && typeMatch && rarityMatch && collectedMatch;
     });
-    // Sorting logic remains, might need adjustment if global Pokedex number vs set-specific number matters more.
-    // For now, it sorts by the pokedexNumber string, which includes set prefix.
     return filtered; 
   }, [searchTerm, filterType, filterRarity, showCollectedOnly, getCollectedCount, cardsInCurrentSeries]);
 
@@ -83,13 +81,8 @@ export default function PokedexPage() {
 
 
   const handleResetPokedex = () => {
-    // console.log("handleResetPokedex called");
     if (window.confirm('Are you sure you want to reset your Pokedex? This action cannot be undone and will clear ALL collected cards across ALL sets.')) {
-      // console.log("User confirmed reset");
       resetPokedex();
-      // console.log("resetPokedex from hook called");
-    } else {
-      // console.log("User cancelled reset");
     }
   };
 

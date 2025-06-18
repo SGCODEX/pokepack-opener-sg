@@ -1,9 +1,9 @@
 
 import type { PokemonPack } from './types';
-import { allCards } from './pokemon-data'; // Import allCards to reference in possibleCards
+import { allCards } from './pokemon-data';
 
 const baseSetPackCards = allCards.filter(card => card.series === 'Base Set').map(card => card.id);
-const mcDonaldsDragonDiscoveryPackCards = allCards.filter(card => card.series === "McDonald's Dragon Discovery").map(card => card.id);
+const mcDonaldsCollection2024Cards = allCards.filter(card => card.series === "McDonald's Collection 2024").map(card => card.id);
 
 export const allPacks: PokemonPack[] = [
   {
@@ -21,18 +21,18 @@ export const allPacks: PokemonPack[] = [
     possibleCards: baseSetPackCards,
   },
   {
-    id: 'mcdonalds-dragon-discovery-001',
-    name: "McDonald's Dragon Discovery Pack",
-    series: "McDonald's Dragon Discovery",
-    image: 'https://i.ebayimg.com/images/g/u-YAAOSwUQRnkFn6/s-l1200.jpg', // User specified image
-    dataAiHint: 'McDonalds promo Charizard Pikachu', // Updated hint
-    cardsPerPack: 4, // Promo packs are smaller
-    rarityDistribution: {
-      common: 3,      // Will pull from non-holo pool
+    id: 'mcdonalds-collection-2024-001',
+    name: "McDonald's Collection 2024 Pack",
+    series: "McDonald's Collection 2024",
+    image: 'https://i.ebayimg.com/images/g/u-YAAOSwUQRnkFn6/s-l1200.jpg',
+    dataAiHint: 'McDonalds promo Sprigatito Pikachu',
+    cardsPerPack: 4, // McDonald's promo packs are smaller
+    rarityDistribution: { // 6 Holos, 9 Commons in this 15-card set
+      common: 3,      // Will pull from non-holo pool (9 cards)
       uncommon: 0,    // No uncommons defined for this set structure
-      rareSlot: 1,    // This slot will aim for a 'Holo Rare'
+      rareSlot: 1,    // This slot will aim for a 'Holo Rare' (6 cards)
     },
-    possibleCards: mcDonaldsDragonDiscoveryPackCards,
+    possibleCards: mcDonaldsCollection2024Cards,
   },
 ];
 

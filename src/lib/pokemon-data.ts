@@ -1,13 +1,12 @@
 
 import type { PokemonCard } from './types';
 import { baseSetCards } from './pokemon-data-base-set';
-import { mcDonaldsDragonDiscoveryCards } from './pokemon-data-mcdonalds-dragon-discovery';
+import { mcDonaldsCollection2024Cards } from './pokemon-data-mcdonalds-dragon-discovery'; // File name kept for now, content is new set
 
 export const allCards: PokemonCard[] = [
   ...baseSetCards,
-  ...mcDonaldsDragonDiscoveryCards,
+  ...mcDonaldsCollection2024Cards, // Now contains McDonald's Collection 2024 cards
 ].sort((a, b) => {
-  // Sort by series first, then by pokedex number within that series
   if (a.series < b.series) return -1;
   if (a.series > b.series) return 1;
   
@@ -24,11 +23,10 @@ export const getCardsBySeries = (series: string): PokemonCard[] => {
   return allCards.filter(card => card.series === series);
 };
 
-// Extract unique series names for Pokedex tabs, maintaining a specific order if desired
-const desiredSeriesOrder = ["Base Set", "McDonald's Dragon Discovery"];
+const desiredSeriesOrder = ["Base Set", "McDonald's Collection 2024"]; // Updated series name
 const seriesSet = new Set(allCards.map(card => card.series));
 export const allSeriesNames = desiredSeriesOrder.filter(name => seriesSet.has(name));
-// Add any other series not in desiredOrder to the end
+
 seriesSet.forEach(name => {
   if (!allSeriesNames.includes(name)) {
     allSeriesNames.push(name);
