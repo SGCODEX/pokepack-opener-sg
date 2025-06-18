@@ -35,6 +35,11 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'img.tradera.net',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.ebayimg.com', // Added for McDonald's pack image
+        pathname: '/**',
       }
     ],
   },

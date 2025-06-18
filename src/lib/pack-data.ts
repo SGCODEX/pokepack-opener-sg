@@ -2,6 +2,9 @@
 import type { PokemonPack } from './types';
 import { allCards } from './pokemon-data'; // Import allCards to reference in possibleCards
 
+const baseSetPackCards = allCards.filter(card => card.series === 'Base Set').map(card => card.id);
+const mcDonaldsDragonDiscoveryPackCards = allCards.filter(card => card.series === "McDonald's Dragon Discovery").map(card => card.id);
+
 export const allPacks: PokemonPack[] = [
   {
     id: 'base-set-booster-001',
@@ -11,16 +14,28 @@ export const allPacks: PokemonPack[] = [
     dataAiHint: 'Base Set booster pack charizard',
     cardsPerPack: 10,
     rarityDistribution: {
-      common: 6, // Includes basic energies and common Pokemon/Trainers
-      uncommon: 3, // Includes uncommon Pokemon/Trainers and Double Colorless Energy
-      rareSlot: 1, // This slot can be a Rare (Pokemon/Trainer) or a Holo Rare Pokemon
+      common: 6, 
+      uncommon: 3, 
+      rareSlot: 1, // Can be Rare or Holo Rare
     },
-    possibleCards: allCards.map(card => card.id), // Reference allCards from pokemon-data
+    possibleCards: baseSetPackCards, 
   },
-  // Add other packs here in the future if needed
+  {
+    id: 'mcdonalds-dragon-discovery-001',
+    name: "McDonald's Dragon Discovery Pack",
+    series: "McDonald's Dragon Discovery",
+    image: 'https://i.ebayimg.com/images/g/u-YAAOSwUQRnkFn6/s-l1200.jpg',
+    dataAiHint: 'McDonalds promo dragon pack',
+    cardsPerPack: 4, // Promo packs are smaller
+    rarityDistribution: {
+      common: 3,
+      uncommon: 1, // For Latios/Latias
+      rareSlot: 0, // No Rares or Holo Rares in this promo pack logic
+    },
+    possibleCards: mcDonaldsDragonDiscoveryPackCards,
+  },
 ];
 
 export const getPackById = (id: string): PokemonPack | undefined => {
   return allPacks.find(pack => pack.id === id);
 };
-
