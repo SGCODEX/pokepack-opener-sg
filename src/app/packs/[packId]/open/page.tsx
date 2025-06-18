@@ -4,7 +4,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { getPackById } from '@/lib/pack-data';
-import { allCards } from '@/lib/pokemon-data'; // Used for the "Open 10 More" button condition logic
+import { allCards } from '@/lib/pokemon-data'; 
 import type { PokemonPack, PokemonCard, CardRarity } from '@/lib/types';
 import { CardComponent } from '@/components/card-component';
 import { Button } from '@/components/ui/button';
@@ -83,7 +83,6 @@ export default function PackOpeningPage() {
       rareSlotCard = pullCardByRarity('Rare', pulledIds);
     }
     if (!rareSlotCard) {
-        // Fallback if no specific rare/holo is found (e.g., small card pool or bad luck)
         rareSlotCard = availableCardsInPack.find(c => (c.rarity === 'Holo Rare' || c.rarity === 'Rare') && !pulledIds.has(c.id));
     }
     if (rareSlotCard) {
@@ -93,21 +92,20 @@ export default function PackOpeningPage() {
 
     for (let i = 0; i < packData.rarityDistribution.uncommon; i++) {
       let card = pullCardByRarity('Uncommon', pulledIds);
-      if (!card) card = availableCardsInPack.find(c => c.rarity === 'Uncommon' && !pulledIds.has(c.id)); // Fallback
-      if (!card) card = availableCardsInPack.find(c => !pulledIds.has(c.id) && c.rarity !== 'Holo Rare' && c.rarity !== 'Rare'); // Broader fallback
+      if (!card) card = availableCardsInPack.find(c => c.rarity === 'Uncommon' && !pulledIds.has(c.id)); 
+      if (!card) card = availableCardsInPack.find(c => !pulledIds.has(c.id) && c.rarity !== 'Holo Rare' && c.rarity !== 'Rare'); 
       if (card) { packCards.push(card); pulledIds.add(card.id); }
     }
     
     const commonsToPull = packData.cardsPerPack - packCards.length;
     for (let i = 0; i < commonsToPull; i++) {
       let card = pullCardByRarity('Common', pulledIds);
-       if (!card) card = availableCardsInPack.find(c => c.rarity === 'Common' && !pulledIds.has(c.id)); // Fallback
-       if (!card) card = availableCardsInPack.find(c => !pulledIds.has(c.id)); // Broader fallback
+       if (!card) card = availableCardsInPack.find(c => c.rarity === 'Common' && !pulledIds.has(c.id)); 
+       if (!card) card = availableCardsInPack.find(c => !pulledIds.has(c.id)); 
       if (card) { packCards.push(card); pulledIds.add(card.id); }
     }
     
-    // Fill remaining slots if any, preferring commons/uncommons
-    let attempts = 0; // Prevent infinite loops
+    let attempts = 0; 
     while(packCards.length < packData.cardsPerPack && pulledIds.size < availableCardsInPack.length && attempts < 20) {
       const remainingCardsForPool = availableCardsInPack.filter(c => !pulledIds.has(c.id));
       if(remainingCardsForPool.length === 0) break;
@@ -130,7 +128,7 @@ export default function PackOpeningPage() {
         setOpenedCards(allOpenedCardsInSession); 
         
         const finalHasHolo = allOpenedCardsInSession.some(card => card.rarity === 'Holo Rare');
-        const finalHasRare = allOpenedCardsInSession.some(card => card.rarity === 'Rare' && !finalHasHolo); // Only count non-holo rares for distinct background
+        const finalHasRare = allOpenedCardsInSession.some(card => card.rarity === 'Rare' && !finalHasHolo); 
         setHasHolo(finalHasHolo);
         setHasRareNonHolo(finalHasRare);
 
@@ -150,17 +148,16 @@ export default function PackOpeningPage() {
       addCardsToCollection(currentSinglePackCards.map(c => c.id));
     }
 
-    // Determine background based on *this current pack*
     const currentPackHasHolo = currentSinglePackCards.some(card => card.rarity === 'Holo Rare');
     const currentPackHasRare = currentSinglePackCards.some(card => card.rarity === 'Rare' && !currentPackHasHolo);
     setHasHolo(currentPackHasHolo);
     setHasRareNonHolo(currentPackHasRare);
     
-    setOpenedCards(currentSinglePackCards); // Set cards for the stack reveal
+    setOpenedCards(currentSinglePackCards); 
 
-    await new Promise(resolve => setTimeout(resolve, 700)); // Time for "Opening pack X..." message and background change
+    await new Promise(resolve => setTimeout(resolve, 700)); 
     
-    setStage('stack-reveal'); // Triggers stack animation
+    setStage('stack-reveal'); 
 
   }, [
     currentPackInBulkLoop, 
@@ -170,7 +167,7 @@ export default function PackOpeningPage() {
     addCardsToCollection, 
     isProcessingBulk, 
     pokedexLoaded, 
-    allOpenedCardsInSession
+    allOpenedCardsInSession 
   ]);
 
   const initiateOpeningProcess = useCallback((numPacksToOpen: number) => {
@@ -190,7 +187,7 @@ export default function PackOpeningPage() {
     setCurrentBurstRarity(null);
     setDisplayPackCountText("");
     
-    setIsReadyToProcessLoop(true); // Signal the useEffect to start the loop
+    setIsReadyToProcessLoop(true); 
 
   }, [packData, pokedexLoaded]);
 
@@ -200,14 +197,13 @@ export default function PackOpeningPage() {
         await processPackLoopIteration();
       };
       fn();
-      setIsReadyToProcessLoop(false); // Reset immediately
+      setIsReadyToProcessLoop(false); 
     }
   }, [isReadyToProcessLoop, processPackLoopIteration]);
 
 
   const handleRevealNextCard = () => {
     if (stage !== 'stack-reveal' || currentStackIndex >= openedCards.length || currentSwipingCard || currentBurstRarity) {
-      // Logic for advancing after an empty pack in single mode (if openedCards.length is 0)
       if (stage === 'stack-reveal' && currentStackIndex >= openedCards.length && openedCards.length === 0 && !isProcessingBulk && !currentSwipingCard && !currentBurstRarity) {
           setIsProcessingBulk(false); 
           setStage('all-revealed');
@@ -233,22 +229,21 @@ export default function PackOpeningPage() {
       setCurrentStackIndex(nextIndex);
       setCurrentSwipingCard(null); 
 
-      if (nextIndex >= openedCards.length) { // Current pack's stack is fully revealed
+      if (nextIndex >= openedCards.length) { 
         if (isProcessingBulk) {
-            // Reset background for transition message
             setHasHolo(false); 
             setHasRareNonHolo(false);
-            setStage('transitioning'); // Show "Pack X complete..." or "Gotta catch 'em all"
+            setStage('transitioning'); 
             setTimeout(() => {
                 setCurrentPackInBulkLoop(prev => prev + 1); 
-                setIsReadyToProcessLoop(true); // Re-trigger loop for next pack
-            }, 2000); // 2-second delay before next pack
-        } else { // Single pack opening finished
-            setIsProcessingBulk(false); // Ensure this is false
+                setIsReadyToProcessLoop(true); 
+            }, 2000); 
+        } else { 
+            setIsProcessingBulk(false); 
             setStage('all-revealed');
         }
       }
-    }, 500); // Duration of swipe animation
+    }, 500); 
   };
 
   const handleCardClickForModal = (card: PokemonCard) => {
@@ -294,6 +289,11 @@ export default function PackOpeningPage() {
   const showHoloBackground = hasHolo && (stage === 'opening' || stage === 'stack-reveal' || stage === 'all-revealed');
   const showRareBackground = !hasHolo && hasRareNonHolo && (stage === 'opening' || stage === 'stack-reveal' || stage === 'all-revealed');
 
+  let backButtonText = "Back to Packs";
+  if (isProcessingBulk && stage !== 'initial' && stage !== 'all-revealed') {
+    backButtonText = "Back & Stop Opening";
+  }
+
 
   return (
     <div className={cn(
@@ -303,7 +303,7 @@ export default function PackOpeningPage() {
         (stage === 'transitioning' && (showHoloBackground || showRareBackground || hasHolo || hasRareNonHolo )) && "bg-background" 
       )}>
       <Button variant="outline" onClick={() => router.push('/')} className="absolute top-24 left-4 md:left-8 z-10">
-        <ArrowLeft className="mr-2 h-4 w-4" /> Back to Packs
+        <ArrowLeft className="mr-2 h-4 w-4" /> {backButtonText}
       </Button>
       <header className="relative z-5 pt-8 pb-4 text-center">
         <h1 className="text-4xl font-headline font-bold text-primary-foreground dark:text-foreground">{packData.name}</h1>
@@ -523,3 +523,5 @@ export default function PackOpeningPage() {
   );
 }
     
+
+  
