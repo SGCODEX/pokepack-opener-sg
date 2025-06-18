@@ -1,11 +1,16 @@
 
+"use client"; // Required for useState and useEffect
+
 import type { Metadata } from 'next';
 import './globals.css';
 import { Navbar } from '@/components/layout/navbar';
 import { Toaster } from "@/components/ui/toaster";
 import { Container } from '@/components/layout/container';
 import { ThemeProvider } from "@/contexts/theme-context";
+import { useState, useEffect } from 'react';
 
+// Metadata should be defined outside the component if it's static
+// For dynamic metadata based on props, it's fine inside, but here it's static.
 export const metadata: Metadata = {
   title: 'PokePack Opener',
   description: 'Open virtual Pokemon card packs and discover amazing cards!',
@@ -16,6 +21,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+
+  useEffect(() => {
+    // This ensures the year is updated on the client if it somehow differs,
+    // but primarily, useState initializes it for SSR consistency.
+    setCurrentYear(new Date().getFullYear());
+  }, []);
+
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -26,7 +39,7 @@ export default function RootLayout({
       </head>
       <body className="font-body antialiased min-h-screen flex flex-col">
         <ThemeProvider
-          defaultTheme="system"
+          defaultTheme="dark"
           storageKey="pokepack-opener-theme"
         >
           <Navbar />
@@ -38,7 +51,7 @@ export default function RootLayout({
           <Toaster />
           <footer className="bg-primary/10 text-center py-4">
             <Container>
-              <p className="text-sm text-foreground/80">&copy; {new Date().getFullYear()} PokePack Opener. Gotta open 'em all!</p>
+              <p className="text-sm text-foreground/80">&copy; {currentYear} PokePack Opener. Gotta open 'em all!</p>
             </Container>
           </footer>
         </ThemeProvider>
