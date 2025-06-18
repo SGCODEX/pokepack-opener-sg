@@ -30,7 +30,7 @@ export default function PackOpeningPage() {
 
   const [stage, setStage] = useState<PackOpeningStage>('initial');
   
-  const { addCardsToCollection, isLoaded: pokedexLoaded } = usePokedex();
+  const { addCardsToCollection, isLoaded: pokedexLoaded, getCollectedCount } = usePokedex();
   const [selectedCardForModal, setSelectedCardForModal] = useState<PokemonCard | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -123,10 +123,13 @@ export default function PackOpeningPage() {
     if (!packData) return;
 
     if (currentPackInBulkLoop >= totalPacksInBulkLoop) {
+        // All packs in the bulk loop are processed.
+        // allOpenedCardsInSession should now contain all cards from all packs.
+        // Set openedCards to all for the final reveal screen (though this isn't strictly necessary if allOpenedCardsInSession is used directly)
         setOpenedCards(allOpenedCardsInSession); 
         
         const finalHasHolo = allOpenedCardsInSession.some(card => card.rarity === 'Holo Rare');
-        const finalHasRare = allOpenedCardsInSession.some(card => card.rarity === 'Rare' && !finalHasHolo);
+        const finalHasRare = allOpenedCardsInSession.some(card => card.rarity === 'Rare' && !finalHasHolo); // Only count non-holo rares if no holo
         setHasHolo(finalHasHolo);
         setHasRareNonHolo(finalHasRare);
 
@@ -140,11 +143,11 @@ export default function PackOpeningPage() {
     setCurrentStackIndex(0); 
 
     const currentSinglePackCards = pullCardsForOnePack();
-    if (currentSinglePackCards.length === 0 && totalPacksInBulkLoop > 0) {
-      console.warn(`Pack ${currentPackInBulkLoop + 1} was empty. Skipping.`);
-      setCurrentPackInBulkLoop(prev => prev + 1);
-      setTimeout(() => processPackLoopIteration(), 100); 
-      return;
+    if (currentSinglePackCards.length === 0 && totalPacksInBulkLoop > 0) { // Check if pack was empty
+      // console.warn(`Pack ${currentPackInBulkLoop + 1} (out of ${totalPacksInBulkLoop}) was empty. Skipping to next reveal action.`);
+      // If a pack is empty in a bulk open, we still want to proceed to allow user to click through "empty" stack
+      // or to proceed to next pack if auto-advancing.
+      // For now, let it try to reveal an empty stack which will auto-advance.
     }
 
     setAllOpenedCardsInSession(prev => [...prev, ...currentSinglePackCards]);
@@ -152,18 +155,19 @@ export default function PackOpeningPage() {
       addCardsToCollection(currentSinglePackCards.map(c => c.id));
     }
 
+    // Set background based on the current individual pack
     const currentPackHasHolo = currentSinglePackCards.some(card => card.rarity === 'Holo Rare');
     const currentPackHasRare = currentSinglePackCards.some(card => card.rarity === 'Rare' && !currentPackHasHolo);
     setHasHolo(currentPackHasHolo);
     setHasRareNonHolo(currentPackHasRare);
     
-    setOpenedCards(currentSinglePackCards); 
+    setOpenedCards(currentSinglePackCards); // Set cards for the current stack reveal
 
-    await new Promise(resolve => setTimeout(resolve, 700)); 
+    await new Promise(resolve => setTimeout(resolve, 700)); // Time for "Opening pack X..." and background to show
     
-    setStage('stack-reveal');
+    setStage('stack-reveal'); // Reveal the current pack's stack
 
-  }, [currentPackInBulkLoop, totalPacksInBulkLoop, packData, pullCardsForOnePack, addCardsToCollection, isProcessingBulk, pokedexLoaded]);
+  }, [currentPackInBulkLoop, totalPacksInBulkLoop, packData, pullCardsForOnePack, addCardsToCollection, isProcessingBulk, pokedexLoaded, allOpenedCardsInSession]);
 
 
   const initiateOpeningProcess = useCallback(async (numPacksToOpen: number) => {
@@ -180,13 +184,31 @@ export default function PackOpeningPage() {
     setHasRareNonHolo(false);
     setCurrentBurstRarity(null);
     
+    // Start the loop
     await processPackLoopIteration();
 
   }, [packData, pokedexLoaded, processPackLoopIteration]);
 
 
   const handleRevealNextCard = () => {
-    if (stage !== 'stack-reveal' || currentStackIndex >= openedCards.length || currentSwipingCard || currentBurstRarity) return;
+    if (stage !== 'stack-reveal' || currentStackIndex >= openedCards.length || currentSwipingCard || currentBurstRarity) {
+      // If stack is empty or already fully revealed, and we are in bulk mode, advance to next pack.
+      if (stage === 'stack-reveal' && currentStackIndex >= openedCards.length && isProcessingBulk && !currentSwipingCard && !currentBurstRarity) {
+        setHasHolo(false); 
+        setHasRareNonHolo(false);
+        setStage('transitioning'); 
+        setTimeout(() => {
+            setCurrentPackInBulkLoop(prev => prev + 1); 
+            processPackLoopIteration(); 
+        }, 2000);
+      } else if (stage === 'stack-reveal' && currentStackIndex >= openedCards.length && !isProcessingBulk && !currentSwipingCard && !currentBurstRarity) {
+        // Single pack fully revealed
+        setIsProcessingBulk(false); 
+        setStage('all-revealed');
+      }
+      return;
+    }
+
 
     const cardToSwipe = openedCards[currentStackIndex];
     
@@ -205,7 +227,7 @@ export default function PackOpeningPage() {
       setCurrentStackIndex(nextIndex);
       setCurrentSwipingCard(null); 
 
-      if (nextIndex >= openedCards.length) { 
+      if (nextIndex >= openedCards.length) { // Current stack is fully revealed
         if (isProcessingBulk) {
             setHasHolo(false); 
             setHasRareNonHolo(false);
@@ -215,6 +237,7 @@ export default function PackOpeningPage() {
                 processPackLoopIteration(); 
             }, 2000); 
         } else { 
+            // Single pack fully revealed
             setIsProcessingBulk(false); 
             setStage('all-revealed');
         }
@@ -266,15 +289,16 @@ export default function PackOpeningPage() {
     );
   }
   
-  const showHoloBackground = hasHolo && (stage === 'opening' || stage === 'stack-reveal' || stage === 'all-revealed' || stage === 'transitioning');
-  const showRareBackground = !hasHolo && hasRareNonHolo && (stage === 'opening' || stage === 'stack-reveal' || stage === 'all-revealed' || stage === 'transitioning');
+  const showHoloBackground = hasHolo && (stage === 'opening' || stage === 'stack-reveal' || stage === 'all-revealed');
+  const showRareBackground = !hasHolo && hasRareNonHolo && (stage === 'opening' || stage === 'stack-reveal' || stage === 'all-revealed');
+
 
   return (
     <div className={cn(
         "transition-colors duration-1000 flex flex-col min-h-[calc(100vh-10rem)]", 
         (showHoloBackground && stage !== 'transitioning') && "holo-blue-wave-background-active animate-holo-blue-wave-shimmer",
         (showRareBackground && stage !== 'transitioning') && "rare-gold-holo-background-active animate-rare-gold-shimmer",
-        (stage === 'transitioning' && (showHoloBackground || showRareBackground)) && "bg-background" // Ensure normal bg during transition if holo/rare was active
+        (stage === 'transitioning' && (showHoloBackground || showRareBackground || hasHolo || hasRareNonHolo )) && "bg-background" 
       )}>
       <Button variant="outline" onClick={() => router.push('/')} className="absolute top-24 left-4 md:left-8 z-10">
         <ArrowLeft className="mr-2 h-4 w-4" /> Back to Packs
@@ -323,6 +347,11 @@ export default function PackOpeningPage() {
               </p>
             </>
           )}
+          {isProcessingBulk && (
+             <p className="text-2xl font-semibold text-primary-foreground dark:text-foreground animate-pulse">
+                {displayPackCountText}
+              </p>
+          )}
         </div>
       )}
       
@@ -334,7 +363,7 @@ export default function PackOpeningPage() {
         </div>
       )}
       
-      {stage === 'stack-reveal' && openedCards.length > 0 && (
+      {stage === 'stack-reveal' && (
         <div className="flex flex-col items-center justify-center flex-grow relative"> 
           {isProcessingBulk && (
             <p className="text-xl font-semibold text-primary-foreground dark:text-foreground mb-4">
@@ -366,83 +395,97 @@ export default function PackOpeningPage() {
               </div>
             </div>
           )}
-          <div 
-            className="relative w-[240px] h-[336px] mx-auto cursor-pointer select-none z-10 animate-stack-arrive" 
-            onClick={!currentSwipingCard && !currentBurstRarity ? handleRevealNextCard : undefined}
-            role="button"
-            tabIndex={0}
-            onKeyPress={(e) => { if(e.key === 'Enter' || e.key === ' ') { if(!currentSwipingCard && !currentBurstRarity) handleRevealNextCard(); }}} 
-            aria-label="Reveal next card"
-          >
-            {openedCards.map((card, index) => {
-              if (index < currentStackIndex && (!currentSwipingCard || currentSwipingCard.id !== card.id)) return null;
+          {openedCards.length > 0 ? (
+            <div 
+              className="relative w-[240px] h-[336px] mx-auto cursor-pointer select-none z-10 animate-stack-arrive" 
+              onClick={!currentSwipingCard && !currentBurstRarity ? handleRevealNextCard : undefined}
+              role="button"
+              tabIndex={0}
+              onKeyPress={(e) => { if(e.key === 'Enter' || e.key === ' ') { if(!currentSwipingCard && !currentBurstRarity) handleRevealNextCard(); }}} 
+              aria-label="Reveal next card"
+            >
+              {openedCards.map((card, index) => {
+                if (index < currentStackIndex && (!currentSwipingCard || currentSwipingCard.id !== card.id)) return null;
 
-              const isBeingSwiped = currentSwipingCard && currentSwipingCard.id === card.id;
-              
-              let cardTransform = 'none';
-              let cardOpacity = 1;
-              const cardZIndex = openedCards.length - index; 
+                const isBeingSwiped = currentSwipingCard && currentSwipingCard.id === card.id;
+                
+                let cardTransform = 'none';
+                let cardOpacity = 1;
+                const cardZIndex = openedCards.length - index; 
 
-              if (!isBeingSwiped && index > currentStackIndex) {
-                const offset = (index - currentStackIndex) * 6; 
-                const scale = 1 - (index - currentStackIndex) * 0.05;
-                cardTransform = `translateY(${offset}px) translateX(${offset/2}px) scale(${scale})`;
-                if (index > currentStackIndex + 3) { 
-                    cardOpacity = Math.max(0, 1 - (index - (currentStackIndex + 3)) * 0.3);
+                if (!isBeingSwiped && index > currentStackIndex) {
+                  const offset = (index - currentStackIndex) * 6; 
+                  const scale = 1 - (index - currentStackIndex) * 0.05;
+                  cardTransform = `translateY(${offset}px) translateX(${offset/2}px) scale(${scale})`;
+                  if (index > currentStackIndex + 3) { 
+                      cardOpacity = Math.max(0, 1 - (index - (currentStackIndex + 3)) * 0.3);
+                  }
                 }
-              }
-              
-              return (
-                <div
-                  key={card.id + '-stack-' + index + '-' + Math.random()}
-                  className={cn(
-                    "absolute top-0 left-0 w-[240px] h-[336px]", 
-                    "transition-all duration-300 ease-in-out", 
-                    isBeingSwiped && currentSwipingCard?.direction === 'left' ? 'animate-swipe-out-left' : '',
-                    isBeingSwiped && currentSwipingCard?.direction === 'right' ? 'animate-swipe-out-right' : '',
-                  )}
-                  style={{
-                    transform: cardTransform,
-                    zIndex: isBeingSwiped ? openedCards.length + 1 : cardZIndex, 
-                    opacity: isBeingSwiped ? 1 : cardOpacity, 
-                  }}
-                >
-                  <CardComponent
-                    card={card}
-                    onClick={undefined} 
-                    showDetails={false} 
-                  />
-                </div>
-              );
-            })}
-          </div>
+                
+                return (
+                  <div
+                    key={card.id + '-stack-' + index + '-' + Math.random()}
+                    className={cn(
+                      "absolute top-0 left-0 w-[240px] h-[336px]", 
+                      "transition-all duration-300 ease-in-out", 
+                      isBeingSwiped && currentSwipingCard?.direction === 'left' ? 'animate-swipe-out-left' : '',
+                      isBeingSwiped && currentSwipingCard?.direction === 'right' ? 'animate-swipe-out-right' : '',
+                    )}
+                    style={{
+                      transform: cardTransform,
+                      zIndex: isBeingSwiped ? openedCards.length + 1 : cardZIndex, 
+                      opacity: isBeingSwiped ? 1 : cardOpacity, 
+                    }}
+                  >
+                    <CardComponent
+                      card={card}
+                      onClick={undefined} 
+                      showDetails={false} 
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            // This case handles an empty stack, allowing click to advance if needed
+            <div 
+              className="relative w-[240px] h-[336px] mx-auto cursor-pointer select-none z-10 flex items-center justify-center text-muted-foreground" 
+              onClick={!currentSwipingCard && !currentBurstRarity ? handleRevealNextCard : undefined}
+              role="button"
+              tabIndex={0}
+              onKeyPress={(e) => { if(e.key === 'Enter' || e.key === ' ') { if(!currentSwipingCard && !currentBurstRarity) handleRevealNextCard(); }}} 
+              aria-label="Reveal next card"
+            >
+              (Empty pack)
+            </div>
+          )}
         </div>
       )}
 
       {stage === 'all-revealed' && (
         <div className="flex-grow flex flex-col items-center justify-center">
-          <h2 className="text-2xl font-headline font-semibold text-primary-foreground dark:text-foreground mb-4">
-            {totalPacksInBulkLoop > 1 ? `Your ${totalPacksInBulkLoop} Packs Yielded`: (allOpenedCardsInSession.length > 0 ? 'Your Cards!' : 'No cards pulled!')}
-          </h2>
-          {allOpenedCardsInSession.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-4 justify-items-center">
-              {allOpenedCardsInSession.map((card, index) => (
-                <CardComponent
-                  key={card.id + '-' + index + '-grid' + Math.random()} 
-                  card={card}
-                  onClick={() => handleCardClickForModal(card)}
-                  showDetails={true}
-                  collectedCount={1} 
-                />
-              ))}
-            </div>
-           ) : (
-            <p className="text-muted-foreground">Try opening some packs!</p>
+          {allOpenedCardsInSession.length > 0 && (
+            <>
+              <h2 className="text-2xl font-headline font-semibold text-primary-foreground dark:text-foreground mb-4">
+                {totalPacksInBulkLoop > 1 ? `Your ${totalPacksInBulkLoop} Packs Yielded` : 'Your Cards!'}
+              </h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-4 justify-items-center">
+                {allOpenedCardsInSession.map((card, index) => (
+                  <CardComponent
+                    key={card.id + '-' + index + '-grid-' + Math.random()} 
+                    card={card}
+                    onClick={() => handleCardClickForModal(card)}
+                    showDetails={true}
+                    collectedCount={getCollectedCount(card.id)} 
+                  />
+                ))}
+              </div>
+            </>
            )}
         </div>
       )}
 
-      {(stage === 'all-revealed' || (stage === 'stack-reveal' && currentStackIndex >= openedCards.length && !isProcessingBulk )) && (
+      {(stage === 'all-revealed' || (stage === 'stack-reveal' && currentStackIndex >= openedCards.length && !isProcessingBulk && !isProcessingBulk )) && (
         <div className="mt-auto py-6 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 relative z-5">
           <Button size="lg" onClick={() => resetPackOpening(1)} variant="outline">
             <Package className="mr-2 h-5 w-5" /> Open Another Pack
@@ -468,6 +511,4 @@ export default function PackOpeningPage() {
     </div>
   );
 }
-    
-
     
