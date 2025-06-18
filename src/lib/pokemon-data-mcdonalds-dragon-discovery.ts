@@ -2,14 +2,14 @@
 import type { PokemonCard } from './types';
 
 // McDonald's Dragon Discovery Set Cards
-// Image URLs from Pokellector: https://den-cards.pokellector.com/MCD24/{CardName}.MCD24.{CardNumber}.png
+// Image URLs from Pokellector: https://den-cards.pokellector.com/MCD24/{CardName}.MCD24.{CardNumber}.thumb.png
 // Pokedex number is the card number in this specific set.
 
 export const mcDonaldsDragonDiscoveryCards: PokemonCard[] = [
   {
-    id: 'mcd-dragon-dragonair-002', // Swapped ID with Dratini to match card number order better
+    id: 'mcd-dragon-dragonair-002',
     name: 'Dragonair',
-    image: 'https://den-cards.pokellector.com/MCD24/Dragonair.MCD24.1.png',
+    image: 'https://den-cards.pokellector.com/MCD24/Dragonair.MCD24.1.thumb.png',
     dataAiHint: 'Dragonair dragon blue',
     rarity: 'Common',
     type: 'Dragon',
@@ -19,7 +19,7 @@ export const mcDonaldsDragonDiscoveryCards: PokemonCard[] = [
   {
     id: 'mcd-dragon-dratini-001',
     name: 'Dratini',
-    image: 'https://den-cards.pokellector.com/MCD24/Dratini.MCD24.2.png',
+    image: 'https://den-cards.pokellector.com/MCD24/Dratini.MCD24.2.thumb.png',
     dataAiHint: 'Dratini dragon pokemon',
     rarity: 'Common',
     type: 'Dragon',
@@ -29,7 +29,7 @@ export const mcDonaldsDragonDiscoveryCards: PokemonCard[] = [
   {
     id: 'mcd-dragon-flaaffy-003',
     name: 'Flaaffy',
-    image: 'https://den-cards.pokellector.com/MCD24/Flaaffy.MCD24.3.png',
+    image: 'https://den-cards.pokellector.com/MCD24/Flaaffy.MCD24.3.thumb.png',
     dataAiHint: 'Flaaffy electric sheep',
     rarity: 'Common',
     type: 'Lightning',
@@ -39,7 +39,7 @@ export const mcDonaldsDragonDiscoveryCards: PokemonCard[] = [
   {
     id: 'mcd-dragon-goomy-004',
     name: 'Goomy',
-    image: 'https://den-cards.pokellector.com/MCD24/Goomy.MCD24.4.png',
+    image: 'https://den-cards.pokellector.com/MCD24/Goomy.MCD24.4.thumb.png',
     dataAiHint: 'Goomy dragon slug',
     rarity: 'Common',
     type: 'Dragon',
@@ -49,7 +49,7 @@ export const mcDonaldsDragonDiscoveryCards: PokemonCard[] = [
   {
     id: 'mcd-dragon-jangmo-o-005',
     name: 'Jangmo-o',
-    image: 'https://den-cards.pokellector.com/MCD24/Jangmo-o.MCD24.5.png',
+    image: 'https://den-cards.pokellector.com/MCD24/Jangmo-o.MCD24.5.thumb.png',
     dataAiHint: 'Jangmo-o dragon scales',
     rarity: 'Common',
     type: 'Dragon',
@@ -59,7 +59,7 @@ export const mcDonaldsDragonDiscoveryCards: PokemonCard[] = [
   {
     id: 'mcd-dragon-latios-006',
     name: 'Latios',
-    image: 'https://den-cards.pokellector.com/MCD24/Latios.MCD24.6.png',
+    image: 'https://den-cards.pokellector.com/MCD24/Latios.MCD24.6.thumb.png',
     dataAiHint: 'Latios eon dragon',
     rarity: 'Uncommon', 
     type: 'Dragon',
@@ -69,7 +69,7 @@ export const mcDonaldsDragonDiscoveryCards: PokemonCard[] = [
   {
     id: 'mcd-dragon-latias-007',
     name: 'Latias',
-    image: 'https://den-cards.pokellector.com/MCD24/Latias.MCD24.7.png',
+    image: 'https://den-cards.pokellector.com/MCD24/Latias.MCD24.7.thumb.png',
     dataAiHint: 'Latias eon dragon red',
     rarity: 'Uncommon', 
     type: 'Dragon',
@@ -79,7 +79,7 @@ export const mcDonaldsDragonDiscoveryCards: PokemonCard[] = [
   {
     id: 'mcd-dragon-milcery-008',
     name: 'Milcery',
-    image: 'https://den-cards.pokellector.com/MCD24/Milcery.MCD24.8.png',
+    image: 'https://den-cards.pokellector.com/MCD24/Milcery.MCD24.8.thumb.png',
     dataAiHint: 'Milcery cream fairy',
     rarity: 'Common',
     type: 'Fairy',
@@ -89,7 +89,7 @@ export const mcDonaldsDragonDiscoveryCards: PokemonCard[] = [
   {
     id: 'mcd-dragon-riolu-009',
     name: 'Riolu',
-    image: 'https://den-cards.pokellector.com/MCD24/Riolu.MCD24.9.png',
+    image: 'https://den-cards.pokellector.com/MCD24/Riolu.MCD24.9.thumb.png',
     dataAiHint: 'Riolu fighting puppy',
     rarity: 'Common',
     type: 'Fighting',
@@ -99,7 +99,7 @@ export const mcDonaldsDragonDiscoveryCards: PokemonCard[] = [
   {
     id: 'mcd-dragon-slurpuff-010',
     name: 'Slurpuff',
-    image: 'https://den-cards.pokellector.com/MCD24/Slurpuff.MCD24.10.png',
+    image: 'https://den-cards.pokellector.com/MCD24/Slurpuff.MCD24.10.thumb.png',
     dataAiHint: 'Slurpuff fairy cake',
     rarity: 'Common',
     type: 'Fairy',
@@ -109,7 +109,7 @@ export const mcDonaldsDragonDiscoveryCards: PokemonCard[] = [
   {
     id: 'mcd-dragon-tatsugiri-011',
     name: 'Tatsugiri',
-    image: 'https://den-cards.pokellector.com/MCD24/Tatsugiri.MCD24.11.png',
+    image: 'https://den-cards.pokellector.com/MCD24/Tatsugiri.MCD24.11.thumb.png',
     dataAiHint: 'Tatsugiri dragon fish',
     rarity: 'Common',
     type: 'Dragon',
@@ -119,7 +119,7 @@ export const mcDonaldsDragonDiscoveryCards: PokemonCard[] = [
   {
     id: 'mcd-dragon-cyclizar-012',
     name: 'Cyclizar',
-    image: 'https://den-cards.pokellector.com/MCD24/Cyclizar.MCD24.12.png',
+    image: 'https://den-cards.pokellector.com/MCD24/Cyclizar.MCD24.12.thumb.png',
     dataAiHint: 'Cyclizar dragon lizard',
     rarity: 'Common',
     type: 'Dragon',
