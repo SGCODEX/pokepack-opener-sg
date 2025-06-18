@@ -55,6 +55,12 @@ export default function PokedexPage() {
     return filtered; 
   }, [searchTerm, filterType, filterRarity, showCollectedOnly, getCollectedCount]);
 
+  const handleResetPokedex = () => {
+    if (window.confirm('Are you sure you want to reset your Pokedex? This action cannot be undone and will clear your collected cards.')) {
+      resetPokedex();
+    }
+  };
+
   if (!pokedexLoaded) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -162,11 +168,7 @@ export default function PokedexPage() {
       )}
       
       <div className="text-center mt-8">
-        <Button variant="destructive" onClick={() => {
-          if (window.confirm('Are you sure you want to reset your Pokedex? This action cannot be undone and will clear your collected cards.')) {
-            resetPokedex();
-          }
-        }}>
+        <Button variant="destructive" onClick={handleResetPokedex}>
           Reset Pokedex Data
         </Button>
       </div>
