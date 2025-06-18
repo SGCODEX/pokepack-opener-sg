@@ -38,7 +38,12 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'i.ebayimg.com', // Added for McDonald's pack image
+        hostname: 'i.ebayimg.com', 
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'pbs.twimg.com', // Added for Destined Rivals pack image
         pathname: '/**',
       }
     ],

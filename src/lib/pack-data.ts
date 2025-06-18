@@ -3,7 +3,7 @@ import type { PokemonPack } from './types';
 import { allCards } from './pokemon-data';
 
 const baseSetPackCards = allCards.filter(card => card.series === 'Base Set').map(card => card.id);
-const mcDonaldsCollection2024Cards = allCards.filter(card => card.series === "McDonald's Collection 2024").map(card => card.id);
+const destinedRivalsPackCards = allCards.filter(card => card.series === 'Destined Rivals').map(card => card.id);
 
 export const allPacks: PokemonPack[] = [
   {
@@ -16,23 +16,23 @@ export const allPacks: PokemonPack[] = [
     rarityDistribution: {
       common: 6,
       uncommon: 3,
-      rareSlot: 1, // Can be Rare or Holo Rare
+      rareSlot: 1, 
     },
     possibleCards: baseSetPackCards,
   },
   {
-    id: 'mcdonalds-collection-2024-001',
-    name: "McDonald's Collection 2024 Pack",
-    series: "McDonald's Collection 2024",
-    image: 'https://i.ebayimg.com/images/g/u-YAAOSwUQRnkFn6/s-l1200.jpg',
-    dataAiHint: 'McDonalds promo Sprigatito Pikachu',
-    cardsPerPack: 4, // McDonald's promo packs are smaller
-    rarityDistribution: { // 6 Holos, 9 Commons in this 15-card set
-      common: 3,      // Will pull from non-holo pool (9 cards)
-      uncommon: 0,    // No uncommons defined for this set structure
-      rareSlot: 1,    // This slot will aim for a 'Holo Rare' (6 cards)
+    id: 'destined-rivals-booster-001',
+    name: 'Destined Rivals Booster Pack',
+    series: 'Destined Rivals',
+    image: 'https://pbs.twimg.com/media/Gmzw5Z9XgAAc9fc?format=jpg&name=large',
+    dataAiHint: 'Destined Rivals pack Iron Thorns Armarouge',
+    cardsPerPack: 10, 
+    rarityDistribution: { 
+      common: 6,      
+      uncommon: 3,    
+      rareSlot: 1, // Can be Rare or any type of Holo Rare from this set   
     },
-    possibleCards: mcDonaldsCollection2024Cards,
+    possibleCards: destinedRivalsPackCards,
   },
 ];
 

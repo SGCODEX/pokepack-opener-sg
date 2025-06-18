@@ -32,7 +32,20 @@ export default function PokedexPage() {
   const [filterType, setFilterType] = useState('All');
   const [filterRarity, setFilterRarity] = useState('All');
   const [showCollectedOnly, setShowCollectedOnly] = useState(false);
-  const [activeSeriesTab, setActiveSeriesTab] = useState<string>(allSeriesNames[0] || 'Base Set');
+  // Ensure a default active tab if allSeriesNames might be empty initially or after filtering
+  const [activeSeriesTab, setActiveSeriesTab] = useState<string>(allSeriesNames.length > 0 ? allSeriesNames[0] : 'Base Set');
+
+  // Effect to set active tab if allSeriesNames loads/changes and current tab is not valid
+  useEffect(() => {
+    if (allSeriesNames.length > 0 && !allSeriesNames.includes(activeSeriesTab)) {
+      setActiveSeriesTab(allSeriesNames[0]);
+    } else if (allSeriesNames.length === 0) {
+      // Handle case where no series are available, maybe set to a default placeholder or clear
+      // For now, defaulting to 'Base Set' if list is empty or invalid tab.
+      setActiveSeriesTab('Base Set'); 
+    }
+  }, [allSeriesNames, activeSeriesTab]);
+
 
   const handleCardClick = (card: PokemonCard) => {
     setSelectedCard(card);
@@ -102,100 +115,107 @@ export default function PokedexPage() {
          <p className="text-lg text-muted-foreground dark:text-foreground/80">Browse your collection for {activeSeriesTab}.</p>
       </header>
 
-      <Tabs value={activeSeriesTab} onValueChange={setActiveSeriesTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-2 mb-4">
-          {allSeriesNames.map(seriesName => (
-            <TabsTrigger key={seriesName} value={seriesName}>{seriesName}</TabsTrigger>
-          ))}
-        </TabsList>
+      {allSeriesNames.length > 0 ? (
+        <Tabs value={activeSeriesTab} onValueChange={setActiveSeriesTab} className="w-full">
+          <TabsList className={`grid w-full grid-cols-${allSeriesNames.length} mb-4`}>
+            {allSeriesNames.map(seriesName => (
+              <TabsTrigger key={seriesName} value={seriesName}>{seriesName}</TabsTrigger>
+            ))}
+          </TabsList>
 
-        <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-4">
-          <div className="bg-card text-card-foreground px-4 py-2 rounded-lg shadow-md border border-border flex items-center gap-2">
-            <BookCopy className="h-5 w-5 text-primary" />
-            <div>
-                <span className="text-lg font-semibold">{totalUniqueCollectedInSeries} / {totalCardsInSeries}</span>
-                <span className="text-sm text-muted-foreground ml-1">Unique Cards</span>
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-4">
+            <div className="bg-card text-card-foreground px-4 py-2 rounded-lg shadow-md border border-border flex items-center gap-2">
+              <BookCopy className="h-5 w-5 text-primary" />
+              <div>
+                  <span className="text-lg font-semibold">{totalUniqueCollectedInSeries} / {totalCardsInSeries}</span>
+                  <span className="text-sm text-muted-foreground ml-1">Unique Cards</span>
+              </div>
+            </div>
+            <div className="bg-card text-card-foreground px-4 py-2 rounded-lg shadow-md border border-border flex items-center gap-2">
+              <Layers className="h-5 w-5 text-accent" />
+              <div>
+                  <span className="text-lg font-semibold">{totalCollectedInSeriesIncludingDuplicates}</span>
+                  <span className="text-sm text-muted-foreground ml-1">Total Cards</span>
+              </div>
             </div>
           </div>
-           <div className="bg-card text-card-foreground px-4 py-2 rounded-lg shadow-md border border-border flex items-center gap-2">
-            <Layers className="h-5 w-5 text-accent" />
-            <div>
-                <span className="text-lg font-semibold">{totalCollectedInSeriesIncludingDuplicates}</span>
-                <span className="text-sm text-muted-foreground ml-1">Total Cards</span>
-            </div>
-          </div>
-        </div>
 
-        <div className="p-4 bg-card rounded-lg shadow space-y-4 md:flex md:items-end md:justify-between md:space-y-0 md:space-x-4 mb-6">
-          <div className="relative flex-grow">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
-            <Input 
-              type="text"
-              placeholder="Search by name..."
-              className="pl-10 w-full"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+          <div className="p-4 bg-card rounded-lg shadow space-y-4 md:flex md:items-end md:justify-between md:space-y-0 md:space-x-4 mb-6">
+            <div className="relative flex-grow">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <Input 
+                type="text"
+                placeholder="Search by name..."
+                className="pl-10 w-full"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:flex gap-2">
+                <Select value={filterType} onValueChange={setFilterType}>
+                  <SelectTrigger className="w-full md:w-[150px]">
+                    <SelectValue placeholder="Filter by Type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {cardTypes.map(type => <SelectItem key={type} value={type}>{type}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+
+                <Select value={filterRarity} onValueChange={setFilterRarity}>
+                  <SelectTrigger className="w-full md:w-[150px]">
+                    <SelectValue placeholder="Filter by Rarity" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {rarities.map(rarity => <SelectItem key={rarity} value={rarity}>{rarity}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+            </div>
+            <div className="flex items-center space-x-2 pt-2 md:pt-0">
+              <Checkbox 
+                id="showCollected" 
+                checked={showCollectedOnly} 
+                onCheckedChange={(checked) => setShowCollectedOnly(checked as boolean)}
+                className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+              />
+              <Label htmlFor="showCollected" className="text-sm text-foreground cursor-pointer">Show Collected Only</Label>
+            </div>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:flex gap-2">
-              <Select value={filterType} onValueChange={setFilterType}>
-                <SelectTrigger className="w-full md:w-[150px]">
-                  <SelectValue placeholder="Filter by Type" />
-                </SelectTrigger>
-                <SelectContent>
-                  {cardTypes.map(type => <SelectItem key={type} value={type}>{type}</SelectItem>)}
-                </SelectContent>
-              </Select>
-
-              <Select value={filterRarity} onValueChange={setFilterRarity}>
-                <SelectTrigger className="w-full md:w-[150px]">
-                  <SelectValue placeholder="Filter by Rarity" />
-                </SelectTrigger>
-                <SelectContent>
-                  {rarities.map(rarity => <SelectItem key={rarity} value={rarity}>{rarity}</SelectItem>)}
-                </SelectContent>
-              </Select>
+          {allSeriesNames.map(seriesName => (
+            <TabsContent key={seriesName} value={seriesName}>
+              {filteredAndSortedCards.length > 0 ? (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-4 gap-y-8 justify-items-center">
+                  {filteredAndSortedCards.map((card) => {
+                    const count = getCollectedCount(card.id);
+                    return (
+                      <CardComponent
+                        key={card.id}
+                        card={card}
+                        onClick={() => handleCardClick(card)}
+                        viewContext="pokedex"
+                        pokedexNumber={card.pokedexNumber} 
+                        collectedCount={count}
+                      />
+                    );
+                  })}
+                </div>
+              ) : (
+                <div className="text-center py-10">
+                  <AlertTriangle className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+                  <p className="text-xl text-muted-foreground">No cards match your current filters for {seriesName}.</p>
+                  <p className="text-sm text-muted-foreground">Try adjusting your search or filter criteria.</p>
+                </div>
+              )}
+            </TabsContent>
+          ))}
+        </Tabs>
+      ) : (
+         <div className="text-center py-10">
+            <AlertTriangle className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+            <p className="text-xl text-muted-foreground">No Pokémon series available for display.</p>
           </div>
-          <div className="flex items-center space-x-2 pt-2 md:pt-0">
-            <Checkbox 
-              id="showCollected" 
-              checked={showCollectedOnly} 
-              onCheckedChange={(checked) => setShowCollectedOnly(checked as boolean)}
-              className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
-            />
-            <Label htmlFor="showCollected" className="text-sm text-foreground cursor-pointer">Show Collected Only</Label>
-          </div>
-        </div>
-        
-        {allSeriesNames.map(seriesName => (
-          <TabsContent key={seriesName} value={seriesName}>
-            {filteredAndSortedCards.length > 0 ? (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-4 gap-y-8 justify-items-center">
-                {filteredAndSortedCards.map((card) => {
-                  const count = getCollectedCount(card.id);
-                  return (
-                    <CardComponent
-                      key={card.id}
-                      card={card}
-                      onClick={() => handleCardClick(card)}
-                      viewContext="pokedex"
-                      pokedexNumber={card.pokedexNumber} 
-                      collectedCount={count}
-                    />
-                  );
-                })}
-              </div>
-            ) : (
-              <div className="text-center py-10">
-                <AlertTriangle className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
-                <p className="text-xl text-muted-foreground">No cards match your current filters for {seriesName}.</p>
-                <p className="text-sm text-muted-foreground">Try adjusting your search or filter criteria.</p>
-              </div>
-            )}
-          </TabsContent>
-        ))}
-      </Tabs>
+      )}
 
       {selectedCard && (
         <CardDetailModal
