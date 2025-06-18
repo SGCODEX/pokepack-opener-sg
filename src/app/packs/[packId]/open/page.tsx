@@ -157,7 +157,7 @@ export default function PackOpeningPage() {
     setOpenedCards(currentSinglePackCards); 
 
     await new Promise(resolve => setTimeout(resolve, 700)); 
-    if (isSkippingAnimations) return; // Check again after delay
+    if (isSkippingAnimations) return; 
     
     setStage('stack-reveal'); 
 
@@ -189,7 +189,7 @@ export default function PackOpeningPage() {
     setHasRareNonHolo(false);
     setCurrentBurstRarity(null);
     setDisplayPackCountText("");
-    setIsSkippingAnimations(false); // Reset skip flag
+    setIsSkippingAnimations(false); 
     
     setIsReadyToProcessLoop(true); 
 
@@ -230,7 +230,7 @@ export default function PackOpeningPage() {
     setCurrentSwipingCard({ id: cardToSwipe.id, direction: swipeDirection });
 
     setTimeout(() => {
-      if (isSkippingAnimations) return; // Check before proceeding
+      if (isSkippingAnimations) return; 
       const nextIndex = currentStackIndex + 1;
       setCurrentStackIndex(nextIndex);
       setCurrentSwipingCard(null); 
@@ -241,30 +241,31 @@ export default function PackOpeningPage() {
             setHasRareNonHolo(false);
             setStage('transitioning'); 
             setTimeout(() => {
-                if (isSkippingAnimations) return; // Check before next iteration
+                if (isSkippingAnimations) return; 
                 setCurrentPackInBulkLoop(prev => prev + 1); 
                 setIsReadyToProcessLoop(true); 
             }, 2000); 
         } else { 
             setIsProcessingBulk(false); 
-            setStage('all-revealed');
+            setStage('all-revealed'); 
         }
       }
     }, 500); 
   };
 
   const handleSkipToResults = () => {
-    if (!isProcessingBulk || !packData || isSkippingAnimations) return;
+    if (!packData || isSkippingAnimations) return;
   
     setIsSkippingAnimations(true);
   
-    // Use a mutable variable to accumulate cards during the skip
     let skippedCardsAccumulator = [...allOpenedCardsInSession];
   
-    // Calculate how many packs are remaining to be processed "silently"
-    const remainingPacksToProcess = totalPacksInBulkLoop - currentPackInBulkLoop;
+    // We need to simulate packs from index (currentPackInBulkLoop + 1) up to (totalPacksInBulkLoop - 1).
+    // The number of these *additional* packs is totalPacksInBulkLoop - (currentPackInBulkLoop + 1).
+    // Ensure it's not negative if currentPackInBulkLoop is already the last pack.
+    const additionalPacksToSimulate = Math.max(0, totalPacksInBulkLoop - (currentPackInBulkLoop + 1));
   
-    for (let i = 0; i < remainingPacksToProcess; i++) {
+    for (let i = 0; i < additionalPacksToSimulate; i++) {
       const cardsFromSkippedPack = pullCardsForOnePack();
       skippedCardsAccumulator.push(...cardsFromSkippedPack);
       if (pokedexLoaded) {
@@ -273,7 +274,7 @@ export default function PackOpeningPage() {
     }
   
     setAllOpenedCardsInSession(skippedCardsAccumulator);
-    setOpenedCards(skippedCardsAccumulator); // This will be used by 'all-revealed'
+    setOpenedCards(skippedCardsAccumulator); 
   
     const finalHasHolo = skippedCardsAccumulator.some(card => card.rarity === 'Holo Rare');
     const finalHasRare = skippedCardsAccumulator.some(card => card.rarity === 'Rare' && !finalHasHolo);
@@ -282,8 +283,8 @@ export default function PackOpeningPage() {
   
     setStage('all-revealed');
     setIsProcessingBulk(false);
-    setCurrentPackInBulkLoop(totalPacksInBulkLoop); // Mark loop as complete
-    setIsSkippingAnimations(false); // Reset for future operations
+    setCurrentPackInBulkLoop(totalPacksInBulkLoop); 
+    setIsSkippingAnimations(false); 
   };
 
 
@@ -412,8 +413,7 @@ export default function PackOpeningPage() {
           )}
           {isProcessingBulk && ( 
              <p className="text-2xl font-semibold text-primary-foreground dark:text-foreground animate-pulse">
-                {/* Text for current pack number will be shown in 'stack-reveal' or 'transitioning' */}
-              </p>
+             </p>
           )}
         </div>
       )}
@@ -576,5 +576,7 @@ export default function PackOpeningPage() {
     
 
   
+
+    
 
     
