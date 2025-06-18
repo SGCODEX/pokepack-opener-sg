@@ -260,9 +260,11 @@ export default function PackOpeningPage() {
   
     let skippedCardsAccumulator = [...allOpenedCardsInSession];
   
-    // We need to simulate packs from index (currentPackInBulkLoop + 1) up to (totalPacksInBulkLoop - 1).
-    // The number of these *additional* packs is totalPacksInBulkLoop - (currentPackInBulkLoop + 1).
-    // Ensure it's not negative if currentPackInBulkLoop is already the last pack.
+    // Correctly calculate *additional* packs to simulate
+    // currentPackInBulkLoop is 0-indexed for the pack that *would* start revealing or *is* revealing
+    // If skip happens during pack 0 reveal (currentPackInBulkLoop = 0), we need to simulate total - 1 additional packs
+    // If skip happens during pack 1 reveal (currentPackInBulkLoop = 1), we need to simulate total - 2 additional packs
+    // So, additional packs = totalPacksInBulkLoop - (currentPackInBulkLoop + 1)
     const additionalPacksToSimulate = Math.max(0, totalPacksInBulkLoop - (currentPackInBulkLoop + 1));
   
     for (let i = 0; i < additionalPacksToSimulate; i++) {
@@ -352,7 +354,7 @@ export default function PackOpeningPage() {
         <Button
           variant="outline"
           onClick={handleSkipToResults}
-          className="absolute top-24 right-4 md:right-8 z-10 bg-accent hover:bg-accent/90 text-accent-foreground"
+          className="absolute top-24 right-4 md:right-8 z-10"
         >
           <FastForward className="mr-2 h-4 w-4" /> Skip to Results
         </Button>
