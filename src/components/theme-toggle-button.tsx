@@ -2,7 +2,7 @@
 "use client";
 
 import * as React from "react";
-import { Moon, Sun, Monitor } from "lucide-react";
+import { Moon, Sun } from "lucide-react"; // Monitor icon removed
 import { useTheme } from "@/contexts/theme-context";
 
 import { Button } from "@/components/ui/button";
@@ -14,12 +14,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export function ThemeToggleButton() {
-  const { theme, resolvedTheme, setTheme } = useTheme();
+  const { theme, resolvedTheme, setTheme } = useTheme(); // theme can be used directly
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="icon">
+          {/* Use resolvedTheme or theme for icon display, they should be consistent now */}
           {resolvedTheme === "light" ? (
             <Sun className="h-[1.2rem] w-[1.2rem]" />
           ) : (
@@ -37,11 +38,9 @@ export function ThemeToggleButton() {
           <Moon className="mr-2 h-4 w-4" />
           Dark
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme("system")} disabled={theme === "system"}>
-          <Monitor className="mr-2 h-4 w-4" />
-          System
-        </DropdownMenuItem>
+        {/* System theme option removed */}
       </DropdownMenuContent>
     </DropdownMenu>
   );
 }
+

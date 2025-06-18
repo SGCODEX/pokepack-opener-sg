@@ -4,23 +4,23 @@
 import type { ReactNode } from 'react';
 import { createContext, useContext, useEffect, useState, useCallback } from 'react';
 
-type Theme = "light" | "dark" | "system";
+type Theme = "light" | "dark"; // "system" removed
 
 interface ThemeProviderProps {
   children: ReactNode;
-  defaultTheme?: Theme;
+  defaultTheme?: Theme; // Will default to "dark"
   storageKey?: string;
 }
 
 interface ThemeProviderState {
   theme: Theme;
-  resolvedTheme: "light" | "dark";
+  resolvedTheme: "light" | "dark"; // resolvedTheme will be same as theme
   setTheme: (theme: Theme) => void;
 }
 
 const initialState: ThemeProviderState = {
-  theme: "system",
-  resolvedTheme: "light", // Default to light if system preference can't be determined initially
+  theme: "dark", // Default to dark
+  resolvedTheme: "dark", 
   setTheme: () => null,
 };
 
@@ -28,36 +28,28 @@ const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
 
 export function ThemeProvider({
   children,
-  defaultTheme = "system",
-  storageKey = "vite-ui-theme", // Using a generic key, can be app-specific
+  defaultTheme = "dark", // Default theme is now dark
+  storageKey = "pokepack-opener-theme",
   ...props
 }: ThemeProviderProps) {
   const [theme, setThemeState] = useState<Theme>(() => {
     if (typeof window !== "undefined") {
-      return (localStorage.getItem(storageKey) as Theme) || defaultTheme;
+      // Ensure that only "light" or "dark" are read from localStorage
+      const storedTheme = localStorage.getItem(storageKey) as Theme;
+      if (storedTheme === "light" || storedTheme === "dark") {
+        return storedTheme;
+      }
     }
     return defaultTheme;
   });
 
-  const [resolvedTheme, setResolvedTheme] = useState<"light" | "dark">("light");
+  // resolvedTheme will always be the same as theme since "system" is removed
+  const resolvedTheme = theme; 
 
   const applyTheme = useCallback((selectedTheme: Theme) => {
     const root = window.document.documentElement;
     root.classList.remove("light", "dark");
-
-    let currentTheme: "light" | "dark";
-    if (selectedTheme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
-        .matches
-        ? "dark"
-        : "light";
-      root.classList.add(systemTheme);
-      currentTheme = systemTheme;
-    } else {
-      root.classList.add(selectedTheme);
-      currentTheme = selectedTheme;
-    }
-    setResolvedTheme(currentTheme);
+    root.classList.add(selectedTheme);
   }, []);
 
 
@@ -65,19 +57,7 @@ export function ThemeProvider({
     applyTheme(theme);
   }, [theme, applyTheme]);
 
-  // Listener for system theme changes
-  useEffect(() => {
-    if (theme !== "system") return;
-
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleChange = () => {
-      applyTheme("system"); // Re-apply to pick up system change
-    };
-
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
-  }, [theme, applyTheme]);
-
+  // System theme change listener is removed as "system" option is no longer available
 
   const setTheme = (newTheme: Theme) => {
     if (typeof window !== "undefined") {
@@ -88,7 +68,7 @@ export function ThemeProvider({
 
   const value = {
     theme,
-    resolvedTheme,
+    resolvedTheme, // This will be 'light' or 'dark'
     setTheme,
   };
 
@@ -107,3 +87,4 @@ export const useTheme = () => {
 
   return context;
 };
+
