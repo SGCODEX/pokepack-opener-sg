@@ -359,9 +359,9 @@ export default function PackOpeningPage() {
               </p>
             </>
           )}
-          {isProcessingBulk && ( // During bulk, 'opening' stage is very brief and mostly for background transition
+          {isProcessingBulk && ( 
              <p className="text-2xl font-semibold text-primary-foreground dark:text-foreground animate-pulse">
-                {/* Text for current pack number will be shown in 'stack-reveal' */}
+                {/* Text for current pack number will be shown in 'stack-reveal' or 'transitioning' */}
               </p>
           )}
         </div>
@@ -370,7 +370,7 @@ export default function PackOpeningPage() {
       {stage === 'transitioning' && isProcessingBulk && (
         <div className="flex flex-col items-center space-y-6 flex-grow justify-center">
             <p className="text-2xl font-semibold text-primary-foreground dark:text-foreground animate-pulse">
-                Gotta Catch 'em all! Preparing next pack...
+                Gotta Catch 'em all!
             </p>
         </div>
       )}
@@ -501,7 +501,7 @@ export default function PackOpeningPage() {
           <Button size="lg" onClick={() => resetPackOpening(1)} variant="outline">
             <Package className="mr-2 h-5 w-5" /> Open Another Pack
           </Button>
-          {packData && packData.possibleCards.length >= 10 && ( // Ensure enough distinct cards for a hypothetical 10-pack opening with variety
+          {packData && packData.possibleCards.length >= 10 && ( 
              <Button size="lg" onClick={() => resetPackOpening(10)} variant="outline">
                 <PackagePlus className="mr-2 h-5 w-5" /> Open 10 More Packs
             </Button>
