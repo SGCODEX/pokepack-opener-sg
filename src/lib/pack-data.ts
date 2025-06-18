@@ -25,14 +25,14 @@ export const allPacks: PokemonPack[] = [
     name: 'Destined Rivals Booster Pack',
     series: 'Destined Rivals',
     image: 'https://pbs.twimg.com/media/Gmzw5Z9XgAAc9fc?format=jpg&name=large',
-    dataAiHint: 'Destined Rivals pack Iron Thorns Armarouge',
+    dataAiHint: 'Destined Rivals pack Iron Thorns Armarouge', // Could be updated based on new set prominent Pokemon
     cardsPerPack: 10, 
     rarityDistribution: { 
       common: 6,      
       uncommon: 3,    
       rareSlot: 1, // Can be Rare or any type of Holo Rare from this set   
     },
-    possibleCards: destinedRivalsPackCards,
+    possibleCards: destinedRivalsPackCards, // Now refers to the 244-card pool
   },
 ];
 
