@@ -14,23 +14,23 @@ export const allPacks: PokemonPack[] = [
     dataAiHint: 'Base Set booster pack charizard',
     cardsPerPack: 10,
     rarityDistribution: {
-      common: 6, 
-      uncommon: 3, 
+      common: 6,
+      uncommon: 3,
       rareSlot: 1, // Can be Rare or Holo Rare
     },
-    possibleCards: baseSetPackCards, 
+    possibleCards: baseSetPackCards,
   },
   {
     id: 'mcdonalds-dragon-discovery-001',
     name: "McDonald's Dragon Discovery Pack",
     series: "McDonald's Dragon Discovery",
-    image: 'https://i.ebayimg.com/images/g/u-YAAOSwUQRnkFn6/s-l1200.jpg',
-    dataAiHint: 'McDonalds promo dragon pack',
+    image: 'https://i.ebayimg.com/images/g/u-YAAOSwUQRnkFn6/s-l1200.jpg', // User specified image
+    dataAiHint: 'McDonalds promo Charizard Pikachu', // Updated hint
     cardsPerPack: 4, // Promo packs are smaller
     rarityDistribution: {
-      common: 3,
-      uncommon: 1, // For Latios/Latias
-      rareSlot: 0, // No Rares or Holo Rares in this promo pack logic
+      common: 3,      // Will pull from non-holo pool
+      uncommon: 0,    // No uncommons defined for this set structure
+      rareSlot: 1,    // This slot will aim for a 'Holo Rare'
     },
     possibleCards: mcDonaldsDragonDiscoveryPackCards,
   },
