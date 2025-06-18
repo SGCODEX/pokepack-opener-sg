@@ -163,7 +163,7 @@ export default function PackOpeningPage() {
     
     setStage('stack-reveal');
 
-  }, [currentPackInBulkLoop, totalPacksInBulkLoop, packData, pullCardsForOnePack, addCardsToCollection, isProcessingBulk, pokedexLoaded, allOpenedCardsInSession]);
+  }, [currentPackInBulkLoop, totalPacksInBulkLoop, packData, pullCardsForOnePack, addCardsToCollection, isProcessingBulk, pokedexLoaded]);
 
 
   const initiateOpeningProcess = useCallback(async (numPacksToOpen: number) => {
@@ -215,9 +215,6 @@ export default function PackOpeningPage() {
                 processPackLoopIteration(); 
             }, 2000); 
         } else { 
-            // Single pack opening is complete.
-            // allOpenedCardsInSession contains the single pack's cards.
-            // The background (hasHolo, hasRareNonHolo) for the single pack was set during its one pass through processPackLoopIteration.
             setIsProcessingBulk(false); 
             setStage('all-revealed');
         }
@@ -298,7 +295,7 @@ export default function PackOpeningPage() {
             priority
           />
           <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
-            <Button size="lg" onClick={() => initiateOpeningProcess(1)} className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8 py-6">
+            <Button size="lg" onClick={() => setTimeout(() => initiateOpeningProcess(1), 50)} className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8 py-6">
               <Package className="mr-2 h-6 w-6" /> Open 1 Booster Pack
             </Button>
             <Button size="lg" onClick={() => setTimeout(() => initiateOpeningProcess(10), 50)} className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-6">
@@ -322,11 +319,10 @@ export default function PackOpeningPage() {
                 priority
               />
               <p className="text-2xl font-semibold text-primary-foreground dark:text-foreground animate-pulse">
-                {displayPackCountText} {/* "Opening Pack..." */}
+                {displayPackCountText}
               </p>
             </>
           )}
-          {/* For bulk opening, this stage is now primarily a brief visual pause. Text is on stack-reveal. */}
         </div>
       )}
       
