@@ -566,7 +566,7 @@ export default function PackOpeningPage() {
             "absolute top-24 left-4 md:left-8 z-10",
             "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]",
             stage === 'all-revealed'
-                ? "text-black border-black"
+                ? "text-black border-black dark:text-black dark:border-black"
                 : "dark:border-[hsl(var(--border))]"
         )}
       >
@@ -581,7 +581,7 @@ export default function PackOpeningPage() {
             "absolute top-24 right-4 md:right-8 z-10",
             "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]",
              stage === 'all-revealed'
-                ? "text-black border-black"
+                ? "text-black border-black dark:text-black dark:border-black"
                 : "dark:border-[hsl(var(--border))]"
           )}
           disabled={!packData}
@@ -764,7 +764,9 @@ export default function PackOpeningPage() {
             variant="outline"
             className={cn(
               "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]",
-              stage === 'all-revealed' && "text-black border-black"
+              stage === 'all-revealed' 
+                ? "text-black border-black dark:text-black dark:border-black"
+                : "" // Relies on default variant for other stages
             )}
           >
             <Package className="mr-2 h-5 w-5" /> Open Another Pack
@@ -776,7 +778,9 @@ export default function PackOpeningPage() {
                 variant="outline"
                 className={cn(
                   "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]",
-                  stage === 'all-revealed' && "text-black border-black"
+                  stage === 'all-revealed' 
+                    ? "text-black border-black dark:text-black dark:border-black"
+                    : "" // Relies on default variant for other stages
                 )}
               >
                 <PackagePlus className="mr-2 h-5 w-5" /> Open 10 More Packs
@@ -809,3 +813,4 @@ export default function PackOpeningPage() {
     </div>
   );
 }
+
