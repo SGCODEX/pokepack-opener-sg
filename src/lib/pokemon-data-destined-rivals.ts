@@ -79,6 +79,7 @@ function getDestinedRivalsUniqueID(cardNumberInSet: number): number {
   return 0; 
 }
 
+
 const cardListData: { name: string, type: PokemonCard['type'], rarity: PokemonCard['rarity'] }[] = [
   { name: "Ethan's Pinsir", type: 'Grass', rarity: 'Holo Rare' }, // 1
   { name: 'Yanma', type: 'Grass', rarity: 'Common' }, // 2
@@ -340,11 +341,19 @@ export const destinedRivalsCards: PokemonCard[] = cardListData.map((card, index)
      dataAiHint += ` trainer card`;
   }
 
+  // Apply specific URL overrides
+  let imageUrl = `https://den-cards.pokellector.com/412/${formattedName}.DRI.${cardNumberInSet}.${uniqueID}.thumb.png`;
+  if (cardNumberInSet === 114) {
+    imageUrl = 'https://den-cards.pokellector.com/412/Team-Rockets-Nidoran-F.DRI.114.57376.thumb.png'; // Corrected URL format
+  } else if (cardNumberInSet === 117) {
+    imageUrl = 'https://den-cards.pokellector.com/412/Team-Rockets-Nidoran-M.DRI.117.57379.thumb.png'; // Corrected URL format
+  }
+
 
   return {
     id: cardId,
     name: card.name,
-    image: `https://den-cards.pokellector.com/412/${formattedName}.DRI.${cardNumberInSet}.${uniqueID}.thumb.png`,
+    image: imageUrl,
     dataAiHint: dataAiHint,
     rarity: card.rarity,
     type: card.type,
@@ -352,3 +361,5 @@ export const destinedRivalsCards: PokemonCard[] = cardListData.map((card, index)
     pokedexNumber: `${cardNumberInSet}/244`,
   };
 });
+
+    
