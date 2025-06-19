@@ -550,6 +550,8 @@ export default function PackOpeningPage() {
     backButtonText = "Back & Stop Opening";
   }
 
+  const activeOpeningStages = ['opening', 'stack-reveal', 'transitioning'];
+
 
   return (
     <div className={cn(
@@ -567,7 +569,9 @@ export default function PackOpeningPage() {
             "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]",
             stage === 'all-revealed'
                 ? "text-black border-black dark:text-black dark:border-black"
-                : "dark:border-[hsl(var(--border))]"
+                : activeOpeningStages.includes(stage)
+                    ? "text-white border-white"
+                    : "dark:border-[hsl(var(--border))]"
         )}
       >
         <ArrowLeft className="mr-2 h-4 w-4" /> {backButtonText}
@@ -582,7 +586,9 @@ export default function PackOpeningPage() {
             "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]",
              stage === 'all-revealed'
                 ? "text-black border-black dark:text-black dark:border-black"
-                : "dark:border-[hsl(var(--border))]"
+                : activeOpeningStages.includes(stage)
+                    ? "text-white border-white"
+                    : "dark:border-[hsl(var(--border))]"
           )}
           disabled={!packData}
         >
@@ -766,7 +772,7 @@ export default function PackOpeningPage() {
               "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]",
               stage === 'all-revealed' 
                 ? "text-black border-black dark:text-black dark:border-black"
-                : "" // Relies on default variant for other stages
+                : ""
             )}
           >
             <Package className="mr-2 h-5 w-5" /> Open Another Pack
@@ -780,7 +786,7 @@ export default function PackOpeningPage() {
                   "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]",
                   stage === 'all-revealed' 
                     ? "text-black border-black dark:text-black dark:border-black"
-                    : "" // Relies on default variant for other stages
+                    : "" 
                 )}
               >
                 <PackagePlus className="mr-2 h-5 w-5" /> Open 10 More Packs
