@@ -186,9 +186,7 @@ export default function PackOpeningPage() {
       if (availableCardsInPack.length === 0) return [];
 
       let rareSlotCard: PokemonCard | undefined;
-      // For older sets like Base Set, "Holo Rare" is the top tier hit.
-      // The old logic of 30% chance for a Holo Rare in the rare slot can be kept for these.
-      const isHoloTierRarity: CardRarity[] = ['Hyper Rare', 'Special Illustration Rare', 'Illustration Rare', 'Ultra Rare', 'Holo Rare']; // Holo Rare for older sets.
+      const isHoloTierRarity: CardRarity[] = ['Hyper Rare', 'Special Illustration Rare', 'Illustration Rare', 'Ultra Rare', 'Holo Rare'];
       const isHoloAttempt = Math.random() < 0.30; 
 
       if (isHoloAttempt) {
@@ -247,7 +245,7 @@ export default function PackOpeningPage() {
         setOpenedCards(allOpenedCardsInSession); 
         
         const finalOverallHighestRarity = allOpenedCardsInSession.reduce((highest, card) => {
-            const rarityOrder: CardRarity[] = ['Common', 'Uncommon', 'Rare', 'Double Rare', 'Ultra Rare', 'Illustration Rare', 'Special Illustration Rare', 'Hyper Rare']; // Holo Rare removed as it's part of the general high-tier logic for DRI
+            const rarityOrder: CardRarity[] = ['Common', 'Uncommon', 'Rare', 'Double Rare', 'Ultra Rare', 'Illustration Rare', 'Special Illustration Rare', 'Hyper Rare'];
             return rarityOrder.indexOf(card.rarity) > rarityOrder.indexOf(highest) ? card.rarity : highest;
         }, 'Common' as CardRarity);
 
@@ -257,12 +255,12 @@ export default function PackOpeningPage() {
         if (packData.id === 'destined-rivals-booster-001') {
             finalOverallHasHolo = ['Hyper Rare', 'Special Illustration Rare', 'Illustration Rare'].includes(finalOverallHighestRarity);
             finalOverallHasRareNonHolo = !finalOverallHasHolo && ['Ultra Rare', 'Double Rare', 'Rare'].includes(finalOverallHighestRarity);
-        } else { // Logic for Base Set or other older sets
-            const oldSetHoloRarities: CardRarity[] = ['Holo Rare']; // Base Set Holo Rare is the top hit
-            const oldSetHighTierNonHolo: CardRarity[] = ['Rare']; // Base Set Rare (non-holo)
+        } else { 
+            const oldSetHoloRarities: CardRarity[] = ['Holo Rare'];
+            const oldSetHighTierNonHolo: CardRarity[] = ['Rare']; 
             
             finalOverallHasHolo = allOpenedCardsInSession.some(c => oldSetHoloRarities.includes(c.rarity));
-            finalOverallHasRareNonHolo = !finalOverallHasHolo && allOpenedCardsInSession.some(c => oldSetHighTierNonHolo.includes(c.rarity));
+            finalOverallHasRareNonHolo = !finalOverallHasHolo && allOpenedCardsInSession.some(c => oldSetHighTierNonHolo.includes(c.rarity) && !oldSetHoloRarities.includes(c.rarity));
         }
         setHasHolo(finalOverallHasHolo);
         setHasRareNonHolo(finalOverallHasRareNonHolo);
@@ -299,7 +297,7 @@ export default function PackOpeningPage() {
         const oldSetHighTierNonHolo: CardRarity[] = ['Rare'];
         
         packSpecificHasHolo = currentSinglePackCards.some(c => oldSetHoloRarities.includes(c.rarity));
-        packSpecificHasRareNonHolo = !packSpecificHasHolo && currentSinglePackCards.some(c => oldSetHighTierNonHolo.includes(c.rarity));
+        packSpecificHasRareNonHolo = !packSpecificHasHolo && currentSinglePackCards.some(c => oldSetHighTierNonHolo.includes(c.rarity) && !oldSetHoloRarities.includes(c.rarity));
     }
     
     setHasHolo(packSpecificHasHolo);
@@ -370,11 +368,10 @@ export default function PackOpeningPage() {
 
     const cardToSwipe = openedCards[currentStackIndex];
     
-    // For Destined Rivals, burst on more specific high tiers. For Base Set, Holo Rare is the main burst.
     let highTierRaritiesForBurst: CardRarity[];
     if (packData?.id === 'destined-rivals-booster-001') {
       highTierRaritiesForBurst = ['Hyper Rare', 'Special Illustration Rare', 'Illustration Rare', 'Ultra Rare', 'Double Rare'];
-    } else { // For Base Set or other older style packs
+    } else { 
       highTierRaritiesForBurst = ['Holo Rare'];
     }
     
@@ -496,7 +493,7 @@ export default function PackOpeningPage() {
         const oldSetHighTierNonHolo: CardRarity[] = ['Rare'];
         
         finalOverallHasHolo = skippedCardsAccumulator.some(c => oldSetHoloRarities.includes(c.rarity));
-        finalOverallHasRareNonHolo = !finalOverallHasHolo && skippedCardsAccumulator.some(c => oldSetHighTierNonHolo.includes(c.rarity));
+        finalOverallHasRareNonHolo = !finalOverallHasHolo && skippedCardsAccumulator.some(c => oldSetHighTierNonHolo.includes(c.rarity) && !oldSetHoloRarities.includes(c.rarity));
     }
   
     setHasHolo(finalOverallHasHolo);
@@ -566,7 +563,8 @@ export default function PackOpeningPage() {
       <Button variant="outline" onClick={() => router.push('/')} className="absolute top-24 left-4 md:left-8 z-10">
         <ArrowLeft className="mr-2 h-4 w-4" /> {backButtonText}
       </Button>
-      {isProcessingBulk && (stage === 'opening' || stage === 'stack-reveal' || stage === 'transitioning' || stage === 'initial') && !isSkippingAnimations && (
+      {!isSkippingAnimations && 
+        (stage === 'opening' || stage === 'stack-reveal' || stage === 'initial' || (isProcessingBulk && stage === 'transitioning')) && (
         <Button
           variant="outline"
           onClick={handleSkipToResults}
@@ -653,7 +651,7 @@ export default function PackOpeningPage() {
                 {Array.from({ length: NUM_BURST_PARTICLES }).map((_, i) => {
                   const angle = (i / NUM_BURST_PARTICLES) * 360;
                   
-                  let particleColor = 'bg-yellow-400'; // Default for Rare (Base Set) or general non-specific burst
+                  let particleColor = 'bg-yellow-400'; 
                   if (packData?.id === 'destined-rivals-booster-001') {
                     const isVeryHighTierDRI = ['Hyper Rare', 'Special Illustration Rare'].includes(currentBurstRarity!);
                     const isHighTierDRI = ['Illustration Rare', 'Ultra Rare'].includes(currentBurstRarity!);
@@ -664,7 +662,7 @@ export default function PackOpeningPage() {
                     } else if (currentBurstRarity === 'Double Rare') {
                        particleColor = ['bg-blue-400', 'bg-slate-300'][i % 2];
                     }
-                  } else if (currentBurstRarity === 'Holo Rare') { // For Base Set Holo Rares
+                  } else if (currentBurstRarity === 'Holo Rare') { 
                      particleColor = ['bg-pink-300', 'bg-indigo-300', 'bg-sky-200', 'bg-fuchsia-300'][i % 4];
                   }
 
@@ -816,4 +814,5 @@ export default function PackOpeningPage() {
     
 
     
+
 
