@@ -152,87 +152,84 @@ export default function PackOpeningPage() {
             packCards.push(availableCardsInSeries[Math.floor(Math.random() * availableCardsInSeries.length)]);
         }
       }
-
-      // Ensure pack reaches cardsPerPack if above logic didn't (e.g. extremely limited card pool)
-      // This will rarely be hit with 4+2+1 base + 3 hits = 10 cards.
-      let fillAttempts = 0;
-      while (packCards.length < packData.cardsPerPack && fillAttempts < 20 && availableCardsInSeries.length > 0) {
-        let fillCard: PokemonCard | undefined;
-        const commonFill = availableCardsInSeries.filter(c => c.rarity === 'Common');
-        if (commonFill.length > 0) {
-          fillCard = commonFill[Math.floor(Math.random() * commonFill.length)];
-        } else {
-          const uncommonFill = availableCardsInSeries.filter(c => c.rarity === 'Uncommon');
-          if (uncommonFill.length > 0) {
-            fillCard = uncommonFill[Math.floor(Math.random() * uncommonFill.length)];
-          } else {
-            fillCard = availableCardsInSeries[Math.floor(Math.random() * availableCardsInSeries.length)];
-          }
-        }
-        if (fillCard) {
-            packCards.push(fillCard);
-        }
-        fillAttempts++;
-      }
       return packCards;
 
-    } else { 
+    } else { // Handles Base Set and other generic packs
+      const availableCardsInPack = allCards.filter(card => packData.possibleCards.includes(card.id));
+      if (availableCardsInPack.length === 0) return [];
+
       const pullCardByRarity = (rarity: CardRarity): PokemonCard | undefined => {
         const potentialCards = availableCardsInPack.filter(c => c.rarity === rarity);
         if (potentialCards.length === 0) return undefined;
         return potentialCards[Math.floor(Math.random() * potentialCards.length)];
       };
       
-      const availableCardsInPack = allCards.filter(card => packData.possibleCards.includes(card.id));
-      if (availableCardsInPack.length === 0) return [];
-
-      let rareSlotCard: PokemonCard | undefined;
-      const isHoloTierRarity: CardRarity[] = ['Hyper Rare', 'Special Illustration Rare', 'Illustration Rare', 'Ultra Rare', 'Holo Rare'];
-      const isHoloAttempt = Math.random() < 0.30; 
-
-      if (isHoloAttempt) {
-        const potentialHoloRares = availableCardsInPack.filter(c => isHoloTierRarity.includes(c.rarity));
-        if (potentialHoloRares.length > 0) {
-          rareSlotCard = potentialHoloRares[Math.floor(Math.random() * potentialHoloRares.length)];
+      // 1. Pull Commons
+      for (let i = 0; i < packData.rarityDistribution.common; i++) {
+        if (packCards.length >= packData.cardsPerPack) break;
+        let card = pullCardByRarity('Common');
+        if (!card && availableCardsInPack.length > 0) { // Fallback for common slot
+            const commonPool = availableCardsInPack.filter(c => c.rarity === 'Common');
+            if(commonPool.length > 0) card = commonPool[Math.floor(Math.random() * commonPool.length)];
+            else card = availableCardsInPack[Math.floor(Math.random() * availableCardsInPack.length)];
         }
+        if (card) packCards.push(card);
       }
-      if (!rareSlotCard) { 
-        rareSlotCard = pullCardByRarity('Rare');
-      }
-      if (!rareSlotCard) { 
-          const potentialAnyRare = availableCardsInPack.filter(c => isHoloTierRarity.includes(c.rarity) || c.rarity === 'Rare');
-          if (potentialAnyRare.length > 0) {
-            rareSlotCard = potentialAnyRare[Math.floor(Math.random() * potentialAnyRare.length)];
-          }
-      }
-      if (rareSlotCard) {
-        packCards.push(rareSlotCard);
-      } else if (availableCardsInPack.length > 0 && packCards.length < packData.cardsPerPack) { 
-         packCards.push(availableCardsInPack[Math.floor(Math.random() * availableCardsInPack.length)]);
-      }
-
+      
+      // 2. Pull Uncommons
       for (let i = 0; i < packData.rarityDistribution.uncommon; i++) {
         if (packCards.length >= packData.cardsPerPack) break;
         let card = pullCardByRarity('Uncommon');
-        if (!card && availableCardsInPack.length > 0) card = availableCardsInPack[Math.floor(Math.random() * availableCardsInPack.length)];
-        if (card) { packCards.push(card); }
-      }
-      
-      const commonsToPull = packData.cardsPerPack - packCards.length;
-      for (let i = 0; i < commonsToPull; i++) {
-        if (packCards.length >= packData.cardsPerPack) break;
-        let card = pullCardByRarity('Common');
-        if (!card && availableCardsInPack.length > 0) card = availableCardsInPack[Math.floor(Math.random() * availableCardsInPack.length)];
-        if (card) { packCards.push(card); }
-      }
-      
-      let attempts = 0; 
-      while(packCards.length < packData.cardsPerPack && availableCardsInPack.length > 0 && attempts < 20) {
-        let card = pullCardByRarity('Common') || pullCardByRarity('Uncommon') || availableCardsInPack[Math.floor(Math.random() * availableCardsInPack.length)];
-        if (card) {
-          packCards.push(card);
+        if (!card && availableCardsInPack.length > 0) { // Fallback for uncommon slot
+            const uncommonPool = availableCardsInPack.filter(c => c.rarity === 'Uncommon');
+            if(uncommonPool.length > 0) card = uncommonPool[Math.floor(Math.random() * uncommonPool.length)];
+            else card = availableCardsInPack[Math.floor(Math.random() * availableCardsInPack.length)];
         }
-        attempts++;
+        if (card) packCards.push(card);
+      }
+
+      // 3. Pull Rare Slot card (Holo Rare or Rare for Base Set)
+      if (packCards.length < packData.cardsPerPack && packData.rarityDistribution.rareSlot > 0) {
+          let rareSlotCard: PokemonCard | undefined;
+          const isHoloAttempt = Math.random() < 0.30; // 30% chance for a Holo Rare in Base Set
+
+          if (isHoloAttempt) {
+            const potentialHoloRares = availableCardsInPack.filter(c => c.rarity === 'Holo Rare');
+            if (potentialHoloRares.length > 0) {
+              rareSlotCard = potentialHoloRares[Math.floor(Math.random() * potentialHoloRares.length)];
+            }
+          }
+
+          if (!rareSlotCard) { 
+            const potentialRares = availableCardsInPack.filter(c => c.rarity === 'Rare');
+            if (potentialRares.length > 0) {
+              rareSlotCard = potentialRares[Math.floor(Math.random() * potentialRares.length)];
+            }
+          }
+          
+          if (!rareSlotCard) { 
+            const potentialAnyRareSlot = availableCardsInPack.filter(c => c.rarity === 'Holo Rare' || c.rarity === 'Rare');
+            if (potentialAnyRareSlot.length > 0) {
+              rareSlotCard = potentialAnyRareSlot[Math.floor(Math.random() * potentialAnyRareSlot.length)];
+            } else if (availableCardsInPack.length > 0) {
+              rareSlotCard = availableCardsInPack[Math.floor(Math.random() * availableCardsInPack.length)];
+            }
+          }
+
+          if (rareSlotCard) {
+            packCards.push(rareSlotCard);
+          }
+      }
+      
+      // 4. Fill pack if still not full (e.g. distribution doesn't sum to cardsPerPack)
+      let fillAttempts = 0;
+      while(packCards.length < packData.cardsPerPack && availableCardsInPack.length > 0 && fillAttempts < 20) {
+        let card = pullCardByRarity('Common') || pullCardByRarity('Uncommon');
+        if (!card) {
+            card = availableCardsInPack[Math.floor(Math.random() * availableCardsInPack.length)];
+        }
+        if (card) packCards.push(card);
+        fillAttempts++;
       }
       return packCards;
     }
@@ -418,7 +415,7 @@ export default function PackOpeningPage() {
   
     let skippedCardsAccumulator = [...allOpenedCardsInSession];
 
-    if (stage === 'opening' || stage === 'stack-reveal') { // Removed 'initial'
+    if (stage === 'opening' || stage === 'stack-reveal') { 
        if (openedCards.length > 0 && currentPackInBulkLoop < totalPacksInBulkLoop) {
             const currentPackCardIdsAndIndicesInSession = new Set(
                 allOpenedCardsInSession.slice(allOpenedCardsInSession.length - openedCards.length)
@@ -444,7 +441,7 @@ export default function PackOpeningPage() {
                     }
                 }
             }
-       } else if (stage === 'opening' && totalPacksInBulkLoop > 0) { 
+       } else if ((stage === 'opening' || stage === 'initial') && totalPacksInBulkLoop > 0) { 
            const cardsFromFirstPack = pullCardsForOnePack();
            skippedCardsAccumulator.push(...cardsFromFirstPack);
            if (pokedexLoaded) {
@@ -456,9 +453,9 @@ export default function PackOpeningPage() {
     let packsAlreadyAccountedFor = 0;
     if (stage !== 'initial' && currentPackInBulkLoop < totalPacksInBulkLoop) {
         packsAlreadyAccountedFor = currentPackInBulkLoop + 1; 
-    } else if (stage === 'opening' && totalPacksInBulkLoop > 0 && skippedCardsAccumulator.length >= packData.cardsPerPack) {
+    } else if ((stage === 'opening' || stage === 'initial') && totalPacksInBulkLoop > 0 && skippedCardsAccumulator.length >= packData.cardsPerPack) {
         packsAlreadyAccountedFor = 1;
-    } else if (stage === 'opening') {
+    } else if (stage === 'opening' || stage === 'initial') {
         packsAlreadyAccountedFor = 0;
     } else { 
         packsAlreadyAccountedFor = totalPacksInBulkLoop;
@@ -577,7 +574,7 @@ export default function PackOpeningPage() {
           onClick={handleSkipToResults}
           className={cn(
             "absolute top-24 right-4 md:right-8 z-10",
-            "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]"
+             "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]"
           )}
           disabled={!packData} 
         >
