@@ -24,7 +24,7 @@ export function PackItem({ pack }: PackItemProps) {
         />
       </CardHeader>
       <CardContent className="p-4 flex flex-col flex-grow">
-        <CardTitle className="text-xl font-headline mb-2 truncate" title={pack.name}>{pack.name}</CardTitle>
+        <CardTitle className="text-xl font-headline mb-2" title={pack.name}>{pack.name}</CardTitle>
         <p className="text-sm text-muted-foreground mb-1">{pack.series}</p>
         <p className="text-sm text-muted-foreground mb-4">{pack.cardsPerPack} cards per pack</p>
         <div className="mt-auto">
