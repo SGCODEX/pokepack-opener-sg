@@ -20,43 +20,43 @@ export function ThemeToggleButton() {
     setTheme(resolvedTheme === 'light' ? 'dark' : 'light');
   };
 
-  // Determine if the navbar context is dark (our blue navbar is dark)
-  const isNavbarDarkStyle = true; 
+  const isNavbarDarkStyle = true; // Navbar is always dark styled (blue)
 
   if (!mounted) {
+    // Determine which icon to render based on the initial theme (defaultTheme from server/first client render)
+    // This ensures the server-rendered hidden button matches the client's first pass.
+    const InitialIconToRender = resolvedTheme === "light" ? Sun : Moon;
     return (
       <Button
         variant="outline"
         size="icon"
         className={cn(
-            isNavbarDarkStyle && "text-primary border-white hover:bg-[hsl(217,91%,50%)] focus-visible:ring-white", 
-            "opacity-0 pointer-events-none" 
+            isNavbarDarkStyle && "border-white hover:bg-[hsl(217,91%,50%)] focus-visible:ring-white",
+            "opacity-0 pointer-events-none" // Hide it visually but structure should match
         )}
-        aria-hidden="true" 
+        aria-hidden="true"
+        tabIndex={-1} // Make it unfocusable when hidden
       >
-        <Sun className={cn("h-[1.2rem] w-[1.2rem]", isNavbarDarkStyle && "text-white")} /> 
+        <InitialIconToRender className={cn("h-[1.2rem] w-[1.2rem]", isNavbarDarkStyle && "text-white")} />
       </Button>
     );
   }
 
+  // Once mounted, render the actual interactive button
+  const CurrentIconToRender = resolvedTheme === "light" ? Sun : Moon;
   return (
     <Button
       variant="outline"
       size="icon"
       onClick={toggleTheme}
       className={cn(
-        "group", 
-        isNavbarDarkStyle && "text-primary border-white hover:bg-[hsl(217,91%,50%)] focus-visible:ring-white"
+        "group", // group class is not strictly needed for icon color anymore but kept for consistency
+        isNavbarDarkStyle && "border-white hover:bg-[hsl(217,91%,50%)] focus-visible:ring-white"
       )}
       aria-label={`Switch to ${resolvedTheme === 'light' ? 'dark' : 'light'} mode`}
     >
-      {resolvedTheme === "light" ? (
-        <Sun className={cn("h-[1.2rem] w-[1.2rem]", isNavbarDarkStyle && "text-white")} />
-      ) : (
-        <Moon className={cn("h-[1.2rem] w-[1.2rem]", isNavbarDarkStyle && "text-white")} />
-      )}
+      <CurrentIconToRender className={cn("h-[1.2rem] w-[1.2rem]", isNavbarDarkStyle && "text-white")} />
       <span className="sr-only">Toggle theme</span>
     </Button>
   );
 }
-
