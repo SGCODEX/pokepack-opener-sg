@@ -54,22 +54,12 @@ function mapRarity(tableRarity: string): CardRarity {
   }
 }
 
-function formatPkNameForUrl(name: string): string {
-  return name
-    .replace(/EX$/, '-EX') // Handle EX at the end of the name
-    .replace(/é/g, 'e')
-    .replace(/\s+/g, '-')
-    .replace(/[.?']/g, '') // Remove periods and apostrophes
-    .replace(/♀/g, '-F')   // Handle female symbol
-    .replace(/♂/g, '-M');  // Handle male symbol
-}
-
-// Data structure: { pokedexNum, name, typeShorthand, rarityShorthand, pkName (for URL), pkCardNum (for URL), pkUniqueId (for URL) }
-// Rarities are directly from the user-provided table. Pokellector IDs meticulously verified.
+// Data structure: { pokedexNum, name, typeShorthand, rarityShorthand, pkNameForUrl, pkCardNumForUrl }
+// Note: pkUniqueId is no longer used for image URLs but kept for data integrity if needed elsewhere.
 const generationsCardDetails: Array<{ pokedexNum: string, name: string, typeShorthand: string, rarityShorthand: string, pkNameForUrl: string, pkCardNumForUrl: string, pkUniqueId: string }> = [
   // Main Set (1/83 to 83/83)
   { pokedexNum: "1/83", name: "Venusaur-EX", typeShorthand: "Grass", rarityShorthand: "Ultra Rare", pkNameForUrl: "Venusaur-EX", pkCardNumForUrl: "1", pkUniqueId: "33866" },
-  { pokedexNum: "2/83", name: "M Venusaur-EX", typeShorthand: "Grass", rarityShorthand: "Ultra Rare", pkNameForUrl: "Mega-Venusaur-EX", pkCardNumForUrl: "2", pkUniqueId: "33867" },
+  { pokedexNum: "2/83", name: "M Venusaur-EX", typeShorthand: "Grass", rarityShorthand: "Ultra Rare", pkNameForUrl: "M-Venusaur-EX", pkCardNumForUrl: "2", pkUniqueId: "33867" },
   { pokedexNum: "3/83", name: "Caterpie", typeShorthand: "Grass", rarityShorthand: "Common", pkNameForUrl: "Caterpie", pkCardNumForUrl: "3", pkUniqueId: "33868" },
   { pokedexNum: "4/83", name: "Metapod", typeShorthand: "Grass", rarityShorthand: "Uncommon", pkNameForUrl: "Metapod", pkCardNumForUrl: "4", pkUniqueId: "33869" },
   { pokedexNum: "5/83", name: "Butterfree", typeShorthand: "Grass", rarityShorthand: "Rare Holo", pkNameForUrl: "Butterfree", pkCardNumForUrl: "5", pkUniqueId: "33870" },
@@ -79,13 +69,13 @@ const generationsCardDetails: Array<{ pokedexNum: string, name: string, typeShor
   { pokedexNum: "9/83", name: "Pinsir", typeShorthand: "Grass", rarityShorthand: "Rare", pkNameForUrl: "Pinsir", pkCardNumForUrl: "9", pkUniqueId: "33952" },
   { pokedexNum: "10/83", name: "Leafeon-EX", typeShorthand: "Grass", rarityShorthand: "Ultra Rare", pkNameForUrl: "Leafeon-EX", pkCardNumForUrl: "10", pkUniqueId: "33875" },
   { pokedexNum: "11/83", name: "Charizard-EX", typeShorthand: "Fire", rarityShorthand: "Ultra Rare", pkNameForUrl: "Charizard-EX", pkCardNumForUrl: "11", pkUniqueId: "33876" },
-  { pokedexNum: "12/83", name: "M Charizard-EX", typeShorthand: "Fire", rarityShorthand: "Ultra Rare", pkNameForUrl: "Mega-Charizard-EX", pkCardNumForUrl: "12", pkUniqueId: "33877" },
+  { pokedexNum: "12/83", name: "M Charizard-EX", typeShorthand: "Fire", rarityShorthand: "Ultra Rare", pkNameForUrl: "M-Charizard-EX", pkCardNumForUrl: "12", pkUniqueId: "33877" },
   { pokedexNum: "13/83", name: "Ninetales-EX", typeShorthand: "Fire", rarityShorthand: "Ultra Rare", pkNameForUrl: "Ninetales-EX", pkCardNumForUrl: "13", pkUniqueId: "33878" },
   { pokedexNum: "14/83", name: "Ponyta", typeShorthand: "Fire", rarityShorthand: "Common", pkNameForUrl: "Ponyta", pkCardNumForUrl: "14", pkUniqueId: "33879" },
   { pokedexNum: "15/83", name: "Rapidash", typeShorthand: "Fire", rarityShorthand: "Rare", pkNameForUrl: "Rapidash", pkCardNumForUrl: "15", pkUniqueId: "33880" },
   { pokedexNum: "16/83", name: "Magmar", typeShorthand: "Fire", rarityShorthand: "Common", pkNameForUrl: "Magmar", pkCardNumForUrl: "16", pkUniqueId: "33881" },
   { pokedexNum: "17/83", name: "Blastoise-EX", typeShorthand: "Water", rarityShorthand: "Ultra Rare", pkNameForUrl: "Blastoise-EX", pkCardNumForUrl: "17", pkUniqueId: "33882" },
-  { pokedexNum: "18/83", name: "M Blastoise-EX", typeShorthand: "Water", rarityShorthand: "Ultra Rare", pkNameForUrl: "Mega-Blastoise-EX", pkCardNumForUrl: "18", pkUniqueId: "33883" },
+  { pokedexNum: "18/83", name: "M Blastoise-EX", typeShorthand: "Water", rarityShorthand: "Ultra Rare", pkNameForUrl: "M-Blastoise-EX", pkCardNumForUrl: "18", pkUniqueId: "33883" },
   { pokedexNum: "19/83", name: "Shellder", typeShorthand: "Water", rarityShorthand: "Common", pkNameForUrl: "Shellder", pkCardNumForUrl: "19", pkUniqueId: "33884" },
   { pokedexNum: "20/83", name: "Cloyster", typeShorthand: "Water", rarityShorthand: "Uncommon", pkNameForUrl: "Cloyster", pkCardNumForUrl: "20", pkUniqueId: "33885" },
   { pokedexNum: "21/83", name: "Krabby", typeShorthand: "Water", rarityShorthand: "Common", pkNameForUrl: "Krabby", pkCardNumForUrl: "21", pkUniqueId: "33886" },
@@ -130,13 +120,13 @@ const generationsCardDetails: Array<{ pokedexNum: string, name: string, typeShor
   { pokedexNum: "60/83", name: "Crushing Hammer", typeShorthand: "I", rarityShorthand: "Uncommon", pkNameForUrl: "Crushing-Hammer", pkCardNumForUrl: "60", pkUniqueId: "33926" },
   { pokedexNum: "61/83", name: "Energy Switch", typeShorthand: "I", rarityShorthand: "Uncommon", pkNameForUrl: "Energy-Switch", pkCardNumForUrl: "61", pkUniqueId: "33927" },
   { pokedexNum: "62/83", name: "Evosoda", typeShorthand: "I", rarityShorthand: "Uncommon", pkNameForUrl: "Evosoda", pkCardNumForUrl: "62", pkUniqueId: "33930" },
-  { pokedexNum: "63/83", name: "Imakuni?", typeShorthand: "Su", rarityShorthand: "Uncommon", pkNameForUrl: "Imakuni", pkCardNumForUrl: "63", pkUniqueId: "33928" }, // Note: Imakuni? uses a '?' in name
+  { pokedexNum: "63/83", name: "Imakuni?", typeShorthand: "Su", rarityShorthand: "Uncommon", pkNameForUrl: "Imakuni", pkCardNumForUrl: "63", pkUniqueId: "33928" },
   { pokedexNum: "64/83", name: "Maintenance", typeShorthand: "I", rarityShorthand: "Uncommon", pkNameForUrl: "Maintenance", pkCardNumForUrl: "64", pkUniqueId: "33931" },
   { pokedexNum: "65/83", name: "Max Revive", typeShorthand: "I", rarityShorthand: "Uncommon", pkNameForUrl: "Max-Revive", pkCardNumForUrl: "65", pkUniqueId: "33933" },
   { pokedexNum: "66/83", name: "Olympia", typeShorthand: "Su", rarityShorthand: "Uncommon", pkNameForUrl: "Olympia", pkCardNumForUrl: "66", pkUniqueId: "33934" },
-  { pokedexNum: "67/83", name: "Poké Ball", typeShorthand: "I", rarityShorthand: "Uncommon", pkNameForUrl: "Pokeball", pkCardNumForUrl: "67", pkUniqueId: "33932" }, // Note: Poké Ball uses 'é'
-  { pokedexNum: "68/83", name: "Pokémon Center Lady", typeShorthand: "Su", rarityShorthand: "Uncommon", pkNameForUrl: "Pokemon-Center-Lady", pkCardNumForUrl: "68", pkUniqueId: "33935" }, // Note: Pokémon uses 'é'
-  { pokedexNum: "69/83", name: "Pokémon Fan Club", typeShorthand: "Su", rarityShorthand: "Uncommon", pkNameForUrl: "Pokemon-Fan-Club", pkCardNumForUrl: "69", pkUniqueId: "33936" }, // Note: Pokémon uses 'é'
+  { pokedexNum: "67/83", name: "Poké Ball", typeShorthand: "I", rarityShorthand: "Uncommon", pkNameForUrl: "Poke-Ball", pkCardNumForUrl: "67", pkUniqueId: "33932" },
+  { pokedexNum: "68/83", name: "Pokémon Center Lady", typeShorthand: "Su", rarityShorthand: "Uncommon", pkNameForUrl: "Pokemon-Center-Lady", pkCardNumForUrl: "68", pkUniqueId: "33935" },
+  { pokedexNum: "69/83", name: "Pokémon Fan Club", typeShorthand: "Su", rarityShorthand: "Uncommon", pkNameForUrl: "Pokemon-Fan-Club", pkCardNumForUrl: "69", pkUniqueId: "33936" },
   { pokedexNum: "70/83", name: "Revitalizer", typeShorthand: "I", rarityShorthand: "Uncommon", pkNameForUrl: "Revitalizer", pkCardNumForUrl: "70", pkUniqueId: "33938" },
   { pokedexNum: "71/83", name: "Red Card", typeShorthand: "I", rarityShorthand: "Uncommon", pkNameForUrl: "Red-Card", pkCardNumForUrl: "71", pkUniqueId: "33937" },
   { pokedexNum: "72/83", name: "Shauna", typeShorthand: "Su", rarityShorthand: "Uncommon", pkNameForUrl: "Shauna", pkCardNumForUrl: "72", pkUniqueId: "33940" },
@@ -157,19 +147,19 @@ const generationsCardDetails: Array<{ pokedexNum: string, name: string, typeShor
   { pokedexNum: "RC2/RC32", name: "Shroomish", typeShorthand: "Grass", rarityShorthand: "Common", pkNameForUrl: "Shroomish", pkCardNumForUrl: "RC2", pkUniqueId: "33872" },
   { pokedexNum: "RC3/RC32", name: "Charmander", typeShorthand: "Fire", rarityShorthand: "Common", pkNameForUrl: "Charmander", pkCardNumForUrl: "RC3", pkUniqueId: "33873" },
   { pokedexNum: "RC4/RC32", name: "Charmeleon", typeShorthand: "Fire", rarityShorthand: "Common", pkNameForUrl: "Charmeleon", pkCardNumForUrl: "RC4", pkUniqueId: "33874" },
-  { pokedexNum: "RC5/RC32", name: "Charizard", typeShorthand: "Fire", rarityShorthand: "Uncommon", pkNameForUrl: "Charizard", pkCardNumForUrl: "RC5", pkUniqueId: "33875" }, // This is the regular Holo Charizard from RC
+  { pokedexNum: "RC5/RC32", name: "Charizard", typeShorthand: "Fire", rarityShorthand: "Uncommon", pkNameForUrl: "Charizard", pkCardNumForUrl: "RC5", pkUniqueId: "33909" }, // RC Charizard is Uncommon, not Holo by default here. The FA EX is separate.
   { pokedexNum: "RC6/RC32", name: "Flareon-EX", typeShorthand: "Fire", rarityShorthand: "Ultra Rare", pkNameForUrl: "Flareon-EX", pkCardNumForUrl: "RC6", pkUniqueId: "33890" }, // Regular Art EX
-  { pokedexNum: "RC7/RC32", name: "Snorunt", typeShorthand: "Water", rarityShorthand: "Common", pkNameForUrl: "Snorunt", pkCardNumForUrl: "RC7", pkUniqueId: "33897" },
+  { pokedexNum: "RC7/RC32", name: "Snorunt", typeShorthand: "Water", rarityShorthand: "Common", pkNameForUrl: "Snorunt", pkCardNumForUrl: "RC7", pkUniqueId: "33902" },
   { pokedexNum: "RC8/RC32", name: "Froslass", typeShorthand: "Water", rarityShorthand: "Uncommon", pkNameForUrl: "Froslass", pkCardNumForUrl: "RC8", pkUniqueId: "33903" },
-  { pokedexNum: "RC9/RC32", name: "Raichu", typeShorthand: "Lightning", rarityShorthand: "Common", pkNameForUrl: "Raichu", pkCardNumForUrl: "RC9", pkUniqueId: "33904" }, // This is the Holo Raichu from RC
+  { pokedexNum: "RC9/RC32", name: "Raichu", typeShorthand: "Lightning", rarityShorthand: "Common", pkNameForUrl: "Raichu", pkCardNumForUrl: "RC9", pkUniqueId: "33904" }, // RC Raichu is Common.
   { pokedexNum: "RC10/RC32", name: "Dedenne", typeShorthand: "Lightning", rarityShorthand: "Uncommon", pkNameForUrl: "Dedenne", pkCardNumForUrl: "RC10", pkUniqueId: "33907" },
   { pokedexNum: "RC11/RC32", name: "Wobbuffet", typeShorthand: "Psychic", rarityShorthand: "Common", pkNameForUrl: "Wobbuffet", pkCardNumForUrl: "RC11", pkUniqueId: "33918" },
   { pokedexNum: "RC12/RC32", name: "Gulpin", typeShorthand: "Psychic", rarityShorthand: "Common", pkNameForUrl: "Gulpin", pkCardNumForUrl: "RC12", pkUniqueId: "33900" },
-  { pokedexNum: "RC13/RC32", name: "Jirachi", typeShorthand: "Psychic", rarityShorthand: "Uncommon", pkNameForUrl: "Jirachi", pkCardNumForUrl: "RC13", pkUniqueId: "33901" }, // Holo Jirachi from RC
+  { pokedexNum: "RC13/RC32", name: "Jirachi", typeShorthand: "Psychic", rarityShorthand: "Uncommon", pkNameForUrl: "Jirachi", pkCardNumForUrl: "RC13", pkUniqueId: "33901" }, // RC Jirachi is Uncommon.
   { pokedexNum: "RC14/RC32", name: "Espurr", typeShorthand: "Psychic", rarityShorthand: "Common", pkNameForUrl: "Espurr", pkCardNumForUrl: "RC14", pkUniqueId: "33905" },
   { pokedexNum: "RC15/RC32", name: "Meowstic", typeShorthand: "Psychic", rarityShorthand: "Uncommon", pkNameForUrl: "Meowstic", pkCardNumForUrl: "RC15", pkUniqueId: "33906" },
-  { pokedexNum: "RC16/RC32", name: "Yveltal", typeShorthand: "Darkness", rarityShorthand: "Uncommon", pkNameForUrl: "Yveltal", pkCardNumForUrl: "RC16", pkUniqueId: "33910" }, // Holo Yveltal from RC
-  { pokedexNum: "RC17/RC32", name: "Flabébé", typeShorthand: "Fairy", rarityShorthand: "Common", pkNameForUrl: "Flabebe", pkCardNumForUrl: "RC17", pkUniqueId: "33908" }, // Note: Flabébé uses 'é'
+  { pokedexNum: "RC16/RC32", name: "Yveltal", typeShorthand: "Darkness", rarityShorthand: "Uncommon", pkNameForUrl: "Yveltal", pkCardNumForUrl: "RC16", pkUniqueId: "33910" }, // RC Yveltal is Uncommon.
+  { pokedexNum: "RC17/RC32", name: "Flabébé", typeShorthand: "Fairy", rarityShorthand: "Common", pkNameForUrl: "Flabebe", pkCardNumForUrl: "RC17", pkUniqueId: "33908" },
   { pokedexNum: "RC18/RC32", name: "Floette", typeShorthand: "Fairy", rarityShorthand: "Uncommon", pkNameForUrl: "Floette", pkCardNumForUrl: "RC18", pkUniqueId: "33911" },
   { pokedexNum: "RC19/RC32", name: "Swirlix", typeShorthand: "Fairy", rarityShorthand: "Uncommon", pkNameForUrl: "Swirlix", pkCardNumForUrl: "RC19", pkUniqueId: "33912" },
   { pokedexNum: "RC20/RC32", name: "Slurpuff", typeShorthand: "Fairy", rarityShorthand: "Uncommon", pkNameForUrl: "Slurpuff", pkCardNumForUrl: "RC20", pkUniqueId: "33913" },
@@ -183,7 +173,7 @@ const generationsCardDetails: Array<{ pokedexNum: string, name: string, typeShor
   { pokedexNum: "RC28/RC32", name: "Flareon-EX", typeShorthand: "Fire", rarityShorthand: "Ultra Rare", pkNameForUrl: "Flareon-EX", pkCardNumForUrl: "RC28", pkUniqueId: "33916" }, // Full Art EX
   { pokedexNum: "RC29/RC32", name: "Pikachu", typeShorthand: "Lightning", rarityShorthand: "Ultra Rare", pkNameForUrl: "Pikachu", pkCardNumForUrl: "RC29", pkUniqueId: "33923" }, // Full Art Pikachu
   { pokedexNum: "RC30/RC32", name: "Gardevoir-EX", typeShorthand: "Fairy", rarityShorthand: "Ultra Rare", pkNameForUrl: "Gardevoir-EX", pkCardNumForUrl: "RC30", pkUniqueId: "33915" }, // Full Art EX
-  { pokedexNum: "RC31/RC32", name: "M Gardevoir-EX", typeShorthand: "Fairy", rarityShorthand: "Ultra Rare", pkNameForUrl: "Mega-Gardevoir-EX", pkCardNumForUrl: "RC31", pkUniqueId: "33919" }, // Full Art M EX
+  { pokedexNum: "RC31/RC32", name: "M Gardevoir-EX", typeShorthand: "Fairy", rarityShorthand: "Ultra Rare", pkNameForUrl: "M-Gardevoir-EX", pkCardNumForUrl: "RC31", pkUniqueId: "33919" }, // Full Art M EX
   { pokedexNum: "RC32/RC32", name: "Sylveon-EX", typeShorthand: "Fairy", rarityShorthand: "Ultra Rare", pkNameForUrl: "Sylveon-EX", pkCardNumForUrl: "RC32", pkUniqueId: "33917" }, // Full Art EX
 ];
 
@@ -191,18 +181,18 @@ const generationsCardDetails: Array<{ pokedexNum: string, name: string, typeShor
 export const generationsCards: PokemonCard[] = generationsCardDetails.map(detail => {
   const cardId = createCardId(detail.name, detail.pokedexNum);
   const type = mapType(detail.typeShorthand);
-  const rarity = mapRarity(detail.rarityShorthand); 
-  
-  const formattedPkName = formatPkNameForUrl(detail.pkNameForUrl); // Use the specified name for URL
-  
-  const imageUrl = `https://den-cards.pokellector.com/120/${formattedPkName}.GEN.${detail.pkCardNumForUrl}.${detail.pkUniqueId}.png`;
-  
+  const rarity = mapRarity(detail.rarityShorthand);
+
+  // Use the new image URL pattern
+  const imageUrl = `https://den-cards.pokellector.com/187/${detail.pkNameForUrl}.GEN.${detail.pkCardNumForUrl}.thumb.png`;
+
   let dataAiHint = detail.name;
    if (type !== 'Trainer' && type !== 'Energy') {
     dataAiHint += ` ${type.toLowerCase()} pokemon`;
   } else if (type === 'Trainer') {
      dataAiHint += ` trainer card`;
   }
+
 
   return {
     id: cardId,
@@ -215,3 +205,15 @@ export const generationsCards: PokemonCard[] = generationsCardDetails.map(detail
     pokedexNumber: detail.pokedexNum,
   };
 });
+
+// Helper function to format name for Pokellector URL (kept for reference, ensure pkNameForUrl is used directly from data)
+// function formatPkNameForUrl(name: string): string {
+//   let formatted = name.replace(/EX$/, '-EX').replace(/Mega\s/, 'M-');
+//   formatted = formatted
+//     .replace(/é/g, 'e')
+//     .replace(/\s+/g, '-')
+//     .replace(/[.?']/g, '') 
+//     .replace(/♀/g, '-F')   
+//     .replace(/♂/g, '-M');
+//   return formatted;
+// }
