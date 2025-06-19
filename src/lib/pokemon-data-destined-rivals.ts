@@ -1,5 +1,5 @@
 
-import type { PokemonCard } from './types';
+import type { PokemonCard, CardRarity } from './types';
 
 // Helper function to format card names for URLs
 function formatNameForUrl(name: string): string {
@@ -71,271 +71,331 @@ function getDestinedRivalsUniqueID(cardNumberInSet: number): number {
   return 0; 
 }
 
-// Rarity Mapping from Pokellector to our system for DRI (Set ID 412):
-// Pokellector "Common" -> Common
-// Pokellector "Uncommon" -> Uncommon
-// Pokellector "Rare" (non-holo) & "Rare Holo" (standard set holos) -> Rare
-// Pokellector "Double Rare" (Pokémon ex) -> Double Rare
-// Pokellector "Ultra Rare" (Full Art Pokémon ex, Full Art Trainers) -> Ultra Rare
-// Pokellector "Illustration Rare" -> Illustration Rare
-// Pokellector "Special Illustration Rare" -> Special Illustration Rare
-// Pokellector "Hyper Rare" (Gold cards) -> Hyper Rare
-
-const cardListData: { name: string, type: PokemonCard['type'], rarity: PokemonCard['rarity'] }[] = [
-  { name: "Ethan's Pinsir", type: 'Grass', rarity: 'Illustration Rare' }, // 1
-  { name: 'Yanma', type: 'Grass', rarity: 'Common' }, // 2
-  { name: 'Yanmega ex', type: 'Grass', rarity: 'Double Rare' }, // 3
-  { name: 'Pineco', type: 'Grass', rarity: 'Common' }, // 4
-  { name: 'Shroomish', type: 'Grass', rarity: 'Common' }, // 5
-  { name: 'Breloom', type: 'Grass', rarity: 'Uncommon' }, // 6
-  { name: "Cynthia's Roselia", type: 'Grass', rarity: 'Uncommon' }, // 7
-  { name: "Cynthia's Roserade", type: 'Grass', rarity: 'Rare' }, // 8 (Rare Holo)
-  { name: 'Mow Rotom', type: 'Grass', rarity: 'Rare' }, // 9 (Rare Holo)
-  { name: 'Shaymin', type: 'Grass', rarity: 'Rare' }, // 10 (Rare Holo)
-  { name: 'Dwebble', type: 'Grass', rarity: 'Common' }, // 11
-  { name: 'Crustle', type: 'Grass', rarity: 'Uncommon' }, // 12
-  { name: 'Fomantis', type: 'Grass', rarity: 'Common' }, // 13
-  { name: 'Lurantis', type: 'Grass', rarity: 'Rare' }, // 14 (Rare Holo)
-  { name: "Team Rocket's Blipbug", type: 'Grass', rarity: 'Common' }, // 15
-  { name: 'Applin', type: 'Grass', rarity: 'Common' }, // 16
-  { name: 'Dipplin', type: 'Grass', rarity: 'Uncommon' }, // 17
-  { name: 'Hydrapple', type: 'Grass', rarity: 'Rare' }, // 18 (Rare Holo)
-  { name: "Team Rocket's Tarountula", type: 'Grass', rarity: 'Common' }, // 19
-  { name: "Team Rocket's Spidops", type: 'Grass', rarity: 'Uncommon' }, // 20
-  { name: 'Smoliv', type: 'Grass', rarity: 'Common' }, // 21
-  { name: 'Dolliv', type: 'Grass', rarity: 'Uncommon' }, // 22
-  { name: 'Arboliva ex', type: 'Grass', rarity: 'Double Rare' }, // 23
-  { name: 'Rellor', type: 'Grass', rarity: 'Common' }, // 24
-  { name: 'Rabsca ex', type: 'Grass', rarity: 'Double Rare' }, // 25
-  { name: 'Teal Mask Ogerpon', type: 'Grass', rarity: 'Rare' }, // 26 (Rare Holo)
-  { name: 'Growlithe', type: 'Fire', rarity: 'Common' }, // 27
-  { name: 'Arcanine', type: 'Fire', rarity: 'Uncommon' }, // 28
-  { name: 'Ponyta', type: 'Fire', rarity: 'Common' }, // 29
-  { name: 'Rapidash', type: 'Fire', rarity: 'Uncommon' }, // 30
-  { name: "Team Rocket's Moltres ex", type: 'Fire', rarity: 'Double Rare' }, // 31
-  { name: "Ethan's Cyndaquil", type: 'Fire', rarity: 'Common' }, // 32
-  { name: "Ethan's Quilava", type: 'Fire', rarity: 'Uncommon' }, // 33
-  { name: "Ethan's Typhlosion", type: 'Fire', rarity: 'Rare' }, // 34 (Rare Holo)
-  { name: "Ethan's Slugma", type: 'Fire', rarity: 'Common' }, // 35
-  { name: "Ethan's Magcargo", type: 'Fire', rarity: 'Uncommon' }, // 36
-  { name: "Team Rocket's Houndour", type: 'Fire', rarity: 'Common' }, // 37
-  { name: "Team Rocket's Houndoom", type: 'Fire', rarity: 'Rare' }, // 38 (Rare Holo)
-  { name: "Ethan's Ho-Oh ex", type: 'Fire', rarity: 'Double Rare' }, // 39
-  { name: 'Torchic', type: 'Fire', rarity: 'Common' }, // 40
-  { name: 'Combusken', type: 'Fire', rarity: 'Uncommon' }, // 41
-  { name: 'Blaziken', type: 'Fire', rarity: 'Rare' }, // 42 (Rare Holo)
-  { name: 'Heat Rotom', type: 'Fire', rarity: 'Rare' }, // 43 (Rare Holo)
-  { name: 'Hearthflame Mask Ogerpon', type: 'Fire', rarity: 'Rare' }, // 44 (Rare Holo)
-  { name: "Misty's Psyduck", type: 'Water', rarity: 'Common' }, // 45
-  { name: "Misty's Staryu", type: 'Water', rarity: 'Common' }, // 46
-  { name: "Misty's Starmie", type: 'Water', rarity: 'Uncommon' }, // 47
-  { name: "Misty's Magikarp", type: 'Water', rarity: 'Common' }, // 48
-  { name: "Misty's Gyarados", type: 'Water', rarity: 'Rare' }, // 49 (Rare Holo)
-  { name: "Misty's Lapras", type: 'Water', rarity: 'Rare' }, // 50 (Rare Holo)
-  { name: "Team Rocket's Articuno", type: 'Water', rarity: 'Rare' }, // 51 (Rare Holo)
-  { name: "Cynthia's Feebas", type: 'Water', rarity: 'Common' }, // 52
-  { name: "Cynthia's Milotic", type: 'Water', rarity: 'Rare' }, // 53 (Rare Holo)
-  { name: 'Clamperl', type: 'Water', rarity: 'Common' }, // 54
-  { name: 'Huntail', type: 'Water', rarity: 'Uncommon' }, // 55
-  { name: 'Gorebyss', type: 'Water', rarity: 'Uncommon' }, // 56
-  { name: 'Buizel', type: 'Water', rarity: 'Common' }, // 57
-  { name: 'Floatzel', type: 'Water', rarity: 'Uncommon' }, // 58
-  { name: 'Snover', type: 'Water', rarity: 'Common' }, // 59
-  { name: 'Abomasnow', type: 'Water', rarity: 'Uncommon' }, // 60
-  { name: 'Wash Rotom', type: 'Water', rarity: 'Rare' }, // 61 (Rare Holo)
-  { name: 'Arrokuda', type: 'Water', rarity: 'Common' }, // 62
-  { name: 'Barraskewda', type: 'Water', rarity: 'Uncommon' }, // 63
-  { name: 'Cetoddle', type: 'Water', rarity: 'Common' }, // 64
-  { name: 'Cetitan ex', type: 'Water', rarity: 'Double Rare' }, // 65
-  { name: 'Dondozo ex', type: 'Water', rarity: 'Double Rare' }, // 66
-  { name: 'Wellspring Mask Ogerpon', type: 'Water', rarity: 'Rare' }, // 67 (Rare Holo)
-  { name: 'Electabuzz', type: 'Lightning', rarity: 'Common' }, // 68
-  { name: 'Electivire ex', type: 'Lightning', rarity: 'Double Rare' }, // 69
-  { name: "Team Rocket's Zapdos", type: 'Lightning', rarity: 'Rare' }, // 70 (Rare Holo)
-  { name: "Ethan's Pichu", type: 'Lightning', rarity: 'Common' }, // 71
-  { name: "Team Rocket's Mareep", type: 'Lightning', rarity: 'Common' }, // 72
-  { name: "Team Rocket's Flaaffy", type: 'Lightning', rarity: 'Uncommon' }, // 73
-  { name: "Team Rocket's Ampharos", type: 'Lightning', rarity: 'Rare' }, // 74 (Rare Holo)
-  { name: 'Electrike', type: 'Lightning', rarity: 'Common' }, // 75
-  { name: 'Manectric', type: 'Lightning', rarity: 'Uncommon' }, // 76
-  { name: 'Rotom', type: 'Lightning', rarity: 'Rare' }, // 77 (Rare Holo)
-  { name: 'Zeraora', type: 'Lightning', rarity: 'Rare' }, // 78 (Rare Holo)
-  { name: "Team Rocket's Drowzee", type: 'Psychic', rarity: 'Common' }, // 79
-  { name: "Team Rocket's Hypno", type: 'Psychic', rarity: 'Uncommon' }, // 80
-  { name: "Team Rocket's Mewtwo ex", type: 'Psychic', rarity: 'Double Rare' }, // 81
-  { name: "Team Rocket's Wobbuffet", type: 'Psychic', rarity: 'Uncommon' }, // 82
-  { name: "Steven's Baltoy", type: 'Psychic', rarity: 'Common' }, // 83
-  { name: "Steven's Claydol", type: 'Psychic', rarity: 'Uncommon' }, // 84
-  { name: "Team Rocket's Chingling", type: 'Psychic', rarity: 'Common' }, // 85
-  { name: "Steven's Carbink", type: 'Psychic', rarity: 'Uncommon' }, // 86
-  { name: "Team Rocket's Mimikyu", type: 'Psychic', rarity: 'Rare' }, // 87 (Rare Holo)
-  { name: "Team Rocket's Dottler", type: 'Psychic', rarity: 'Uncommon' }, // 88
-  { name: "Team Rocket's Orbeetle", type: 'Psychic', rarity: 'Rare' }, // 89 (Rare Holo)
-  { name: 'Mankey', type: 'Fighting', rarity: 'Common' }, // 90
-  { name: 'Primeape', type: 'Fighting', rarity: 'Uncommon' }, // 91
-  { name: 'Annihilape', type: 'Fighting', rarity: 'Rare' }, // 92 (Rare Holo)
-  { name: "Ethan's Sudowoodo", type: 'Fighting', rarity: 'Uncommon' }, // 93
-  { name: "Team Rocket's Larvitar", type: 'Fighting', rarity: 'Common' }, // 94
-  { name: "Team Rocket's Pupitar", type: 'Fighting', rarity: 'Uncommon' }, // 95
-  { name: "Team Rocket's Tyranitar", type: 'Darkness', rarity: 'Rare' }, // 96 (Rare Holo)
-  { name: 'Nosepass', type: 'Fighting', rarity: 'Common' }, // 97
-  { name: 'Probopass', type: 'Metal', rarity: 'Uncommon' }, // 98
-  { name: 'Meditite', type: 'Fighting', rarity: 'Common' }, // 99
-  { name: 'Medicham', type: 'Fighting', rarity: 'Uncommon' }, // 100
-  { name: 'Regirock ex', type: 'Fighting', rarity: 'Double Rare' }, // 101
-  { name: "Cynthia's Gible", type: 'Dragon', rarity: 'Common' }, // 102
-  { name: "Cynthia's Gabite", type: 'Dragon', rarity: 'Uncommon' }, // 103
-  { name: "Cynthia's Garchomp ex", type: 'Dragon', rarity: 'Double Rare' }, // 104
-  { name: 'Hippopotas', type: 'Fighting', rarity: 'Common' }, // 105
-  { name: 'Hippowdon', type: 'Fighting', rarity: 'Uncommon' }, // 106
-  { name: 'Mudbray', type: 'Fighting', rarity: 'Common' }, // 107
-  { name: 'Mudsdale', type: 'Fighting', rarity: 'Uncommon' }, // 108
-  { name: "Arven's Toedscool", type: 'Grass', rarity: 'Common' }, // 109
-  { name: "Arven's Toedscruel", type: 'Grass', rarity: 'Uncommon' }, // 110
-  { name: 'Cornerstone Mask Ogerpon', type: 'Fighting', rarity: 'Rare' }, // 111 (Rare Holo)
-  { name: "Team Rocket's Ekans", type: 'Grass', rarity: 'Common' }, // 112
-  { name: "Team Rocket's Arbok", type: 'Grass', rarity: 'Uncommon' }, // 113
-  { name: "Team Rocket's Nidoran♀", type: 'Grass', rarity: 'Common' }, // 114
-  { name: "Team Rocket's Nidorina", type: 'Grass', rarity: 'Uncommon' }, // 115
-  { name: "Team Rocket's Nidoqueen", type: 'Grass', rarity: 'Rare' }, // 116 (Rare Holo)
-  { name: "Team Rocket's Nidoran♂", type: 'Grass', rarity: 'Common' }, // 117
-  { name: "Team Rocket's Nidorino", type: 'Grass', rarity: 'Uncommon' }, // 118
-  { name: "Team Rocket's Nidoking ex", type: 'Grass', rarity: 'Double Rare' }, // 119
-  { name: "Team Rocket's Zubat", type: 'Grass', rarity: 'Common' }, // 120
-  { name: "Team Rocket's Golbat", type: 'Grass', rarity: 'Uncommon' }, // 121
-  { name: "Team Rocket's Crobat ex", type: 'Darkness', rarity: 'Double Rare' }, // 122
-  { name: "Team Rocket's Grimer", type: 'Grass', rarity: 'Common' }, // 123
-  { name: "Team Rocket's Muk", type: 'Grass', rarity: 'Uncommon' }, // 124
-  { name: "Team Rocket's Koffing", type: 'Grass', rarity: 'Common' }, // 125
-  { name: "Team Rocket's Weezing", type: 'Grass', rarity: 'Rare' }, // 126 (Rare Holo)
-  { name: "Team Rocket's Murkrow", type: 'Darkness', rarity: 'Common' }, // 127
-  { name: "Team Rocket's Sneasel", type: 'Darkness', rarity: 'Common' }, // 128
-  { name: "Cynthia's Spiritomb", type: 'Psychic', rarity: 'Rare' }, // 129 (Rare Holo)
-  { name: "Marnie's Purrloin", type: 'Darkness', rarity: 'Common' }, // 130
-  { name: "Marnie's Liepard", type: 'Darkness', rarity: 'Uncommon' }, // 131
-  { name: "Marnie's Scraggy", type: 'Darkness', rarity: 'Common' }, // 132
-  { name: "Marnie's Scrafty", type: 'Darkness', rarity: 'Uncommon' }, // 133
-  { name: "Marnie's Impidimp", type: 'Darkness', rarity: 'Common' }, // 134
-  { name: "Marnie's Morgrem", type: 'Darkness', rarity: 'Uncommon' }, // 135
-  { name: "Marnie's Grimmsnarl ex", type: 'Darkness', rarity: 'Double Rare' }, // 136
-  { name: "Marnie's Morpeko", type: 'Lightning', rarity: 'Rare' }, // 137 (Rare Holo)
-  { name: "Arven's Maschiff", type: 'Darkness', rarity: 'Common' }, // 138
-  { name: "Arven's Mabosstiff ex", type: 'Darkness', rarity: 'Double Rare' }, // 139
-  { name: 'Forretress', type: 'Metal', rarity: 'Uncommon' }, // 140
-  { name: 'Skarmory', type: 'Metal', rarity: 'Common' }, // 141
-  { name: "Steven's Skarmory", type: 'Metal', rarity: 'Uncommon' }, // 142
-  { name: "Steven's Beldum", type: 'Metal', rarity: 'Common' }, // 143
-  { name: "Steven's Metang", type: 'Metal', rarity: 'Uncommon' }, // 144
-  { name: "Steven's Metagross ex", type: 'Metal', rarity: 'Double Rare' }, // 145
-  { name: 'Zamazenta', type: 'Metal', rarity: 'Rare' }, // 146 (Rare Holo)
-  { name: "Team Rocket's Rattata", type: 'Colorless', rarity: 'Common' }, // 147
-  { name: "Team Rocket's Raticate", type: 'Colorless', rarity: 'Uncommon' }, // 148
-  { name: "Team Rocket's Meowth", type: 'Colorless', rarity: 'Common' }, // 149
-  { name: "Team Rocket's Persian ex", type: 'Colorless', rarity: 'Double Rare' }, // 150
-  { name: 'Kangaskhan', type: 'Colorless', rarity: 'Rare' }, // 151 (Rare Holo)
-  { name: 'Tauros', type: 'Colorless', rarity: 'Uncommon' }, // 152
-  { name: "Team Rocket's Porygon", type: 'Colorless', rarity: 'Common' }, // 153
-  { name: "Team Rocket's Porygon2", type: 'Colorless', rarity: 'Uncommon' }, // 154
-  { name: "Team Rocket's Porygon-Z", type: 'Colorless', rarity: 'Rare' }, // 155 (Rare Holo)
-  { name: 'Taillow', type: 'Colorless', rarity: 'Common' }, // 156
-  { name: 'Swellow', type: 'Colorless', rarity: 'Uncommon' }, // 157
-  { name: "Arven's Skwovet", type: 'Colorless', rarity: 'Common' }, // 158
-  { name: "Arven's Greedent", type: 'Colorless', rarity: 'Uncommon' }, // 159
-  { name: 'Squawkabilly', type: 'Colorless', rarity: 'Rare' }, // 160 (Rare Holo)
-  { name: "Arven's Sandwich", type: 'Trainer', rarity: 'Uncommon' }, // 161
-  { name: "Cynthia's Power Weight", type: 'Trainer', rarity: 'Uncommon' }, // 162
-  { name: "Emcee's Hype", type: 'Trainer', rarity: 'Ultra Rare' }, // 163 - Assuming Full Art Supporter
-  { name: 'Energy Recycler', type: 'Trainer', rarity: 'Uncommon' }, // 164
-  { name: "Ethan's Adventure", type: 'Trainer', rarity: 'Ultra Rare' }, // 165 - Assuming Full Art Supporter
-  { name: 'Granite Cave', type: 'Trainer', rarity: 'Uncommon' }, // 166
-  { name: 'Judge', type: 'Trainer', rarity: 'Rare' }, // 167 - Regular print of a supporter, often Rare
-  { name: 'Sacred Ash', type: 'Trainer', rarity: 'Uncommon' }, // 168
-  { name: 'Spikemuth Gym', type: 'Trainer', rarity: 'Uncommon' }, // 169
-  { name: "Team Rocket's Archer", type: 'Trainer', rarity: 'Ultra Rare' }, // 170 - Assuming Full Art Supporter
-  { name: "Team Rocket's Ariana", type: 'Trainer', rarity: 'Ultra Rare' }, // 171 - Assuming Full Art Supporter
-  { name: "Team Rocket's Bother-Bot", type: 'Trainer', rarity: 'Uncommon' }, // 172
-  { name: "Team Rocket's Factory", type: 'Trainer', rarity: 'Uncommon' }, // 173
-  { name: "Team Rocket's Giovanni", type: 'Trainer', rarity: 'Ultra Rare' }, // 174 - Assuming Full Art Supporter
-  { name: "Team Rocket's Great Ball", type: 'Trainer', rarity: 'Uncommon' }, // 175
-  { name: "Team Rocket's Petrel", type: 'Trainer', rarity: 'Ultra Rare' }, // 176 - Assuming Full Art Supporter
-  { name: "Team Rocket's Proton", type: 'Trainer', rarity: 'Ultra Rare' }, // 177 - Assuming Full Art Supporter
-  { name: "Team Rocket's Transceiver", type: 'Trainer', rarity: 'Uncommon' }, // 178
-  { name: "Team Rocket's Venture Bomb", type: 'Trainer', rarity: 'Uncommon' }, // 179
-  { name: "Team Rocket's Watchtower", type: 'Trainer', rarity: 'Uncommon' }, // 180
-  { name: 'TM Machine', type: 'Trainer', rarity: 'Uncommon' }, // 181
-  { name: "Team Rocket's Energy", type: 'Energy', rarity: 'Rare' }, // 182 - Special Energy, often Rare or Uncommon
-  { name: 'Yanma', type: 'Grass', rarity: 'Illustration Rare' }, // 183
-  { name: "Cynthia's Roserade", type: 'Grass', rarity: 'Illustration Rare' }, // 184
-  { name: 'Shaymin', type: 'Grass', rarity: 'Illustration Rare' }, // 185
-  { name: 'Crustle', type: 'Grass', rarity: 'Illustration Rare' }, // 186
-  { name: "Team Rocket's Spidops", type: 'Grass', rarity: 'Illustration Rare' }, // 187
-  { name: 'Hydrapple', type: 'Grass', rarity: 'Illustration Rare' }, // 188
-  { name: 'Rapidash', type: 'Fire', rarity: 'Illustration Rare' }, // 189
-  { name: "Ethan's Typhlosion", type: 'Fire', rarity: 'Illustration Rare' }, // 190
-  { name: "Team Rocket's Houndoom", type: 'Fire', rarity: 'Illustration Rare' }, // 191
-  { name: 'Blaziken', type: 'Fire', rarity: 'Illustration Rare' }, // 192
-  { name: "Misty's Psyduck", type: 'Water', rarity: 'Illustration Rare' }, // 193
-  { name: "Misty's Lapras", type: 'Water', rarity: 'Illustration Rare' }, // 194
-  { name: 'Clamperl', type: 'Water', rarity: 'Illustration Rare' }, // 195
-  { name: 'Electrike', type: 'Lightning', rarity: 'Illustration Rare' }, // 196
-  { name: 'Rotom', type: 'Lightning', rarity: 'Illustration Rare' }, // 197
-  { name: "Team Rocket's Orbeetle", type: 'Psychic', rarity: 'Illustration Rare' }, // 198
-  { name: "Team Rocket's Weezing", type: 'Grass', rarity: 'Illustration Rare' }, // 199
-  { name: "Team Rocket's Murkrow", type: 'Darkness', rarity: 'Illustration Rare' }, // 200
-  { name: 'Zamazenta', type: 'Metal', rarity: 'Illustration Rare' }, // 201
-  { name: "Team Rocket's Raticate", type: 'Colorless', rarity: 'Illustration Rare' }, // 202
-  { name: "Team Rocket's Meowth", type: 'Colorless', rarity: 'Illustration Rare' }, // 203
-  { name: 'Kangaskhan', type: 'Colorless', rarity: 'Illustration Rare' }, // 204
-  { name: "Arven's Greedent", type: 'Colorless', rarity: 'Illustration Rare' }, // 205
-  { name: 'Yanmega ex', type: 'Grass', rarity: 'Ultra Rare' }, // 206 - Full Art ex
-  { name: 'Arboliva ex', type: 'Grass', rarity: 'Ultra Rare' }, // 207 - Full Art ex
-  { name: "Team Rocket's Moltres ex", type: 'Fire', rarity: 'Ultra Rare' }, // 208 - Full Art ex
-  { name: "Ethan's Ho-Oh ex", type: 'Fire', rarity: 'Ultra Rare' }, // 209 - Full Art ex
-  { name: 'Cetitan ex', type: 'Water', rarity: 'Ultra Rare' }, // 210 - Full Art ex
-  { name: 'Dondozo ex', type: 'Water', rarity: 'Ultra Rare' }, // 211 - Full Art ex
-  { name: 'Electivire ex', type: 'Lightning', rarity: 'Ultra Rare' }, // 212 - Full Art ex
-  { name: "Team Rocket's Mewtwo ex", type: 'Psychic', rarity: 'Ultra Rare' }, // 213 - Full Art ex
-  { name: 'Regirock ex', type: 'Fighting', rarity: 'Ultra Rare' }, // 214 - Full Art ex
-  { name: "Cynthia's Garchomp ex", type: 'Dragon', rarity: 'Ultra Rare' }, // 215 - Full Art ex
-  { name: "Team Rocket's Nidoking ex", type: 'Grass', rarity: 'Ultra Rare' }, // 216 - Full Art ex
-  { name: "Team Rocket's Crobat ex", type: 'Darkness', rarity: 'Ultra Rare' }, // 217 - Full Art ex
-  { name: "Arven's Mabosstiff ex", type: 'Darkness', rarity: 'Ultra Rare' }, // 218 - Full Art ex
-  { name: "Team Rocket's Persian ex", type: 'Colorless', rarity: 'Ultra Rare' }, // 219 - Full Art ex
-  { name: "Emcee's Hype", type: 'Trainer', rarity: 'Ultra Rare' }, // 220 - Full Art Supporter
-  { name: "Ethan's Adventure", type: 'Trainer', rarity: 'Ultra Rare' }, // 221 - Full Art Supporter
-  { name: 'Judge', type: 'Trainer', rarity: 'Ultra Rare' }, // 222 - Full Art Supporter (this is likely the FA version)
-  { name: "Team Rocket's Archer", type: 'Trainer', rarity: 'Ultra Rare' }, // 223 - Full Art Supporter
-  { name: "Team Rocket's Ariana", type: 'Trainer', rarity: 'Ultra Rare' }, // 224 - Full Art Supporter
-  { name: "Team Rocket's Giovanni", type: 'Trainer', rarity: 'Ultra Rare' }, // 225 - Full Art Supporter
-  { name: "Team Rocket's Petrel", type: 'Trainer', rarity: 'Ultra Rare' }, // 226 - Full Art Supporter
-  { name: "Team Rocket's Proton", type: 'Trainer', rarity: 'Ultra Rare' }, // 227 - Full Art Supporter
-  { name: 'Yanmega ex', type: 'Grass', rarity: 'Special Illustration Rare' }, // 228
-  { name: "Team Rocket's Moltres ex", type: 'Fire', rarity: 'Special Illustration Rare' }, // 229
-  { name: "Ethan's Ho-Oh ex", type: 'Fire', rarity: 'Special Illustration Rare' }, // 230
-  { name: "Team Rocket's Mewtwo ex", type: 'Psychic', rarity: 'Special Illustration Rare' }, // 231
-  { name: "Cynthia's Garchomp ex", type: 'Dragon', rarity: 'Special Illustration Rare' }, // 232
-  { name: "Team Rocket's Nidoking ex", type: 'Grass', rarity: 'Special Illustration Rare' }, // 233
-  { name: "Team Rocket's Crobat ex", type: 'Darkness', rarity: 'Special Illustration Rare' }, // 234
-  { name: "Arven's Mabosstiff ex", type: 'Darkness', rarity: 'Special Illustration Rare' }, // 235
-  { name: "Ethan's Adventure", type: 'Trainer', rarity: 'Special Illustration Rare' }, // 236
-  { name: "Team Rocket's Ariana", type: 'Trainer', rarity: 'Special Illustration Rare' }, // 237
-  { name: "Team Rocket's Giovanni", type: 'Trainer', rarity: 'Special Illustration Rare' }, // 238
-  { name: "Ethan's Ho-Oh ex", type: 'Fire', rarity: 'Hyper Rare' }, // 239 - Gold ex
-  { name: "Team Rocket's Mewtwo ex", type: 'Psychic', rarity: 'Hyper Rare' }, // 240 - Gold ex
-  { name: "Cynthia's Garchomp ex", type: 'Dragon', rarity: 'Hyper Rare' }, // 241 - Gold ex
-  { name: "Team Rocket's Crobat ex", type: 'Darkness', rarity: 'Hyper Rare' }, // 242 - Gold ex
-  { name: 'Jamming Tower', type: 'Trainer', rarity: 'Hyper Rare' }, // 243 - Gold Stadium
-  { name: 'Levincia', type: 'Trainer', rarity: 'Hyper Rare' }, // 244 - Gold Stadium
+// Baseline data for the 244 cards in "Destined Rivals Illustration Collection (DRI)"
+// Types are based on typical TCG representations.
+// Initial rarities are based on the card's nature in the DRI set.
+const cardListData: { name: string, type: PokemonCard['type'], initialRarity: CardRarity }[] = [
+  { name: "Ethan's Pinsir", type: 'Grass', initialRarity: 'Illustration Rare' }, // 1
+  { name: 'Yanma', type: 'Grass', initialRarity: 'Common' }, // 2
+  { name: 'Yanmega ex', type: 'Grass', initialRarity: 'Double Rare' }, // 3
+  { name: 'Pineco', type: 'Grass', initialRarity: 'Common' }, // 4
+  { name: 'Shroomish', type: 'Grass', initialRarity: 'Common' }, // 5
+  { name: 'Breloom', type: 'Grass', initialRarity: 'Uncommon' }, // 6
+  { name: "Cynthia's Roselia", type: 'Grass', initialRarity: 'Uncommon' }, // 7
+  { name: "Cynthia's Roserade", type: 'Grass', initialRarity: 'Rare' }, // 8
+  { name: 'Mow Rotom', type: 'Grass', initialRarity: 'Rare' }, // 9
+  { name: 'Shaymin', type: 'Grass', initialRarity: 'Rare' }, // 10
+  { name: 'Dwebble', type: 'Grass', initialRarity: 'Common' }, // 11
+  { name: 'Crustle', type: 'Grass', initialRarity: 'Uncommon' }, // 12
+  { name: 'Fomantis', type: 'Grass', initialRarity: 'Common' }, // 13
+  { name: 'Lurantis', type: 'Grass', initialRarity: 'Rare' }, // 14
+  { name: "Team Rocket's Blipbug", type: 'Grass', initialRarity: 'Common' }, // 15
+  { name: 'Applin', type: 'Grass', initialRarity: 'Common' }, // 16
+  { name: 'Dipplin', type: 'Grass', initialRarity: 'Uncommon' }, // 17
+  { name: 'Hydrapple', type: 'Grass', initialRarity: 'Rare' }, // 18
+  { name: "Team Rocket's Tarountula", type: 'Grass', initialRarity: 'Common' }, // 19
+  { name: "Team Rocket's Spidops", type: 'Grass', initialRarity: 'Uncommon' }, // 20
+  { name: 'Smoliv', type: 'Grass', initialRarity: 'Common' }, // 21
+  { name: 'Dolliv', type: 'Grass', initialRarity: 'Uncommon' }, // 22
+  { name: 'Arboliva ex', type: 'Grass', initialRarity: 'Double Rare' }, // 23
+  { name: 'Rellor', type: 'Grass', initialRarity: 'Common' }, // 24
+  { name: 'Rabsca ex', type: 'Grass', initialRarity: 'Double Rare' }, // 25
+  { name: 'Teal Mask Ogerpon', type: 'Grass', initialRarity: 'Rare' }, // 26
+  { name: 'Growlithe', type: 'Fire', initialRarity: 'Common' }, // 27
+  { name: 'Arcanine', type: 'Fire', initialRarity: 'Uncommon' }, // 28
+  { name: 'Ponyta', type: 'Fire', initialRarity: 'Common' }, // 29
+  { name: 'Rapidash', type: 'Fire', initialRarity: 'Uncommon' }, // 30
+  { name: "Team Rocket's Moltres ex", type: 'Fire', initialRarity: 'Double Rare' }, // 31
+  { name: "Ethan's Cyndaquil", type: 'Fire', initialRarity: 'Common' }, // 32
+  { name: "Ethan's Quilava", type: 'Fire', initialRarity: 'Uncommon' }, // 33
+  { name: "Ethan's Typhlosion", type: 'Fire', initialRarity: 'Rare' }, // 34
+  { name: "Ethan's Slugma", type: 'Fire', initialRarity: 'Common' }, // 35
+  { name: "Ethan's Magcargo", type: 'Fire', initialRarity: 'Uncommon' }, // 36
+  { name: "Team Rocket's Houndour", type: 'Fire', initialRarity: 'Common' }, // 37
+  { name: "Team Rocket's Houndoom", type: 'Fire', initialRarity: 'Rare' }, // 38
+  { name: "Ethan's Ho-Oh ex", type: 'Fire', initialRarity: 'Double Rare' }, // 39
+  { name: 'Torchic', type: 'Fire', initialRarity: 'Common' }, // 40
+  { name: 'Combusken', type: 'Fire', initialRarity: 'Uncommon' }, // 41
+  { name: 'Blaziken', type: 'Fire', initialRarity: 'Rare' }, // 42
+  { name: 'Heat Rotom', type: 'Fire', initialRarity: 'Rare' }, // 43
+  { name: 'Hearthflame Mask Ogerpon', type: 'Fire', initialRarity: 'Rare' }, // 44
+  { name: "Misty's Psyduck", type: 'Water', initialRarity: 'Common' }, // 45
+  { name: "Misty's Staryu", type: 'Water', initialRarity: 'Common' }, // 46
+  { name: "Misty's Starmie", type: 'Water', initialRarity: 'Uncommon' }, // 47
+  { name: "Misty's Magikarp", type: 'Water', initialRarity: 'Common' }, // 48
+  { name: "Misty's Gyarados", type: 'Water', initialRarity: 'Rare' }, // 49
+  { name: "Misty's Lapras", type: 'Water', initialRarity: 'Rare' }, // 50
+  { name: "Team Rocket's Articuno", type: 'Water', initialRarity: 'Rare' }, // 51
+  { name: "Cynthia's Feebas", type: 'Water', initialRarity: 'Common' }, // 52
+  { name: "Cynthia's Milotic", type: 'Water', initialRarity: 'Rare' }, // 53
+  { name: 'Clamperl', type: 'Water', initialRarity: 'Common' }, // 54
+  { name: 'Huntail', type: 'Water', initialRarity: 'Uncommon' }, // 55
+  { name: 'Gorebyss', type: 'Water', initialRarity: 'Uncommon' }, // 56
+  { name: 'Buizel', type: 'Water', initialRarity: 'Common' }, // 57
+  { name: 'Floatzel', type: 'Water', initialRarity: 'Uncommon' }, // 58
+  { name: 'Snover', type: 'Water', initialRarity: 'Common' }, // 59
+  { name: 'Abomasnow', type: 'Water', initialRarity: 'Uncommon' }, // 60
+  { name: 'Wash Rotom', type: 'Water', initialRarity: 'Rare' }, // 61
+  { name: 'Arrokuda', type: 'Water', initialRarity: 'Common' }, // 62
+  { name: 'Barraskewda', type: 'Water', initialRarity: 'Uncommon' }, // 63
+  { name: 'Cetoddle', type: 'Water', initialRarity: 'Common' }, // 64
+  { name: 'Cetitan ex', type: 'Water', initialRarity: 'Double Rare' }, // 65
+  { name: 'Dondozo ex', type: 'Water', initialRarity: 'Double Rare' }, // 66
+  { name: 'Wellspring Mask Ogerpon', type: 'Water', initialRarity: 'Rare' }, // 67
+  { name: 'Electabuzz', type: 'Lightning', initialRarity: 'Common' }, // 68
+  { name: 'Electivire ex', type: 'Lightning', initialRarity: 'Double Rare' }, // 69
+  { name: "Team Rocket's Zapdos", type: 'Lightning', initialRarity: 'Rare' }, // 70
+  { name: "Ethan's Pichu", type: 'Lightning', initialRarity: 'Common' }, // 71
+  { name: "Team Rocket's Mareep", type: 'Lightning', initialRarity: 'Common' }, // 72
+  { name: "Team Rocket's Flaaffy", type: 'Lightning', initialRarity: 'Uncommon' }, // 73
+  { name: "Team Rocket's Ampharos", type: 'Lightning', initialRarity: 'Rare' }, // 74
+  { name: 'Electrike', type: 'Lightning', initialRarity: 'Common' }, // 75
+  { name: 'Manectric', type: 'Lightning', initialRarity: 'Uncommon' }, // 76
+  { name: 'Rotom', type: 'Lightning', initialRarity: 'Rare' }, // 77
+  { name: 'Zeraora', type: 'Lightning', initialRarity: 'Rare' }, // 78
+  { name: "Team Rocket's Drowzee", type: 'Psychic', initialRarity: 'Common' }, // 79
+  { name: "Team Rocket's Hypno", type: 'Psychic', initialRarity: 'Uncommon' }, // 80
+  { name: "Team Rocket's Mewtwo ex", type: 'Psychic', initialRarity: 'Double Rare' }, // 81
+  { name: "Team Rocket's Wobbuffet", type: 'Psychic', initialRarity: 'Uncommon' }, // 82
+  { name: "Steven's Baltoy", type: 'Psychic', initialRarity: 'Common' }, // 83
+  { name: "Steven's Claydol", type: 'Psychic', initialRarity: 'Uncommon' }, // 84
+  { name: "Team Rocket's Chingling", type: 'Psychic', initialRarity: 'Common' }, // 85
+  { name: "Steven's Carbink", type: 'Psychic', initialRarity: 'Uncommon' }, // 86
+  { name: "Team Rocket's Mimikyu", type: 'Psychic', initialRarity: 'Rare' }, // 87
+  { name: "Team Rocket's Dottler", type: 'Psychic', initialRarity: 'Uncommon' }, // 88
+  { name: "Team Rocket's Orbeetle", type: 'Psychic', initialRarity: 'Rare' }, // 89
+  { name: 'Mankey', type: 'Fighting', initialRarity: 'Common' }, // 90
+  { name: 'Primeape', type: 'Fighting', initialRarity: 'Uncommon' }, // 91
+  { name: 'Annihilape', type: 'Fighting', initialRarity: 'Rare' }, // 92
+  { name: "Ethan's Sudowoodo", type: 'Fighting', initialRarity: 'Uncommon' }, // 93
+  { name: "Team Rocket's Larvitar", type: 'Fighting', initialRarity: 'Common' }, // 94
+  { name: "Team Rocket's Pupitar", type: 'Fighting', initialRarity: 'Uncommon' }, // 95
+  { name: "Team Rocket's Tyranitar", type: 'Darkness', initialRarity: 'Rare' }, // 96
+  { name: 'Nosepass', type: 'Fighting', initialRarity: 'Common' }, // 97
+  { name: 'Probopass', type: 'Metal', initialRarity: 'Uncommon' }, // 98
+  { name: 'Meditite', type: 'Fighting', initialRarity: 'Common' }, // 99
+  { name: 'Medicham', type: 'Fighting', initialRarity: 'Uncommon' }, // 100
+  { name: 'Regirock ex', type: 'Fighting', initialRarity: 'Double Rare' }, // 101
+  { name: "Cynthia's Gible", type: 'Dragon', initialRarity: 'Common' }, // 102
+  { name: "Cynthia's Gabite", type: 'Dragon', initialRarity: 'Uncommon' }, // 103
+  { name: "Cynthia's Garchomp ex", type: 'Dragon', initialRarity: 'Double Rare' }, // 104
+  { name: 'Hippopotas', type: 'Fighting', initialRarity: 'Common' }, // 105
+  { name: 'Hippowdon', type: 'Fighting', initialRarity: 'Uncommon' }, // 106
+  { name: 'Mudbray', type: 'Fighting', initialRarity: 'Common' }, // 107
+  { name: 'Mudsdale', type: 'Fighting', initialRarity: 'Uncommon' }, // 108
+  { name: "Arven's Toedscool", type: 'Grass', initialRarity: 'Common' }, // 109
+  { name: "Arven's Toedscruel", type: 'Grass', initialRarity: 'Uncommon' }, // 110
+  { name: 'Cornerstone Mask Ogerpon', type: 'Fighting', initialRarity: 'Rare' }, // 111
+  { name: "Team Rocket's Ekans", type: 'Grass', initialRarity: 'Common' }, // 112
+  { name: "Team Rocket's Arbok", type: 'Grass', initialRarity: 'Uncommon' }, // 113
+  { name: "Team Rocket's Nidoran♀", type: 'Grass', initialRarity: 'Common' }, // 114
+  { name: "Team Rocket's Nidorina", type: 'Grass', initialRarity: 'Uncommon' }, // 115
+  { name: "Team Rocket's Nidoqueen", type: 'Grass', initialRarity: 'Rare' }, // 116
+  { name: "Team Rocket's Nidoran♂", type: 'Grass', initialRarity: 'Common' }, // 117
+  { name: "Team Rocket's Nidorino", type: 'Grass', initialRarity: 'Uncommon' }, // 118
+  { name: "Team Rocket's Nidoking ex", type: 'Grass', initialRarity: 'Double Rare' }, // 119
+  { name: "Team Rocket's Zubat", type: 'Grass', initialRarity: 'Common' }, // 120
+  { name: "Team Rocket's Golbat", type: 'Grass', initialRarity: 'Uncommon' }, // 121
+  { name: "Team Rocket's Crobat ex", type: 'Darkness', initialRarity: 'Double Rare' }, // 122
+  { name: "Team Rocket's Grimer", type: 'Grass', initialRarity: 'Common' }, // 123
+  { name: "Team Rocket's Muk", type: 'Grass', initialRarity: 'Uncommon' }, // 124
+  { name: "Team Rocket's Koffing", type: 'Grass', initialRarity: 'Common' }, // 125
+  { name: "Team Rocket's Weezing", type: 'Grass', initialRarity: 'Rare' }, // 126
+  { name: "Team Rocket's Murkrow", type: 'Darkness', initialRarity: 'Common' }, // 127
+  { name: "Team Rocket's Sneasel", type: 'Darkness', initialRarity: 'Common' }, // 128
+  { name: "Cynthia's Spiritomb", type: 'Psychic', initialRarity: 'Rare' }, // 129
+  { name: "Marnie's Purrloin", type: 'Darkness', initialRarity: 'Common' }, // 130
+  { name: "Marnie's Liepard", type: 'Darkness', initialRarity: 'Uncommon' }, // 131
+  { name: "Marnie's Scraggy", type: 'Darkness', initialRarity: 'Common' }, // 132
+  { name: "Marnie's Scrafty", type: 'Darkness', initialRarity: 'Uncommon' }, // 133
+  { name: "Marnie's Impidimp", type: 'Darkness', initialRarity: 'Common' }, // 134
+  { name: "Marnie's Morgrem", type: 'Darkness', initialRarity: 'Uncommon' }, // 135
+  { name: "Marnie's Grimmsnarl ex", type: 'Darkness', initialRarity: 'Double Rare' }, // 136
+  { name: "Marnie's Morpeko", type: 'Lightning', initialRarity: 'Rare' }, // 137
+  { name: "Arven's Maschiff", type: 'Darkness', initialRarity: 'Common' }, // 138
+  { name: "Arven's Mabosstiff ex", type: 'Darkness', initialRarity: 'Double Rare' }, // 139
+  { name: 'Forretress', type: 'Metal', initialRarity: 'Uncommon' }, // 140
+  { name: 'Skarmory', type: 'Metal', initialRarity: 'Common' }, // 141
+  { name: "Steven's Skarmory", type: 'Metal', initialRarity: 'Uncommon' }, // 142
+  { name: "Steven's Beldum", type: 'Metal', initialRarity: 'Common' }, // 143
+  { name: "Steven's Metang", type: 'Metal', initialRarity: 'Uncommon' }, // 144
+  { name: "Steven's Metagross ex", type: 'Metal', initialRarity: 'Double Rare' }, // 145
+  { name: 'Zamazenta', type: 'Metal', initialRarity: 'Rare' }, // 146
+  { name: "Team Rocket's Rattata", type: 'Colorless', initialRarity: 'Common' }, // 147
+  { name: "Team Rocket's Raticate", type: 'Colorless', initialRarity: 'Uncommon' }, // 148
+  { name: "Team Rocket's Meowth", type: 'Colorless', initialRarity: 'Common' }, // 149
+  { name: "Team Rocket's Persian ex", type: 'Colorless', initialRarity: 'Double Rare' }, // 150
+  { name: 'Kangaskhan', type: 'Colorless', initialRarity: 'Rare' }, // 151
+  { name: 'Tauros', type: 'Colorless', initialRarity: 'Uncommon' }, // 152
+  { name: "Team Rocket's Porygon", type: 'Colorless', initialRarity: 'Common' }, // 153
+  { name: "Team Rocket's Porygon2", type: 'Colorless', initialRarity: 'Uncommon' }, // 154
+  { name: "Team Rocket's Porygon-Z", type: 'Colorless', initialRarity: 'Rare' }, // 155
+  { name: 'Taillow', type: 'Colorless', initialRarity: 'Common' }, // 156
+  { name: 'Swellow', type: 'Colorless', initialRarity: 'Uncommon' }, // 157
+  { name: "Arven's Skwovet", type: 'Colorless', initialRarity: 'Common' }, // 158
+  { name: "Arven's Greedent", type: 'Colorless', initialRarity: 'Uncommon' }, // 159
+  { name: 'Squawkabilly', type: 'Colorless', initialRarity: 'Rare' }, // 160
+  { name: "Arven's Sandwich", type: 'Trainer', initialRarity: 'Uncommon' }, // 161
+  { name: "Cynthia's Power Weight", type: 'Trainer', initialRarity: 'Uncommon' }, // 162
+  { name: "Emcee's Hype", type: 'Trainer', initialRarity: 'Ultra Rare' }, // 163 - DRI Supporter
+  { name: 'Energy Recycler', type: 'Trainer', initialRarity: 'Uncommon' }, // 164
+  { name: "Ethan's Adventure", type: 'Trainer', initialRarity: 'Ultra Rare' }, // 165 - DRI Supporter
+  { name: 'Granite Cave', type: 'Trainer', initialRarity: 'Uncommon' }, // 166
+  { name: 'Judge', type: 'Trainer', initialRarity: 'Rare' }, // 167 - DRI Supporter
+  { name: 'Sacred Ash', type: 'Trainer', initialRarity: 'Uncommon' }, // 168
+  { name: 'Spikemuth Gym', type: 'Trainer', initialRarity: 'Uncommon' }, // 169
+  { name: "Team Rocket's Archer", type: 'Trainer', initialRarity: 'Ultra Rare' }, // 170 - DRI Supporter
+  { name: "Team Rocket's Ariana", type: 'Trainer', initialRarity: 'Ultra Rare' }, // 171 - DRI Supporter
+  { name: "Team Rocket's Bother-Bot", type: 'Trainer', initialRarity: 'Uncommon' }, // 172
+  { name: "Team Rocket's Factory", type: 'Trainer', initialRarity: 'Uncommon' }, // 173
+  { name: "Team Rocket's Giovanni", type: 'Trainer', initialRarity: 'Ultra Rare' }, // 174 - DRI Supporter
+  { name: "Team Rocket's Great Ball", type: 'Trainer', initialRarity: 'Uncommon' }, // 175
+  { name: "Team Rocket's Petrel", type: 'Trainer', initialRarity: 'Ultra Rare' }, // 176 - DRI Supporter
+  { name: "Team Rocket's Proton", type: 'Trainer', initialRarity: 'Ultra Rare' }, // 177 - DRI Supporter
+  { name: "Team Rocket's Transceiver", type: 'Trainer', initialRarity: 'Uncommon' }, // 178
+  { name: "Team Rocket's Venture Bomb", type: 'Trainer', initialRarity: 'Uncommon' }, // 179
+  { name: "Team Rocket's Watchtower", type: 'Trainer', initialRarity: 'Uncommon' }, // 180
+  { name: 'TM Machine', type: 'Trainer', initialRarity: 'Uncommon' }, // 181
+  { name: "Team Rocket's Energy", type: 'Energy', initialRarity: 'Rare' }, // 182 - Special Energy
+  { name: 'Yanma', type: 'Grass', initialRarity: 'Illustration Rare' }, // 183
+  { name: "Cynthia's Roserade", type: 'Grass', initialRarity: 'Illustration Rare' }, // 184
+  { name: 'Shaymin', type: 'Grass', initialRarity: 'Illustration Rare' }, // 185
+  { name: 'Crustle', type: 'Grass', initialRarity: 'Illustration Rare' }, // 186
+  { name: "Team Rocket's Spidops", type: 'Grass', initialRarity: 'Illustration Rare' }, // 187
+  { name: 'Hydrapple', type: 'Grass', initialRarity: 'Illustration Rare' }, // 188
+  { name: 'Rapidash', type: 'Fire', initialRarity: 'Illustration Rare' }, // 189
+  { name: "Ethan's Typhlosion", type: 'Fire', initialRarity: 'Illustration Rare' }, // 190
+  { name: "Team Rocket's Houndoom", type: 'Fire', initialRarity: 'Illustration Rare' }, // 191
+  { name: 'Blaziken', type: 'Fire', initialRarity: 'Illustration Rare' }, // 192
+  { name: "Misty's Psyduck", type: 'Water', initialRarity: 'Illustration Rare' }, // 193
+  { name: "Misty's Lapras", type: 'Water', initialRarity: 'Illustration Rare' }, // 194
+  { name: 'Clamperl', type: 'Water', initialRarity: 'Illustration Rare' }, // 195
+  { name: 'Electrike', type: 'Lightning', initialRarity: 'Illustration Rare' }, // 196
+  { name: 'Rotom', type: 'Lightning', initialRarity: 'Illustration Rare' }, // 197
+  { name: "Team Rocket's Orbeetle", type: 'Psychic', initialRarity: 'Illustration Rare' }, // 198
+  { name: "Team Rocket's Weezing", type: 'Grass', initialRarity: 'Illustration Rare' }, // 199
+  { name: "Team Rocket's Murkrow", type: 'Darkness', initialRarity: 'Illustration Rare' }, // 200
+  { name: 'Zamazenta', type: 'Metal', initialRarity: 'Illustration Rare' }, // 201
+  { name: "Team Rocket's Raticate", type: 'Colorless', initialRarity: 'Illustration Rare' }, // 202
+  { name: "Team Rocket's Meowth", type: 'Colorless', initialRarity: 'Illustration Rare' }, // 203
+  { name: 'Kangaskhan', type: 'Colorless', initialRarity: 'Illustration Rare' }, // 204
+  { name: "Arven's Greedent", type: 'Colorless', initialRarity: 'Illustration Rare' }, // 205
+  { name: 'Yanmega ex', type: 'Grass', initialRarity: 'Ultra Rare' }, // 206 - Full Art ex
+  { name: 'Arboliva ex', type: 'Grass', initialRarity: 'Ultra Rare' }, // 207 - Full Art ex
+  { name: "Team Rocket's Moltres ex", type: 'Fire', initialRarity: 'Ultra Rare' }, // 208 - Full Art ex
+  { name: "Ethan's Ho-Oh ex", type: 'Fire', initialRarity: 'Ultra Rare' }, // 209 - Full Art ex
+  { name: 'Cetitan ex', type: 'Water', initialRarity: 'Ultra Rare' }, // 210 - Full Art ex
+  { name: 'Dondozo ex', type: 'Water', initialRarity: 'Ultra Rare' }, // 211 - Full Art ex
+  { name: 'Electivire ex', type: 'Lightning', initialRarity: 'Ultra Rare' }, // 212 - Full Art ex
+  { name: "Team Rocket's Mewtwo ex", type: 'Psychic', initialRarity: 'Ultra Rare' }, // 213 - Full Art ex
+  { name: 'Regirock ex', type: 'Fighting', initialRarity: 'Ultra Rare' }, // 214 - Full Art ex
+  { name: "Cynthia's Garchomp ex", type: 'Dragon', initialRarity: 'Ultra Rare' }, // 215 - Full Art ex
+  { name: "Team Rocket's Nidoking ex", type: 'Grass', initialRarity: 'Ultra Rare' }, // 216 - Full Art ex
+  { name: "Team Rocket's Crobat ex", type: 'Darkness', initialRarity: 'Ultra Rare' }, // 217 - Full Art ex
+  { name: "Arven's Mabosstiff ex", type: 'Darkness', initialRarity: 'Ultra Rare' }, // 218 - Full Art ex
+  { name: "Team Rocket's Persian ex", type: 'Colorless', initialRarity: 'Ultra Rare' }, // 219 - Full Art ex
+  { name: "Emcee's Hype", type: 'Trainer', initialRarity: 'Ultra Rare' }, // 220 - Full Art Supporter
+  { name: "Ethan's Adventure", type: 'Trainer', initialRarity: 'Ultra Rare' }, // 221 - Full Art Supporter
+  { name: 'Judge', type: 'Trainer', initialRarity: 'Ultra Rare' }, // 222 - Full Art Supporter
+  { name: "Team Rocket's Archer", type: 'Trainer', initialRarity: 'Ultra Rare' }, // 223 - Full Art Supporter
+  { name: "Team Rocket's Ariana", type: 'Trainer', initialRarity: 'Ultra Rare' }, // 224 - Full Art Supporter
+  { name: "Team Rocket's Giovanni", type: 'Trainer', initialRarity: 'Ultra Rare' }, // 225 - Full Art Supporter
+  { name: "Team Rocket's Petrel", type: 'Trainer', initialRarity: 'Ultra Rare' }, // 226 - Full Art Supporter
+  { name: "Team Rocket's Proton", type: 'Trainer', initialRarity: 'Ultra Rare' }, // 227 - Full Art Supporter
+  { name: 'Yanmega ex', type: 'Grass', initialRarity: 'Special Illustration Rare' }, // 228
+  { name: "Team Rocket's Moltres ex", type: 'Fire', initialRarity: 'Special Illustration Rare' }, // 229
+  { name: "Ethan's Ho-Oh ex", type: 'Fire', initialRarity: 'Special Illustration Rare' }, // 230
+  { name: "Team Rocket's Mewtwo ex", type: 'Psychic', initialRarity: 'Special Illustration Rare' }, // 231
+  { name: "Cynthia's Garchomp ex", type: 'Dragon', initialRarity: 'Special Illustration Rare' }, // 232
+  { name: "Team Rocket's Nidoking ex", type: 'Grass', initialRarity: 'Special Illustration Rare' }, // 233
+  { name: "Team Rocket's Crobat ex", type: 'Darkness', initialRarity: 'Special Illustration Rare' }, // 234
+  { name: "Arven's Mabosstiff ex", type: 'Darkness', initialRarity: 'Special Illustration Rare' }, // 235
+  { name: "Ethan's Adventure", type: 'Trainer', initialRarity: 'Special Illustration Rare' }, // 236
+  { name: "Team Rocket's Ariana", type: 'Trainer', initialRarity: 'Special Illustration Rare' }, // 237
+  { name: "Team Rocket's Giovanni", type: 'Trainer', initialRarity: 'Special Illustration Rare' }, // 238
+  { name: "Ethan's Ho-Oh ex", type: 'Fire', initialRarity: 'Hyper Rare' }, // 239 - Gold ex
+  { name: "Team Rocket's Mewtwo ex", type: 'Psychic', initialRarity: 'Hyper Rare' }, // 240 - Gold ex
+  { name: "Cynthia's Garchomp ex", type: 'Dragon', initialRarity: 'Hyper Rare' }, // 241 - Gold ex
+  { name: "Team Rocket's Crobat ex", type: 'Darkness', initialRarity: 'Hyper Rare' }, // 242 - Gold ex
+  { name: 'Jamming Tower', type: 'Trainer', initialRarity: 'Hyper Rare' }, // 243 - Gold Stadium
+  { name: 'Levincia', type: 'Trainer', initialRarity: 'Hyper Rare' }, // 244 - Gold Stadium
 ];
 
-export const destinedRivalsCards: PokemonCard[] = cardListData.map((card, index) => {
+// Lookup for rarities from the 58-card "Destined Rivals Expansion" (DER) set on Pokellector
+const derRarityLookup: Record<string, string> = {
+  "Armarouge ex": "Rare Holo", // #1 in DER
+  "Charcadet": "Common",      // #2 in DER
+  "Volcarona": "Rare Holo",   // #3 in DER
+  "Iron Moth": "Rare",        // #4 in DER
+  "Chi-Yu ex": "Rare Holo",   // #5 in DER
+  "Greninja ex": "Rare Holo", // #6 in DER
+  "Frogadier": "Uncommon",    // #7 in DER
+  "Froakie": "Common",        // #8 in DER
+  "Clawitzer": "Rare",        // #9 in DER
+  "Clauncher": "Common",      // #10 in DER
+  "Walking Wake ex": "Rare Holo", // #11 in DER
+  "Suicune": "Rare",          // #12 in DER
+  "Iron Bundle": "Rare",      // #13 in DER
+  "Decidueye ex": "Rare Holo",// #14 in DER
+  "Dartrix": "Uncommon",      // #15 in DER
+  "Rowlet": "Common",         // #16 in DER
+  "Scovillain": "Rare",       // #17 in DER
+  "Toedscruel": "Uncommon",   // #18 in DER
+  "Toedscool": "Common",      // #19 in DER
+  "Brute Bonnet": "Rare",     // #20 in DER
+  "Wo-Chien ex": "Rare Holo", // #21 in DER
+  "Meowscarada ex": "Rare Holo",// #22 in DER
+  "Floragato": "Uncommon",    // #23 in DER
+  "Sprigatito": "Common",     // #24 in DER
+  // Pokellector shows "Armarouge ex" again at #25 in DER, assuming it's the same as #1 for rarity lookup.
+  "Iron Thorns ex": "Rare Holo",// #26 in DER
+  "Flaaffy": "Uncommon",      // #27 in DER
+  "Mareep": "Common",         // #28 in DER
+  "Raichu": "Rare",           // #29 in DER
+  "Pikachu": "Common",        // #30 in DER
+  "Pawmot": "Uncommon",       // #31 in DER
+  "Pawmo": "Common",          // #32 in DER
+  "Pawmi": "Common",          // #33 in DER
+  "Miraidon ex": "Rare Holo", // #34 in DER
+  "Zeraora": "Rare Holo",     // #35 in DER
+  "Sandy Shocks ex": "Rare Holo",// #36 in DER
+  "Iron Hands ex": "Rare Holo",// #37 in DER
+  "Scream Tail": "Rare",      // #38 in DER
+  "Gardevoir ex": "Rare Holo",// #39 in DER
+  "Clefable": "Rare",         // #40 in DER
+  "Clefairy": "Common",       // #41 in DER
+  "Enamorus": "Rare Holo",    // #42 in DER
+  "Flutter Mane": "Rare",     // #43 in DER
+  "Great Tusk ex": "Rare Holo",// #44 in DER
+  "Annihilape ex": "Rare Holo",// #45 in DER
+  "Primeape": "Uncommon",     // #46 in DER
+  "Mankey": "Common",         // #47 in DER
+  "Lucario": "Rare Holo",     // #48 in DER
+  "Koraidon ex": "Rare Holo", // #49 in DER
+  "Slither Wing": "Rare",     // #50 in DER
+  "Hawlucha": "Uncommon",     // #51 in DER
+  "Falinks": "Common",        // #52 in DER
+  "Ting-Lu ex": "Rare Holo",  // #53 in DER
+  "Nemona's Backpack": "Uncommon", // #54 in DER
+  "Nemona": "Uncommon",       // #55 in DER
+  "Giacomo": "Uncommon",      // #56 in DER
+  "Atticus": "Uncommon",      // #57 in DER
+  "Penny": "Uncommon",        // #58 in DER
+  // Other potential cards from the 58 list like "Ethan's Pinsir" are not directly on that overview page.
+  // The logic will only override if a name from our 244 list is found in this 58-item lookup.
+  // Adding cards mentioned in prompts previously if they are on the 58-card page:
+  "Yanma": "Common", // From 58-card set.
+};
+
+
+export const destinedRivalsCards: PokemonCard[] = cardListData.map((cardData, index) => {
   const cardNumberInSet = index + 1;
   const uniqueID = getDestinedRivalsUniqueID(cardNumberInSet);
-  const formattedNameForFile = formatNameForUrl(card.name);
-  let dataAiHint = card.name;
-  if (card.type !== 'Trainer' && card.type !== 'Energy') {
-    dataAiHint += ` ${card.type.toLowerCase()} pokemon`;
-  } else if (card.type === 'Trainer') {
+  const formattedNameForFile = formatNameForUrl(cardData.name);
+  let dataAiHint = cardData.name;
+  if (cardData.type !== 'Trainer' && cardData.type !== 'Energy') {
+    dataAiHint += ` ${cardData.type.toLowerCase()} pokemon`;
+  } else if (cardData.type === 'Trainer') {
      dataAiHint += ` trainer card`;
   }
 
@@ -347,13 +407,36 @@ export const destinedRivalsCards: PokemonCard[] = cardListData.map((card, index)
     imageUrl = 'https://den-cards.pokellector.com/412/Team-Rockets-Nidoran.DRI.117.57379.thumb.png';
   }
 
+  let finalRarity = cardData.initialRarity;
+  const pokellectorRarity = derRarityLookup[cardData.name];
+
+  if (pokellectorRarity) {
+    if (pokellectorRarity === 'Common') {
+      finalRarity = 'Common';
+    } else if (pokellectorRarity === 'Uncommon') {
+      finalRarity = 'Uncommon';
+    } else if (pokellectorRarity === 'Rare') {
+      finalRarity = 'Rare';
+    } else if (pokellectorRarity === 'Rare Holo') {
+      if (cardData.name.includes(' ex')) {
+        finalRarity = 'Double Rare';
+      } else {
+        finalRarity = 'Rare';
+      }
+    }
+    // If pokellectorRarity is something else from the 58-set not explicitly mapped here,
+    // it implies it's not a basic Common/Uncommon/Rare/Rare Holo, so we'd stick to initialRarity.
+    // However, the DER set mostly contains these base rarities.
+  }
+
+
   return {
     id: `dri-${formattedNameForFile.toLowerCase().replace(/-+/g, '-')}-${String(cardNumberInSet).padStart(3, '0')}`,
-    name: card.name,
+    name: cardData.name,
     image: imageUrl,
     dataAiHint: dataAiHint,
-    rarity: card.rarity,
-    type: card.type,
+    rarity: finalRarity, // Use the potentially overridden rarity
+    type: cardData.type,
     series: 'Destined Rivals',
     pokedexNumber: `${cardNumberInSet}/244`,
   };
