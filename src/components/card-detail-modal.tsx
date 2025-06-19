@@ -12,6 +12,7 @@ import { Separator } from './ui/separator';
 import { Loader2 } from 'lucide-react';
 import { PokemonTypeIcon } from './pokemon-type-icon';
 import { Badge } from './ui/badge';
+import { cn } from '@/lib/utils';
 
 interface CardDetailModalProps {
   card: PokemonCard | null;
@@ -55,7 +56,10 @@ export function CardDetailModal({ card, isOpen, onClose }: CardDetailModalProps)
         <ScrollArea className="max-h-[90vh]">
           <div className="p-6 flex flex-col items-center">
             <DialogHeader className="w-full mb-4">
-              <DialogTitle className="text-2xl font-headline text-primary-foreground text-center">
+              <DialogTitle className={cn(
+                "text-2xl font-headline text-primary-foreground text-center",
+                "dark:text-white"
+                )}>
                 {card.name}
               </DialogTitle>
               <div className="flex items-center justify-center space-x-2 pt-1">
@@ -76,7 +80,7 @@ export function CardDetailModal({ card, isOpen, onClose }: CardDetailModalProps)
             
             <Separator className="my-4" />
 
-            <h3 className="text-lg font-semibold mb-2 font-headline">Trivia</h3>
+            <h3 className="text-lg font-semibold mb-2 font-headline dark:text-white">Trivia</h3>
             {loadingTrivia && (
               <div className="flex items-center space-x-2 text-muted-foreground">
                 <Loader2 className="h-5 w-5 animate-spin" />
@@ -84,7 +88,7 @@ export function CardDetailModal({ card, isOpen, onClose }: CardDetailModalProps)
               </div>
             )}
             {errorTrivia && <p className="text-destructive text-sm">{errorTrivia}</p>}
-            {trivia && <p className="text-sm bg-secondary/30 p-3 rounded-md leading-relaxed text-foreground">{trivia}</p>}
+            {trivia && <p className="text-sm bg-secondary/30 p-3 rounded-md leading-relaxed text-foreground dark:text-white">{trivia}</p>}
             
             <Separator className="my-4" />
 
