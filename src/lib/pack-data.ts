@@ -25,17 +25,18 @@ export const allPacks: PokemonPack[] = [
     name: 'Destined Rivals Booster Pack',
     series: 'Destined Rivals',
     image: 'https://pbs.twimg.com/media/Gmzw5Z9XgAAc9fc?format=jpg&name=large',
-    dataAiHint: 'Destined Rivals pack Iron Thorns Armarouge', // Could be updated based on new set prominent Pokemon
+    dataAiHint: 'Destined Rivals pack Iron Thorns Armarouge',
     cardsPerPack: 10, 
     rarityDistribution: { 
-      common: 6,      
-      uncommon: 3,    
-      rareSlot: 1, // Can be Rare or any type of Holo Rare from this set   
+      common: 3,      
+      uncommon: 2,    
+      rareSlot: 1, // Represents the guaranteed basic 'Rare'. 4 additional slots are dynamic "hits".
     },
-    possibleCards: destinedRivalsPackCards, // Now refers to the 244-card pool
+    possibleCards: destinedRivalsPackCards,
   },
 ];
 
 export const getPackById = (id: string): PokemonPack | undefined => {
   return allPacks.find(pack => pack.id === id);
 };
+
