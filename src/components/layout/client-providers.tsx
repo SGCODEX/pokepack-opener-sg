@@ -11,6 +11,7 @@ import { LoadingProvider, LoadingContext } from '@/contexts/loading-context';
 import { PageLoader } from '@/components/layout/page-loader';
 import { usePathname } from 'next/navigation';
 import { AuthProvider } from '@/contexts/auth-context';
+import { cn } from '@/lib/utils';
 
 
 // Main exported component
@@ -78,7 +79,16 @@ function AppContent({ children }: { children: ReactNode }) {
       <Toaster />
       <footer className="bg-primary/10 text-center py-4">
         <Container>
-          <p className="text-sm text-foreground/80">&copy; {currentYear} PokePack Opener. Gotta open 'em all!</p>
+          <a
+            href="https://github.com/SGCODEX"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn(
+              "text-sm text-foreground/80 hover:text-foreground/100 hover:underline transition-colors"
+            )}
+          >
+            &copy; {currentYear} PokePack Opener SG. Gotta open 'em all! Made by SGCODEX
+          </a>
         </Container>
       </footer>
     </>

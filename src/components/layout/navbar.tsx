@@ -7,7 +7,6 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Container } from './container';
 import { ThemeToggleButton } from '@/components/theme-toggle-button';
-// Button import is not directly used here for styling the ThemeToggleButton itself, but kept for context if needed.
 
 const navLinks = [
   { href: '/', label: 'Open Packs' },
@@ -25,7 +24,7 @@ export function Navbar() {
         <div className="flex items-center justify-between h-16">
           <Link href="/" className="flex items-center gap-2 text-primary hover:opacity-90 transition-opacity">
             <Sparkles className="h-8 w-8 text-primary" /> {/* Yellow Sparkle */}
-            <span className="font-pokemonlogo text-3xl text-primary tracking-wider">PokePack Opener</span> {/* Pokemon Font, Yellow */}
+            <span className="font-pokemonlogo text-3xl text-primary tracking-wider">PokePack Opener SG</span> {/* Pokemon Font, Yellow */}
           </Link>
           <div className="flex items-center space-x-4">
             <nav className="hidden sm:flex items-center space-x-1">

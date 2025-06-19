@@ -5,7 +5,7 @@ import './globals.css'; // Keep this for global styles
 import { ClientProviders } from '@/components/layout/client-providers'; // Import the new wrapper
 
 export const metadata: Metadata = {
-  title: 'PokePack Opener',
+  title: 'PokePack Opener SG',
   description: 'Open virtual Pokemon card packs and discover amazing cards!',
 };
 
