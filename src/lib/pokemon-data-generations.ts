@@ -54,7 +54,7 @@ function mapRarity(tableRarity: string): CardRarity {
   }
 }
 
-// Data structure: { pokedexNum, name, typeShorthand, rarityShorthand, pkNameForUrl, pkCardNumForUrl, pkUniqueId (kept for potential future use) }
+// Data structure: { pokedexNum, name, typeShorthand, rarityShorthand, pkNameForUrl, pkCardNumForUrl, pkUniqueId (not used in URL anymore but kept for reference) }
 const generationsCardDetails: Array<{ pokedexNum: string, name: string, typeShorthand: string, rarityShorthand: string, pkNameForUrl: string, pkCardNumForUrl: string, pkUniqueId: string }> = [
   // Main Set (1/83 to 83/83)
   { pokedexNum: "1/83", name: "Venusaur-EX", typeShorthand: "Grass", rarityShorthand: "Ultra Rare", pkNameForUrl: "Venusaur-EX", pkCardNumForUrl: "1", pkUniqueId: "33866" },
@@ -91,7 +91,7 @@ const generationsCardDetails: Array<{ pokedexNum: string, name: string, typeShor
   { pokedexNum: "32/83", name: "Slowpoke", typeShorthand: "Psychic", rarityShorthand: "Common", pkNameForUrl: "Slowpoke", pkCardNumForUrl: "32", pkUniqueId: "33897" },
   { pokedexNum: "33/83", name: "Gastly", typeShorthand: "Psychic", rarityShorthand: "Common", pkNameForUrl: "Gastly", pkCardNumForUrl: "33", pkUniqueId: "33898" },
   { pokedexNum: "34/83", name: "Haunter", typeShorthand: "Psychic", rarityShorthand: "Uncommon", pkNameForUrl: "Haunter", pkCardNumForUrl: "34", pkUniqueId: "33899" },
-  { pokedexNum: "35/83", name: "Gengar", typeShorthand: "Psychic", rarityShorthand: "Rare Holo", pkNameForUrl: "Gengar", pkCardNumForUrl: "36", pkUniqueId: "N/A" }, // Unique ID not needed for direct link
+  { pokedexNum: "35/83", name: "Gengar", typeShorthand: "Psychic", rarityShorthand: "Rare Holo", pkNameForUrl: "Gengar", pkCardNumForUrl: "35", pkUniqueId: "33900" },
   { pokedexNum: "36/83", name: "Jynx", typeShorthand: "Psychic", rarityShorthand: "Rare", pkNameForUrl: "Jynx", pkCardNumForUrl: "36", pkUniqueId: "33901" },
   { pokedexNum: "37/83", name: "Meowstic-EX", typeShorthand: "Psychic", rarityShorthand: "Ultra Rare", pkNameForUrl: "Meowstic-EX", pkCardNumForUrl: "37", pkUniqueId: "33902" },
   { pokedexNum: "38/83", name: "Diglett", typeShorthand: "Fighting", rarityShorthand: "Common", pkNameForUrl: "Diglett", pkCardNumForUrl: "38", pkUniqueId: "33903" },
@@ -123,7 +123,7 @@ const generationsCardDetails: Array<{ pokedexNum: string, name: string, typeShor
   { pokedexNum: "64/83", name: "Maintenance", typeShorthand: "I", rarityShorthand: "Uncommon", pkNameForUrl: "Maintenance", pkCardNumForUrl: "64", pkUniqueId: "33931" },
   { pokedexNum: "65/83", name: "Max Revive", typeShorthand: "I", rarityShorthand: "Uncommon", pkNameForUrl: "Max-Revive", pkCardNumForUrl: "65", pkUniqueId: "33933" },
   { pokedexNum: "66/83", name: "Olympia", typeShorthand: "Su", rarityShorthand: "Uncommon", pkNameForUrl: "Olympia", pkCardNumForUrl: "66", pkUniqueId: "33934" },
-  { pokedexNum: "67/83", name: "Poké Ball", typeShorthand: "I", rarityShorthand: "Uncommon", pkNameForUrl: "Pokeball", pkCardNumForUrl: "67", pkUniqueId: "N/A" }, // Unique ID not needed for direct link
+  { pokedexNum: "67/83", name: "Poké Ball", typeShorthand: "I", rarityShorthand: "Uncommon", pkNameForUrl: "Pokeball", pkCardNumForUrl: "67", pkUniqueId: "N/A" },
   { pokedexNum: "68/83", name: "Pokémon Center Lady", typeShorthand: "Su", rarityShorthand: "Uncommon", pkNameForUrl: "Pokemon-Center-Lady", pkCardNumForUrl: "68", pkUniqueId: "33935" },
   { pokedexNum: "69/83", name: "Pokémon Fan Club", typeShorthand: "Su", rarityShorthand: "Uncommon", pkNameForUrl: "Pokemon-Fan-Club", pkCardNumForUrl: "69", pkUniqueId: "33936" },
   { pokedexNum: "70/83", name: "Revitalizer", typeShorthand: "I", rarityShorthand: "Uncommon", pkNameForUrl: "Revitalizer", pkCardNumForUrl: "70", pkUniqueId: "33938" },
@@ -134,35 +134,35 @@ const generationsCardDetails: Array<{ pokedexNum: string, name: string, typeShor
   { pokedexNum: "75/83", name: "Grass Energy", typeShorthand: "Grass E", rarityShorthand: "Common", pkNameForUrl: "Grass-Energy", pkCardNumForUrl: "75", pkUniqueId: "33942" },
   { pokedexNum: "76/83", name: "Fire Energy", typeShorthand: "Fire E", rarityShorthand: "Common", pkNameForUrl: "Fire-Energy", pkCardNumForUrl: "76", pkUniqueId: "33943" },
   { pokedexNum: "77/83", name: "Water Energy", typeShorthand: "Water E", rarityShorthand: "Common", pkNameForUrl: "Water-Energy", pkCardNumForUrl: "77", pkUniqueId: "33944" },
-  { pokedexNum: "78/83", name: "Lightning Energy", typeShorthand: "Lightning E", rarityShorthand: "Common", pkNameForUrl: "Electric-Energy", pkCardNumForUrl: "78", pkUniqueId: "N/A" }, // Unique ID not needed for direct link
+  { pokedexNum: "78/83", name: "Lightning Energy", typeShorthand: "Lightning E", rarityShorthand: "Common", pkNameForUrl: "Electric-Energy", pkCardNumForUrl: "78", pkUniqueId: "33945" },
   { pokedexNum: "79/83", name: "Psychic Energy", typeShorthand: "Psychic E", rarityShorthand: "Common", pkNameForUrl: "Psychic-Energy", pkCardNumForUrl: "79", pkUniqueId: "33946" },
   { pokedexNum: "80/83", name: "Fighting Energy", typeShorthand: "Fighting E", rarityShorthand: "Common", pkNameForUrl: "Fighting-Energy", pkCardNumForUrl: "80", pkUniqueId: "33947" },
-  { pokedexNum: "81/83", name: "Darkness Energy", typeShorthand: "Darkness E", rarityShorthand: "Common", pkNameForUrl: "Dark-Energy", pkCardNumForUrl: "81", pkUniqueId: "N/A" },    // Unique ID not needed for direct link
-  { pokedexNum: "82/83", name: "Metal Energy", typeShorthand: "Metal E", rarityShorthand: "Common", pkNameForUrl: "Steel-Energy", pkCardNumForUrl: "82", pkUniqueId: "N/A" },    // Unique ID not needed for direct link
+  { pokedexNum: "81/83", name: "Darkness Energy", typeShorthand: "Darkness E", rarityShorthand: "Common", pkNameForUrl: "Dark-Energy", pkCardNumForUrl: "81", pkUniqueId: "N/A" },
+  { pokedexNum: "82/83", name: "Metal Energy", typeShorthand: "Metal E", rarityShorthand: "Common", pkNameForUrl: "Steel-Energy", pkCardNumForUrl: "82", pkUniqueId: "N/A" },
   { pokedexNum: "83/83", name: "Fairy Energy", typeShorthand: "Fairy E", rarityShorthand: "Common", pkNameForUrl: "Fairy-Energy", pkCardNumForUrl: "83", pkUniqueId: "33948" },
   // Radiant Collection (RC1/RC32 to RC32/RC32)
   { pokedexNum: "RC1/RC32", name: "Chikorita", typeShorthand: "Grass", rarityShorthand: "Common", pkNameForUrl: "Chikorita", pkCardNumForUrl: "RC1", pkUniqueId: "33871" },
   { pokedexNum: "RC2/RC32", name: "Shroomish", typeShorthand: "Grass", rarityShorthand: "Common", pkNameForUrl: "Shroomish", pkCardNumForUrl: "RC2", pkUniqueId: "33872" },
   { pokedexNum: "RC3/RC32", name: "Charmander", typeShorthand: "Fire", rarityShorthand: "Common", pkNameForUrl: "Charmander", pkCardNumForUrl: "RC3", pkUniqueId: "33873" },
   { pokedexNum: "RC4/RC32", name: "Charmeleon", typeShorthand: "Fire", rarityShorthand: "Common", pkNameForUrl: "Charmeleon", pkCardNumForUrl: "RC4", pkUniqueId: "33874" },
-  { pokedexNum: "RC5/RC32", name: "Charizard", typeShorthand: "Fire", rarityShorthand: "Uncommon", pkNameForUrl: "Charizard", pkCardNumForUrl: "RC5", pkUniqueId: "33909" }, // Typo in previous data, was 33908
+  { pokedexNum: "RC5/RC32", name: "Charizard", typeShorthand: "Fire", rarityShorthand: "Uncommon", pkNameForUrl: "Charizard", pkCardNumForUrl: "RC5", pkUniqueId: "33909" }, // Note: Pokellector shows this as Rare Holo, user data is Uncommon
   { pokedexNum: "RC6/RC32", name: "Flareon-EX", typeShorthand: "Fire", rarityShorthand: "Ultra Rare", pkNameForUrl: "Flareon-EX", pkCardNumForUrl: "RC6", pkUniqueId: "33916" },
   { pokedexNum: "RC7/RC32", name: "Snorunt", typeShorthand: "Water", rarityShorthand: "Common", pkNameForUrl: "Snorunt", pkCardNumForUrl: "RC7", pkUniqueId: "33902" },
   { pokedexNum: "RC8/RC32", name: "Froslass", typeShorthand: "Water", rarityShorthand: "Uncommon", pkNameForUrl: "Froslass", pkCardNumForUrl: "RC8", pkUniqueId: "33903" },
   { pokedexNum: "RC9/RC32", name: "Raichu", typeShorthand: "Lightning", rarityShorthand: "Common", pkNameForUrl: "Raichu", pkCardNumForUrl: "RC9", pkUniqueId: "33904" },
   { pokedexNum: "RC10/RC32", name: "Dedenne", typeShorthand: "Lightning", rarityShorthand: "Uncommon", pkNameForUrl: "Dedenne", pkCardNumForUrl: "RC10", pkUniqueId: "33907" },
-  { pokedexNum: "RC11/RC32", name: "Wobbuffet", typeShorthand: "Psychic", rarityShorthand: "Common", pkNameForUrl: "Wobbuffet", pkCardNumForUrl: "RC11", pkUniqueId: "33918" }, // Was 33919
+  { pokedexNum: "RC11/RC32", name: "Wobbuffet", typeShorthand: "Psychic", rarityShorthand: "Common", pkNameForUrl: "Wobbuffet", pkCardNumForUrl: "RC11", pkUniqueId: "33918" },
   { pokedexNum: "RC12/RC32", name: "Gulpin", typeShorthand: "Psychic", rarityShorthand: "Common", pkNameForUrl: "Gulpin", pkCardNumForUrl: "RC12", pkUniqueId: "33900" },
-  { pokedexNum: "RC13/RC32", name: "Jirachi", typeShorthand: "Psychic", rarityShorthand: "Uncommon", pkNameForUrl: "Jirachi", pkCardNumForUrl: "RC13", pkUniqueId: "33901" },
+  { pokedexNum: "RC13/RC32", name: "Jirachi", typeShorthand: "Psychic", rarityShorthand: "Uncommon", pkNameForUrl: "Jirachi", pkCardNumForUrl: "RC13", pkUniqueId: "33901" }, // Note: Pokellector shows this as Rare Holo, user data is Uncommon
   { pokedexNum: "RC14/RC32", name: "Espurr", typeShorthand: "Psychic", rarityShorthand: "Common", pkNameForUrl: "Espurr", pkCardNumForUrl: "RC14", pkUniqueId: "33905" },
   { pokedexNum: "RC15/RC32", name: "Meowstic", typeShorthand: "Psychic", rarityShorthand: "Uncommon", pkNameForUrl: "Meowstic", pkCardNumForUrl: "RC15", pkUniqueId: "33906" },
-  { pokedexNum: "RC16/RC32", name: "Yveltal", typeShorthand: "Darkness", rarityShorthand: "Uncommon", pkNameForUrl: "Yveltal", pkCardNumForUrl: "RC16", pkUniqueId: "33910" },
+  { pokedexNum: "RC16/RC32", name: "Yveltal", typeShorthand: "Darkness", rarityShorthand: "Uncommon", pkNameForUrl: "Yveltal", pkCardNumForUrl: "RC16", pkUniqueId: "33910" }, // Note: Pokellector shows this as Rare Holo, user data is Uncommon
   { pokedexNum: "RC17/RC32", name: "Flabébé", typeShorthand: "Fairy", rarityShorthand: "Common", pkNameForUrl: "Flabebe", pkCardNumForUrl: "RC17", pkUniqueId: "33908" },
   { pokedexNum: "RC18/RC32", name: "Floette", typeShorthand: "Fairy", rarityShorthand: "Uncommon", pkNameForUrl: "Floette", pkCardNumForUrl: "RC18", pkUniqueId: "33911" },
   { pokedexNum: "RC19/RC32", name: "Swirlix", typeShorthand: "Fairy", rarityShorthand: "Uncommon", pkNameForUrl: "Swirlix", pkCardNumForUrl: "RC19", pkUniqueId: "33912" },
   { pokedexNum: "RC20/RC32", name: "Slurpuff", typeShorthand: "Fairy", rarityShorthand: "Uncommon", pkNameForUrl: "Slurpuff", pkCardNumForUrl: "RC20", pkUniqueId: "33913" },
   { pokedexNum: "RC21/RC32", name: "Sylveon-EX", typeShorthand: "Fairy", rarityShorthand: "Ultra Rare", pkNameForUrl: "Sylveon-EX", pkCardNumForUrl: "RC21", pkUniqueId: "33917" },
-  { pokedexNum: "RC22/RC32", name: "Diancie", typeShorthand: "Fairy", rarityShorthand: "Uncommon", pkNameForUrl: "Diancie", pkCardNumForUrl: "RC22", pkUniqueId: "33922" },
+  { pokedexNum: "RC22/RC32", name: "Diancie", typeShorthand: "Fairy", rarityShorthand: "Uncommon", pkNameForUrl: "Diancie", pkCardNumForUrl: "RC22", pkUniqueId: "33922" }, // Note: Pokellector shows this as Rare Holo, user data is Uncommon
   { pokedexNum: "RC23/RC32", name: "Swablu", typeShorthand: "Colorless", rarityShorthand: "Common", pkNameForUrl: "Swablu", pkCardNumForUrl: "RC23", pkUniqueId: "33924" },
   { pokedexNum: "RC24/RC32", name: "Altaria", typeShorthand: "Colorless", rarityShorthand: "Uncommon", pkNameForUrl: "Altaria", pkCardNumForUrl: "RC24", pkUniqueId: "33925" },
   { pokedexNum: "RC25/RC32", name: "Fletchling", typeShorthand: "Colorless", rarityShorthand: "Common", pkNameForUrl: "Fletchling", pkCardNumForUrl: "RC25", pkUniqueId: "33914" },
@@ -175,17 +175,16 @@ const generationsCardDetails: Array<{ pokedexNum: string, name: string, typeShor
   { pokedexNum: "RC32/RC32", name: "Sylveon-EX", typeShorthand: "Fairy", rarityShorthand: "Ultra Rare", pkNameForUrl: "Sylveon-EX", pkCardNumForUrl: "RC32", pkUniqueId: "33917" }  // Full Art EX
 ];
 
-
-// Specific image URL overrides based on direct links you provided
+// Specific image URL overrides based on direct links previously confirmed for higher quality or specific thumbnails
 const imageExceptionMap: Record<string, string> = {
-  "28/83": "https://den-cards.pokellector.com/187/Jolteon-EX.GEN.28.12166.png",
-  "35/83": "https://den-cards.pokellector.com/187/Gengar.GEN.36.png",
-  "41/83": "https://den-cards.pokellector.com/187/Machoke.GEN.41.12264.png",
-  "53/83": "https://den-cards.pokellector.com/187/Meowth.GEN.53.12267.png",
-  "67/83": "https://den-cards.pokellector.com/187/Pokeball.GEN.67.png",
-  "78/83": "https://den-cards.pokellector.com/187/Electric-Energy.GEN.78.png",
-  "81/83": "https://den-cards.pokellector.com/187/Dark-Energy.GEN.81.png",
-  "82/83": "https://den-cards.pokellector.com/187/Steel-Energy.GEN.82.png"
+  "28/83": "https://den-cards.pokellector.com/187/Jolteon-EX.GEN.28.12166.thumb.png", // User provided .thumb
+  "35/83": "https://den-cards.pokellector.com/187/Gengar.GEN.35.thumb.png",       // Corrected to GEN.35, user pattern .thumb
+  "41/83": "https://den-cards.pokellector.com/187/Machoke.GEN.41.12264.thumb.png",// User provided .thumb
+  "53/83": "https://den-cards.pokellector.com/187/Meowth.GEN.53.12267.thumb.png",  // User provided .thumb
+  "67/83": "https://den-cards.pokellector.com/187/Pokeball.GEN.67.thumb.png",     // User provided .thumb
+  "78/83": "https://den-cards.pokellector.com/187/Electric-Energy.GEN.78.thumb.png",// User provided .thumb
+  "81/83": "https://den-cards.pokellector.com/187/Dark-Energy.GEN.81.thumb.png",   // User provided .thumb
+  "82/83": "https://den-cards.pokellector.com/187/Steel-Energy.GEN.82.thumb.png",  // User provided .thumb
 };
 
 
@@ -194,12 +193,25 @@ export const generationsCards: PokemonCard[] = generationsCardDetails.map(detail
   const type = mapType(detail.typeShorthand);
   const rarity = mapRarity(detail.rarityShorthand);
 
+  let imageUrl: string;
   const exceptionImageUrl = imageExceptionMap[detail.pokedexNum];
-  // Construct the image URL based on the pattern, removing ".thumb"
-  const imageUrl = exceptionImageUrl 
-    ? exceptionImageUrl 
-    : `https://den-cards.pokellector.com/187/${detail.pkNameForUrl}.GEN.${detail.pkCardNumForUrl}.png`;
 
+  if (exceptionImageUrl) {
+    imageUrl = exceptionImageUrl; // Use the exact exception URL
+  } else {
+    const isRadiantCollection = detail.pokedexNum.startsWith('RC');
+    let useThumb = isRadiantCollection; // Default to thumb for RC
+
+    if (!isRadiantCollection) {
+      const mainSetCardNumber = parseInt(detail.pokedexNum.split('/')[0], 10);
+      if (mainSetCardNumber >= 66) {
+        useThumb = true; // Use thumb for main set cards 66 and above
+      }
+    }
+    const suffix = useThumb ? '.thumb.png' : '.png';
+    imageUrl = `https://den-cards.pokellector.com/187/${detail.pkNameForUrl}.GEN.${detail.pkCardNumForUrl}${suffix}`;
+  }
+  
   let dataAiHint = detail.name;
   if (type !== 'Trainer' && type !== 'Energy') {
     dataAiHint += ` ${type.toLowerCase()} pokemon`;
