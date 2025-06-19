@@ -2,9 +2,9 @@
 import type { PokemonCard } from './types';
 
 // Helper function to format card names for URLs
+// Removes content in parentheses, handles apostrophes, symbols, spaces, and colons.
 function formatNameForUrl(name: string): string {
-  // Remove content in parentheses first
-  let cleanedName = name.replace(/\s*\(.*?\)\s*/g, '');
+  let cleanedName = name.replace(/\s*\(.*?\)\s*/g, ''); // Remove content in parentheses
   
   return cleanedName
     .replace(/'s/g, 's') // Ethan's -> Ethans
@@ -19,2447 +19,284 @@ function formatNameForUrl(name: string): string {
     .replace(/^-+|-+$/g, ''); // Trim leading/trailing hyphens
 }
 
-const baseUniqueId = 57267;
+// Helper function to generate UniqueID based on card number with exceptions
+function getUniqueId(cardNumberInSet: number): number {
+  if (cardNumberInSet >= 1 && cardNumberInSet <= 33) {
+    return 57267 + (cardNumberInSet - 1);
+  } else if (cardNumberInSet === 34) {
+    return 56855; // Special case for Ethan's Typhlosion (DRI 34)
+  } else if (cardNumberInSet >= 35 && cardNumberInSet <= 244) {
+    // Resumes sequence from card 35 with a new base
+    return 57300 + (cardNumberInSet - 35);
+  }
+  // Fallback for numbers outside the range, though the list is fixed at 244
+  console.warn(`Card number ${cardNumberInSet} is out of expected range for UniqueID generation.`);
+  return 0; 
+}
 
-export const destinedRivalsCards: PokemonCard[] = [
-  {
-    id: 'dri-ethans-pinsir-001',
-    name: "Ethan's Pinsir",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Ethan's Pinsir")}.DRI.1.${baseUniqueId + 1 - 1}.thumb.png`,
-    dataAiHint: "Ethan Pinsir bug pokemon",
-    rarity: 'Holo Rare',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '1/244',
-  },
-  {
-    id: 'dri-yanma-002',
-    name: 'Yanma',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Yanma")}.DRI.2.${baseUniqueId + 2 - 1}.thumb.png`,
-    dataAiHint: 'Yanma bug flying pokemon',
-    rarity: 'Common',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '2/244',
-  },
-  {
-    id: 'dri-yanmega-ex-003',
-    name: 'Yanmega ex',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Yanmega ex")}.DRI.3.${baseUniqueId + 3 - 1}.thumb.png`,
-    dataAiHint: 'Yanmega ex bug flying pokemon',
-    rarity: 'Holo Rare',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '3/244',
-  },
-  {
-    id: 'dri-pineco-004',
-    name: 'Pineco',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Pineco")}.DRI.4.${baseUniqueId + 4 - 1}.thumb.png`,
-    dataAiHint: 'Pineco bug pokemon',
-    rarity: 'Common',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '4/244',
-  },
-  {
-    id: 'dri-shroomish-005',
-    name: 'Shroomish',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Shroomish")}.DRI.5.${baseUniqueId + 5 - 1}.thumb.png`,
-    dataAiHint: 'Shroomish mushroom pokemon',
-    rarity: 'Common',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '5/244',
-  },
-  {
-    id: 'dri-breloom-006',
-    name: 'Breloom',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Breloom")}.DRI.6.${baseUniqueId + 6 - 1}.thumb.png`,
-    dataAiHint: 'Breloom mushroom fighting pokemon',
-    rarity: 'Uncommon',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '6/244',
-  },
-  {
-    id: 'dri-cynthias-roselia-007',
-    name: "Cynthia's Roselia",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Cynthia's Roselia")}.DRI.7.${baseUniqueId + 7 - 1}.thumb.png`,
-    dataAiHint: "Cynthia Roselia grass poison",
-    rarity: 'Uncommon',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '7/244',
-  },
-  {
-    id: 'dri-cynthias-roserade-008',
-    name: "Cynthia's Roserade",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Cynthia's Roserade")}.DRI.8.${baseUniqueId + 8 - 1}.thumb.png`,
-    dataAiHint: "Cynthia Roserade bouquet pokemon",
-    rarity: 'Holo Rare',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '8/244',
-  },
-  {
-    id: 'dri-mow-rotom-009',
-    name: 'Mow Rotom',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Mow Rotom")}.DRI.9.${baseUniqueId + 9 - 1}.thumb.png`,
-    dataAiHint: 'Mow Rotom plasma grass',
-    rarity: 'Holo Rare',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '9/244',
-  },
-  {
-    id: 'dri-shaymin-010',
-    name: 'Shaymin',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Shaymin")}.DRI.10.${baseUniqueId + 10 - 1}.thumb.png`,
-    dataAiHint: 'Shaymin gratitude pokemon',
-    rarity: 'Holo Rare',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '10/244',
-  },
-  {
-    id: 'dri-dwebble-011',
-    name: 'Dwebble',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Dwebble")}.DRI.11.${baseUniqueId + 11 - 1}.thumb.png`,
-    dataAiHint: 'Dwebble rock bug pokemon',
-    rarity: 'Common',
-    type: 'Grass', // Often Grass or Fighting in TCG for Bug/Rock
-    series: 'Destined Rivals',
-    pokedexNumber: '11/244',
-  },
-  {
-    id: 'dri-crustle-012',
-    name: 'Crustle',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Crustle")}.DRI.12.${baseUniqueId + 12 - 1}.thumb.png`,
-    dataAiHint: 'Crustle stone home pokemon',
-    rarity: 'Uncommon',
-    type: 'Grass', // Often Grass or Fighting in TCG for Bug/Rock
-    series: 'Destined Rivals',
-    pokedexNumber: '12/244',
-  },
-  {
-    id: 'dri-fomantis-013',
-    name: 'Fomantis',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Fomantis")}.DRI.13.${baseUniqueId + 13 - 1}.thumb.png`,
-    dataAiHint: 'Fomantis sickle grass pokemon',
-    rarity: 'Common',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '13/244',
-  },
-  {
-    id: 'dri-lurantis-014',
-    name: 'Lurantis',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Lurantis")}.DRI.14.${baseUniqueId + 14 - 1}.thumb.png`,
-    dataAiHint: 'Lurantis bloom sickle pokemon',
-    rarity: 'Holo Rare',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '14/244',
-  },
-  {
-    id: 'dri-team-rockets-blipbug-015',
-    name: "Team Rocket's Blipbug",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Blipbug")}.DRI.15.${baseUniqueId + 15 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Blipbug larva",
-    rarity: 'Common',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '15/244',
-  },
-  {
-    id: 'dri-applin-016',
-    name: 'Applin',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Applin")}.DRI.16.${baseUniqueId + 16 - 1}.thumb.png`,
-    dataAiHint: 'Applin apple core pokemon',
-    rarity: 'Common',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '16/244',
-  },
-  {
-    id: 'dri-dipplin-017',
-    name: 'Dipplin',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Dipplin")}.DRI.17.${baseUniqueId + 17 - 1}.thumb.png`,
-    dataAiHint: 'Dipplin candy apple pokemon',
-    rarity: 'Uncommon',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '17/244',
-  },
-  {
-    id: 'dri-hydrapple-018',
-    name: 'Hydrapple',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Hydrapple")}.DRI.18.${baseUniqueId + 18 - 1}.thumb.png`,
-    dataAiHint: 'Hydrapple apple hydra pokemon',
-    rarity: 'Holo Rare',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '18/244',
-  },
-  {
-    id: 'dri-team-rockets-tarountula-019',
-    name: "Team Rocket's Tarountula",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Tarountula")}.DRI.19.${baseUniqueId + 19 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Tarountula string ball",
-    rarity: 'Common',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '19/244',
-  },
-  {
-    id: 'dri-team-rockets-spidops-020',
-    name: "Team Rocket's Spidops",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Spidops")}.DRI.20.${baseUniqueId + 20 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Spidops trap pokemon",
-    rarity: 'Uncommon',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '20/244',
-  },
-  {
-    id: 'dri-smoliv-021',
-    name: 'Smoliv',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Smoliv")}.DRI.21.${baseUniqueId + 21 - 1}.thumb.png`,
-    dataAiHint: 'Smoliv olive pokemon',
-    rarity: 'Common',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '21/244',
-  },
-  {
-    id: 'dri-dolliv-022',
-    name: 'Dolliv',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Dolliv")}.DRI.22.${baseUniqueId + 22 - 1}.thumb.png`,
-    dataAiHint: 'Dolliv olive pokemon',
-    rarity: 'Uncommon',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '22/244',
-  },
-  {
-    id: 'dri-arboliva-ex-023',
-    name: 'Arboliva ex',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Arboliva ex")}.DRI.23.${baseUniqueId + 23 - 1}.thumb.png`,
-    dataAiHint: 'Arboliva ex olive pokemon',
-    rarity: 'Holo Rare',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '23/244',
-  },
-  {
-    id: 'dri-rellor-024',
-    name: 'Rellor',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Rellor")}.DRI.24.${baseUniqueId + 24 - 1}.thumb.png`,
-    dataAiHint: 'Rellor rolling pokemon',
-    rarity: 'Common',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '24/244',
-  },
-  {
-    id: 'dri-rabsca-ex-025',
-    name: 'Rabsca ex',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Rabsca ex")}.DRI.25.${baseUniqueId + 25 - 1}.thumb.png`,
-    dataAiHint: 'Rabsca ex rolling pokemon',
-    rarity: 'Holo Rare',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '25/244',
-  },
-  {
-    id: 'dri-teal-mask-ogerpon-026',
-    name: 'Teal Mask Ogerpon',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Teal Mask Ogerpon")}.DRI.26.${baseUniqueId + 26 - 1}.thumb.png`,
-    dataAiHint: 'Teal Mask Ogerpon mask pokemon',
-    rarity: 'Holo Rare',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '26/244',
-  },
-  {
-    id: 'dri-growlithe-027',
-    name: 'Growlithe',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Growlithe")}.DRI.27.${baseUniqueId + 27 - 1}.thumb.png`,
-    dataAiHint: 'Growlithe puppy pokemon',
-    rarity: 'Common',
-    type: 'Fire',
-    series: 'Destined Rivals',
-    pokedexNumber: '27/244',
-  },
-  {
-    id: 'dri-arcanine-028',
-    name: 'Arcanine',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Arcanine")}.DRI.28.${baseUniqueId + 28 - 1}.thumb.png`,
-    dataAiHint: 'Arcanine legendary pokemon',
-    rarity: 'Uncommon',
-    type: 'Fire',
-    series: 'Destined Rivals',
-    pokedexNumber: '28/244',
-  },
-  {
-    id: 'dri-ponyta-029',
-    name: 'Ponyta',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Ponyta")}.DRI.29.${baseUniqueId + 29 - 1}.thumb.png`,
-    dataAiHint: 'Ponyta fire horse pokemon',
-    rarity: 'Common',
-    type: 'Fire',
-    series: 'Destined Rivals',
-    pokedexNumber: '29/244',
-  },
-  {
-    id: 'dri-rapidash-030',
-    name: 'Rapidash',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Rapidash")}.DRI.30.${baseUniqueId + 30 - 1}.thumb.png`,
-    dataAiHint: 'Rapidash fire horse pokemon',
-    rarity: 'Uncommon',
-    type: 'Fire',
-    series: 'Destined Rivals',
-    pokedexNumber: '30/244',
-  },
-  {
-    id: 'dri-team-rockets-moltres-ex-031',
-    name: "Team Rocket's Moltres ex",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Moltres ex")}.DRI.31.${baseUniqueId + 31 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Moltres ex flame",
-    rarity: 'Holo Rare',
-    type: 'Fire',
-    series: 'Destined Rivals',
-    pokedexNumber: '31/244',
-  },
-  {
-    id: 'dri-ethans-cyndaquil-032',
-    name: "Ethan's Cyndaquil",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Ethan's Cyndaquil")}.DRI.32.${baseUniqueId + 32 - 1}.thumb.png`,
-    dataAiHint: "Ethan Cyndaquil fire mouse",
-    rarity: 'Common',
-    type: 'Fire',
-    series: 'Destined Rivals',
-    pokedexNumber: '32/244',
-  },
-  {
-    id: 'dri-ethans-quilava-033',
-    name: "Ethan's Quilava",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Ethan's Quilava")}.DRI.33.${baseUniqueId + 33 - 1}.thumb.png`,
-    dataAiHint: "Ethan Quilava volcano pokemon",
-    rarity: 'Uncommon',
-    type: 'Fire',
-    series: 'Destined Rivals',
-    pokedexNumber: '33/244',
-  },
-  {
-    id: 'dri-ethans-typhlosion-034',
-    name: "Ethan's Typhlosion",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Ethan's Typhlosion")}.DRI.34.${baseUniqueId + 34 - 1}.thumb.png`,
-    dataAiHint: "Ethan Typhlosion volcano pokemon",
-    rarity: 'Holo Rare',
-    type: 'Fire',
-    series: 'Destined Rivals',
-    pokedexNumber: '34/244',
-  },
-  {
-    id: 'dri-ethans-slugma-035',
-    name: "Ethan's Slugma",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Ethan's Slugma")}.DRI.35.${baseUniqueId + 35 - 1}.thumb.png`,
-    dataAiHint: "Ethan Slugma lava pokemon",
-    rarity: 'Common',
-    type: 'Fire',
-    series: 'Destined Rivals',
-    pokedexNumber: '35/244',
-  },
-  {
-    id: 'dri-ethans-magcargo-036',
-    name: "Ethan's Magcargo",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Ethan's Magcargo")}.DRI.36.${baseUniqueId + 36 - 1}.thumb.png`,
-    dataAiHint: "Ethan Magcargo lava pokemon",
-    rarity: 'Uncommon', // Assuming not ex or special holo
-    type: 'Fire',
-    series: 'Destined Rivals',
-    pokedexNumber: '36/244',
-  },
-  {
-    id: 'dri-team-rockets-houndour-037',
-    name: "Team Rocket's Houndour",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Houndour")}.DRI.37.${baseUniqueId + 37 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Houndour dark pokemon",
-    rarity: 'Common',
-    type: 'Fire', // Or Darkness, but given position in list implies Fire theme block
-    series: 'Destined Rivals',
-    pokedexNumber: '37/244',
-  },
-  {
-    id: 'dri-team-rockets-houndoom-038',
-    name: "Team Rocket's Houndoom",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Houndoom")}.DRI.38.${baseUniqueId + 38 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Houndoom dark pokemon",
-    rarity: 'Holo Rare',
-    type: 'Fire', // Or Darkness
-    series: 'Destined Rivals',
-    pokedexNumber: '38/244',
-  },
-  {
-    id: 'dri-ethans-ho-oh-ex-039',
-    name: "Ethan's Ho-Oh ex",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Ethan's Ho-Oh ex")}.DRI.39.${baseUniqueId + 39 - 1}.thumb.png`,
-    dataAiHint: "Ethan Ho-Oh ex rainbow pokemon",
-    rarity: 'Holo Rare',
-    type: 'Fire',
-    series: 'Destined Rivals',
-    pokedexNumber: '39/244',
-  },
-  {
-    id: 'dri-torchic-040',
-    name: 'Torchic',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Torchic")}.DRI.40.${baseUniqueId + 40 - 1}.thumb.png`,
-    dataAiHint: 'Torchic chick pokemon',
-    rarity: 'Common',
-    type: 'Fire',
-    series: 'Destined Rivals',
-    pokedexNumber: '40/244',
-  },
-  {
-    id: 'dri-combusken-041',
-    name: 'Combusken',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Combusken")}.DRI.41.${baseUniqueId + 41 - 1}.thumb.png`,
-    dataAiHint: 'Combusken young fowl pokemon',
-    rarity: 'Uncommon',
-    type: 'Fire',
-    series: 'Destined Rivals',
-    pokedexNumber: '41/244',
-  },
-  {
-    id: 'dri-blaziken-042',
-    name: 'Blaziken',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Blaziken")}.DRI.42.${baseUniqueId + 42 - 1}.thumb.png`,
-    dataAiHint: 'Blaziken blaze pokemon',
-    rarity: 'Holo Rare',
-    type: 'Fire',
-    series: 'Destined Rivals',
-    pokedexNumber: '42/244',
-  },
-  {
-    id: 'dri-heat-rotom-043',
-    name: 'Heat Rotom',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Heat Rotom")}.DRI.43.${baseUniqueId + 43 - 1}.thumb.png`,
-    dataAiHint: 'Heat Rotom plasma fire',
-    rarity: 'Holo Rare',
-    type: 'Fire',
-    series: 'Destined Rivals',
-    pokedexNumber: '43/244',
-  },
-  {
-    id: 'dri-hearthflame-mask-ogerpon-044',
-    name: 'Hearthflame Mask Ogerpon',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Hearthflame Mask Ogerpon")}.DRI.44.${baseUniqueId + 44 - 1}.thumb.png`,
-    dataAiHint: 'Hearthflame Mask Ogerpon fire',
-    rarity: 'Holo Rare',
-    type: 'Fire',
-    series: 'Destined Rivals',
-    pokedexNumber: '44/244',
-  },
-  {
-    id: 'dri-mistys-psyduck-045',
-    name: "Misty's Psyduck",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Misty's Psyduck")}.DRI.45.${baseUniqueId + 45 - 1}.thumb.png`,
-    dataAiHint: "Misty Psyduck duck pokemon",
-    rarity: 'Common',
-    type: 'Water',
-    series: 'Destined Rivals',
-    pokedexNumber: '45/244',
-  },
-  {
-    id: 'dri-mistys-staryu-046',
-    name: "Misty's Staryu",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Misty's Staryu")}.DRI.46.${baseUniqueId + 46 - 1}.thumb.png`,
-    dataAiHint: "Misty Staryu star shape pokemon",
-    rarity: 'Common',
-    type: 'Water',
-    series: 'Destined Rivals',
-    pokedexNumber: '46/244',
-  },
-  {
-    id: 'dri-mistys-starmie-047',
-    name: "Misty's Starmie",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Misty's Starmie")}.DRI.47.${baseUniqueId + 47 - 1}.thumb.png`,
-    dataAiHint: "Misty Starmie mysterious pokemon",
-    rarity: 'Uncommon',
-    type: 'Water',
-    series: 'Destined Rivals',
-    pokedexNumber: '47/244',
-  },
-  {
-    id: 'dri-mistys-magikarp-048',
-    name: "Misty's Magikarp",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Misty's Magikarp")}.DRI.48.${baseUniqueId + 48 - 1}.thumb.png`,
-    dataAiHint: "Misty Magikarp fish pokemon",
-    rarity: 'Common',
-    type: 'Water',
-    series: 'Destined Rivals',
-    pokedexNumber: '48/244',
-  },
-  {
-    id: 'dri-mistys-gyarados-049',
-    name: "Misty's Gyarados",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Misty's Gyarados")}.DRI.49.${baseUniqueId + 49 - 1}.thumb.png`,
-    dataAiHint: "Misty Gyarados atrocious pokemon",
-    rarity: 'Holo Rare',
-    type: 'Water',
-    series: 'Destined Rivals',
-    pokedexNumber: '49/244',
-  },
-  {
-    id: 'dri-mistys-lapras-050',
-    name: "Misty's Lapras",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Misty's Lapras")}.DRI.50.${baseUniqueId + 50 - 1}.thumb.png`,
-    dataAiHint: "Misty Lapras transport pokemon",
-    rarity: 'Holo Rare',
-    type: 'Water',
-    series: 'Destined Rivals',
-    pokedexNumber: '50/244',
-  },
-  {
-    id: 'dri-team-rockets-articuno-051',
-    name: "Team Rocket's Articuno", // No "ex" in user list
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Articuno")}.DRI.51.${baseUniqueId + 51 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Articuno freeze pokemon",
-    rarity: 'Holo Rare', // Legendary birds are usually Holo
-    type: 'Water',
-    series: 'Destined Rivals',
-    pokedexNumber: '51/244',
-  },
-  {
-    id: 'dri-cynthias-feebas-052',
-    name: "Cynthia's Feebas",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Cynthia's Feebas")}.DRI.52.${baseUniqueId + 52 - 1}.thumb.png`,
-    dataAiHint: "Cynthia Feebas fish pokemon",
-    rarity: 'Common',
-    type: 'Water',
-    series: 'Destined Rivals',
-    pokedexNumber: '52/244',
-  },
-  {
-    id: 'dri-cynthias-milotic-053',
-    name: "Cynthia's Milotic",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Cynthia's Milotic")}.DRI.53.${baseUniqueId + 53 - 1}.thumb.png`,
-    dataAiHint: "Cynthia Milotic tender pokemon",
-    rarity: 'Holo Rare',
-    type: 'Water',
-    series: 'Destined Rivals',
-    pokedexNumber: '53/244',
-  },
-  {
-    id: 'dri-clamperl-054',
-    name: 'Clamperl',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Clamperl")}.DRI.54.${baseUniqueId + 54 - 1}.thumb.png`,
-    dataAiHint: 'Clamperl bivalve pokemon',
-    rarity: 'Common',
-    type: 'Water',
-    series: 'Destined Rivals',
-    pokedexNumber: '54/244',
-  },
-  {
-    id: 'dri-huntail-055',
-    name: 'Huntail',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Huntail")}.DRI.55.${baseUniqueId + 55 - 1}.thumb.png`,
-    dataAiHint: 'Huntail deep sea pokemon',
-    rarity: 'Uncommon',
-    type: 'Water',
-    series: 'Destined Rivals',
-    pokedexNumber: '55/244',
-  },
-  {
-    id: 'dri-gorebyss-056',
-    name: 'Gorebyss',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Gorebyss")}.DRI.56.${baseUniqueId + 56 - 1}.thumb.png`,
-    dataAiHint: 'Gorebyss south sea pokemon',
-    rarity: 'Uncommon',
-    type: 'Water',
-    series: 'Destined Rivals',
-    pokedexNumber: '56/244',
-  },
-  {
-    id: 'dri-buizel-057',
-    name: 'Buizel',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Buizel")}.DRI.57.${baseUniqueId + 57 - 1}.thumb.png`,
-    dataAiHint: 'Buizel sea weasel pokemon',
-    rarity: 'Common',
-    type: 'Water',
-    series: 'Destined Rivals',
-    pokedexNumber: '57/244',
-  },
-  {
-    id: 'dri-floatzel-058',
-    name: 'Floatzel',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Floatzel")}.DRI.58.${baseUniqueId + 58 - 1}.thumb.png`,
-    dataAiHint: 'Floatzel sea weasel pokemon',
-    rarity: 'Uncommon',
-    type: 'Water',
-    series: 'Destined Rivals',
-    pokedexNumber: '58/244',
-  },
-  {
-    id: 'dri-snover-059',
-    name: 'Snover',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Snover")}.DRI.59.${baseUniqueId + 59 - 1}.thumb.png`,
-    dataAiHint: 'Snover frost tree pokemon',
-    rarity: 'Common',
-    type: 'Water', // Grass/Ice often Water in TCG
-    series: 'Destined Rivals',
-    pokedexNumber: '59/244',
-  },
-  {
-    id: 'dri-abomasnow-060',
-    name: 'Abomasnow',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Abomasnow")}.DRI.60.${baseUniqueId + 60 - 1}.thumb.png`,
-    dataAiHint: 'Abomasnow frost tree pokemon',
-    rarity: 'Uncommon',
-    type: 'Water', // Grass/Ice often Water in TCG
-    series: 'Destined Rivals',
-    pokedexNumber: '60/244',
-  },
-  {
-    id: 'dri-wash-rotom-061',
-    name: 'Wash Rotom',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Wash Rotom")}.DRI.61.${baseUniqueId + 61 - 1}.thumb.png`,
-    dataAiHint: 'Wash Rotom plasma water',
-    rarity: 'Holo Rare',
-    type: 'Water',
-    series: 'Destined Rivals',
-    pokedexNumber: '61/244',
-  },
-  {
-    id: 'dri-arrokuda-062',
-    name: 'Arrokuda',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Arrokuda")}.DRI.62.${baseUniqueId + 62 - 1}.thumb.png`,
-    dataAiHint: 'Arrokuda rush pokemon',
-    rarity: 'Common',
-    type: 'Water',
-    series: 'Destined Rivals',
-    pokedexNumber: '62/244',
-  },
-  {
-    id: 'dri-barraskewda-063',
-    name: 'Barraskewda',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Barraskewda")}.DRI.63.${baseUniqueId + 63 - 1}.thumb.png`,
-    dataAiHint: 'Barraskewda skewer pokemon',
-    rarity: 'Uncommon',
-    type: 'Water',
-    series: 'Destined Rivals',
-    pokedexNumber: '63/244',
-  },
-  {
-    id: 'dri-cetoddle-064',
-    name: 'Cetoddle',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Cetoddle")}.DRI.64.${baseUniqueId + 64 - 1}.thumb.png`,
-    dataAiHint: 'Cetoddle terra whale pokemon',
-    rarity: 'Common',
-    type: 'Water',
-    series: 'Destined Rivals',
-    pokedexNumber: '64/244',
-  },
-  {
-    id: 'dri-cetitan-ex-065',
-    name: 'Cetitan ex',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Cetitan ex")}.DRI.65.${baseUniqueId + 65 - 1}.thumb.png`,
-    dataAiHint: 'Cetitan ex terra whale pokemon',
-    rarity: 'Holo Rare',
-    type: 'Water',
-    series: 'Destined Rivals',
-    pokedexNumber: '65/244',
-  },
-  {
-    id: 'dri-dondozo-ex-066',
-    name: 'Dondozo ex',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Dondozo ex")}.DRI.66.${baseUniqueId + 66 - 1}.thumb.png`,
-    dataAiHint: 'Dondozo ex big cat pokemon',
-    rarity: 'Holo Rare',
-    type: 'Water',
-    series: 'Destined Rivals',
-    pokedexNumber: '66/244',
-  },
-  {
-    id: 'dri-wellspring-mask-ogerpon-067',
-    name: 'Wellspring Mask Ogerpon',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Wellspring Mask Ogerpon")}.DRI.67.${baseUniqueId + 67 - 1}.thumb.png`,
-    dataAiHint: 'Wellspring Mask Ogerpon water',
-    rarity: 'Holo Rare',
-    type: 'Water',
-    series: 'Destined Rivals',
-    pokedexNumber: '67/244',
-  },
-  {
-    id: 'dri-electabuzz-068',
-    name: 'Electabuzz',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Electabuzz")}.DRI.68.${baseUniqueId + 68 - 1}.thumb.png`,
-    dataAiHint: 'Electabuzz electric pokemon',
-    rarity: 'Common',
-    type: 'Lightning',
-    series: 'Destined Rivals',
-    pokedexNumber: '68/244',
-  },
-  {
-    id: 'dri-electivire-ex-069',
-    name: 'Electivire ex',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Electivire ex")}.DRI.69.${baseUniqueId + 69 - 1}.thumb.png`,
-    dataAiHint: 'Electivire ex thunderbolt pokemon',
-    rarity: 'Holo Rare',
-    type: 'Lightning',
-    series: 'Destined Rivals',
-    pokedexNumber: '69/244',
-  },
-  {
-    id: 'dri-team-rockets-zapdos-070',
-    name: "Team Rocket's Zapdos", // No "ex" in user list
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Zapdos")}.DRI.70.${baseUniqueId + 70 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Zapdos electric pokemon",
-    rarity: 'Holo Rare',
-    type: 'Lightning',
-    series: 'Destined Rivals',
-    pokedexNumber: '70/244',
-  },
-  {
-    id: 'dri-ethans-pichu-071',
-    name: "Ethan's Pichu",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Ethan's Pichu")}.DRI.71.${baseUniqueId + 71 - 1}.thumb.png`,
-    dataAiHint: "Ethan Pichu tiny mouse pokemon",
-    rarity: 'Common',
-    type: 'Lightning',
-    series: 'Destined Rivals',
-    pokedexNumber: '71/244',
-  },
-  {
-    id: 'dri-team-rockets-mareep-072',
-    name: "Team Rocket's Mareep",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Mareep")}.DRI.72.${baseUniqueId + 72 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Mareep wool pokemon",
-    rarity: 'Common',
-    type: 'Lightning',
-    series: 'Destined Rivals',
-    pokedexNumber: '72/244',
-  },
-  {
-    id: 'dri-team-rockets-flaaffy-073',
-    name: "Team Rocket's Flaaffy",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Flaaffy")}.DRI.73.${baseUniqueId + 73 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Flaaffy wool pokemon",
-    rarity: 'Uncommon',
-    type: 'Lightning',
-    series: 'Destined Rivals',
-    pokedexNumber: '73/244',
-  },
-  {
-    id: 'dri-team-rockets-ampharos-074',
-    name: "Team Rocket's Ampharos",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Ampharos")}.DRI.74.${baseUniqueId + 74 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Ampharos light pokemon",
-    rarity: 'Holo Rare',
-    type: 'Lightning',
-    series: 'Destined Rivals',
-    pokedexNumber: '74/244',
-  },
-  {
-    id: 'dri-electrike-075',
-    name: 'Electrike',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Electrike")}.DRI.75.${baseUniqueId + 75 - 1}.thumb.png`,
-    dataAiHint: 'Electrike lightning pokemon',
-    rarity: 'Common',
-    type: 'Lightning',
-    series: 'Destined Rivals',
-    pokedexNumber: '75/244',
-  },
-  {
-    id: 'dri-manectric-076',
-    name: 'Manectric',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Manectric")}.DRI.76.${baseUniqueId + 76 - 1}.thumb.png`,
-    dataAiHint: 'Manectric discharge pokemon',
-    rarity: 'Uncommon',
-    type: 'Lightning',
-    series: 'Destined Rivals',
-    pokedexNumber: '76/244',
-  },
-  {
-    id: 'dri-rotom-077',
-    name: 'Rotom',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Rotom")}.DRI.77.${baseUniqueId + 77 - 1}.thumb.png`,
-    dataAiHint: 'Rotom plasma pokemon',
-    rarity: 'Holo Rare', // Base Rotom is often rare/holo
-    type: 'Lightning',
-    series: 'Destined Rivals',
-    pokedexNumber: '77/244',
-  },
-  {
-    id: 'dri-zeraora-078',
-    name: 'Zeraora',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Zeraora")}.DRI.78.${baseUniqueId + 78 - 1}.thumb.png`,
-    dataAiHint: 'Zeraora thunderclap pokemon',
-    rarity: 'Holo Rare',
-    type: 'Lightning',
-    series: 'Destined Rivals',
-    pokedexNumber: '78/244',
-  },
-  {
-    id: 'dri-team-rockets-drowzee-079',
-    name: "Team Rocket's Drowzee",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Drowzee")}.DRI.79.${baseUniqueId + 79 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Drowzee hypnosis pokemon",
-    rarity: 'Common',
-    type: 'Psychic',
-    series: 'Destined Rivals',
-    pokedexNumber: '79/244',
-  },
-  {
-    id: 'dri-team-rockets-hypno-080',
-    name: "Team Rocket's Hypno",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Hypno")}.DRI.80.${baseUniqueId + 80 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Hypno hypnosis pokemon",
-    rarity: 'Uncommon',
-    type: 'Psychic',
-    series: 'Destined Rivals',
-    pokedexNumber: '80/244',
-  },
-  {
-    id: 'dri-team-rockets-mewtwo-ex-081',
-    name: "Team Rocket's Mewtwo ex",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Mewtwo ex")}.DRI.81.${baseUniqueId + 81 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Mewtwo ex genetic",
-    rarity: 'Holo Rare',
-    type: 'Psychic',
-    series: 'Destined Rivals',
-    pokedexNumber: '81/244',
-  },
-  {
-    id: 'dri-team-rockets-wobbuffet-082',
-    name: "Team Rocket's Wobbuffet",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Wobbuffet")}.DRI.82.${baseUniqueId + 82 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Wobbuffet patient pokemon",
-    rarity: 'Uncommon',
-    type: 'Psychic',
-    series: 'Destined Rivals',
-    pokedexNumber: '82/244',
-  },
-  {
-    id: 'dri-stevens-baltoy-083',
-    name: "Steven's Baltoy",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Steven's Baltoy")}.DRI.83.${baseUniqueId + 83 - 1}.thumb.png`,
-    dataAiHint: "Steven Baltoy clay doll pokemon",
-    rarity: 'Common',
-    type: 'Psychic', // Ground/Psychic
-    series: 'Destined Rivals',
-    pokedexNumber: '83/244',
-  },
-  {
-    id: 'dri-stevens-claydol-084',
-    name: "Steven's Claydol",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Steven's Claydol")}.DRI.84.${baseUniqueId + 84 - 1}.thumb.png`,
-    dataAiHint: "Steven Claydol clay doll pokemon",
-    rarity: 'Uncommon',
-    type: 'Psychic', // Ground/Psychic
-    series: 'Destined Rivals',
-    pokedexNumber: '84/244',
-  },
-  {
-    id: 'dri-team-rockets-chingling-085',
-    name: "Team Rocket's Chingling",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Chingling")}.DRI.85.${baseUniqueId + 85 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Chingling bell pokemon",
-    rarity: 'Common',
-    type: 'Psychic',
-    series: 'Destined Rivals',
-    pokedexNumber: '85/244',
-  },
-  {
-    id: 'dri-stevens-carbink-086',
-    name: "Steven's Carbink",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Steven's Carbink")}.DRI.86.${baseUniqueId + 86 - 1}.thumb.png`,
-    dataAiHint: "Steven Carbink jewel pokemon",
-    rarity: 'Uncommon',
-    type: 'Psychic', // Rock/Fairy often Psychic
-    series: 'Destined Rivals',
-    pokedexNumber: '86/244',
-  },
-  {
-    id: 'dri-team-rockets-mimikyu-087',
-    name: "Team Rocket's Mimikyu",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Mimikyu")}.DRI.87.${baseUniqueId + 87 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Mimikyu disguise pokemon",
-    rarity: 'Holo Rare',
-    type: 'Psychic', // Ghost/Fairy
-    series: 'Destined Rivals',
-    pokedexNumber: '87/244',
-  },
-  {
-    id: 'dri-team-rockets-dottler-088',
-    name: "Team Rocket's Dottler",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Dottler")}.DRI.88.${baseUniqueId + 88 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Dottler radome pokemon",
-    rarity: 'Uncommon',
-    type: 'Psychic', // Bug/Psychic
-    series: 'Destined Rivals',
-    pokedexNumber: '88/244',
-  },
-  {
-    id: 'dri-team-rockets-orbeetle-089',
-    name: "Team Rocket's Orbeetle",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Orbeetle")}.DRI.89.${baseUniqueId + 89 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Orbeetle seven spot pokemon",
-    rarity: 'Holo Rare',
-    type: 'Psychic', // Bug/Psychic
-    series: 'Destined Rivals',
-    pokedexNumber: '89/244',
-  },
-  {
-    id: 'dri-mankey-090',
-    name: 'Mankey',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Mankey")}.DRI.90.${baseUniqueId + 90 - 1}.thumb.png`,
-    dataAiHint: 'Mankey pig monkey pokemon',
-    rarity: 'Common',
-    type: 'Fighting',
-    series: 'Destined Rivals',
-    pokedexNumber: '90/244',
-  },
-  {
-    id: 'dri-primeape-091',
-    name: 'Primeape',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Primeape")}.DRI.91.${baseUniqueId + 91 - 1}.thumb.png`,
-    dataAiHint: 'Primeape pig monkey pokemon',
-    rarity: 'Uncommon',
-    type: 'Fighting',
-    series: 'Destined Rivals',
-    pokedexNumber: '91/244',
-  },
-  {
-    id: 'dri-annihilape-092',
-    name: 'Annihilape', // No "ex" in user list here
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Annihilape")}.DRI.92.${baseUniqueId + 92 - 1}.thumb.png`,
-    dataAiHint: 'Annihilape rage monkey pokemon',
-    rarity: 'Holo Rare',
-    type: 'Fighting',
-    series: 'Destined Rivals',
-    pokedexNumber: '92/244',
-  },
-  {
-    id: 'dri-ethans-sudowoodo-093',
-    name: "Ethan's Sudowoodo",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Ethan's Sudowoodo")}.DRI.93.${baseUniqueId + 93 - 1}.thumb.png`,
-    dataAiHint: "Ethan Sudowoodo imitation pokemon",
-    rarity: 'Uncommon',
-    type: 'Fighting', // Rock type typically Fighting
-    series: 'Destined Rivals',
-    pokedexNumber: '93/244',
-  },
-  {
-    id: 'dri-team-rockets-larvitar-094',
-    name: "Team Rocket's Larvitar",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Larvitar")}.DRI.94.${baseUniqueId + 94 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Larvitar rock skin pokemon",
-    rarity: 'Common',
-    type: 'Fighting', // Rock/Ground
-    series: 'Destined Rivals',
-    pokedexNumber: '94/244',
-  },
-  {
-    id: 'dri-team-rockets-pupitar-095',
-    name: "Team Rocket's Pupitar",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Pupitar")}.DRI.95.${baseUniqueId + 95 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Pupitar hard shell pokemon",
-    rarity: 'Uncommon',
-    type: 'Fighting', // Rock/Ground
-    series: 'Destined Rivals',
-    pokedexNumber: '95/244',
-  },
-  {
-    id: 'dri-team-rockets-tyranitar-096',
-    name: "Team Rocket's Tyranitar",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Tyranitar")}.DRI.96.${baseUniqueId + 96 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Tyranitar armor pokemon",
-    rarity: 'Holo Rare',
-    type: 'Fighting', // Rock/Dark
-    series: 'Destined Rivals',
-    pokedexNumber: '96/244',
-  },
-  {
-    id: 'dri-nosepass-097',
-    name: 'Nosepass',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Nosepass")}.DRI.97.${baseUniqueId + 97 - 1}.thumb.png`,
-    dataAiHint: 'Nosepass compass pokemon',
-    rarity: 'Common',
-    type: 'Fighting', // Rock type
-    series: 'Destined Rivals',
-    pokedexNumber: '97/244',
-  },
-  {
-    id: 'dri-probopass-098',
-    name: 'Probopass',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Probopass")}.DRI.98.${baseUniqueId + 98 - 1}.thumb.png`,
-    dataAiHint: 'Probopass compass pokemon',
-    rarity: 'Uncommon',
-    type: 'Fighting', // Rock/Steel
-    series: 'Destined Rivals',
-    pokedexNumber: '98/244',
-  },
-  {
-    id: 'dri-meditite-099',
-    name: 'Meditite',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Meditite")}.DRI.99.${baseUniqueId + 99 - 1}.thumb.png`,
-    dataAiHint: 'Meditite meditate pokemon',
-    rarity: 'Common',
-    type: 'Fighting', // Fighting/Psychic
-    series: 'Destined Rivals',
-    pokedexNumber: '99/244',
-  },
-  {
-    id: 'dri-medicham-100',
-    name: 'Medicham',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Medicham")}.DRI.100.${baseUniqueId + 100 - 1}.thumb.png`,
-    dataAiHint: 'Medicham meditate pokemon',
-    rarity: 'Uncommon',
-    type: 'Fighting', // Fighting/Psychic
-    series: 'Destined Rivals',
-    pokedexNumber: '100/244',
-  },
-  {
-    id: 'dri-regirock-ex-101',
-    name: 'Regirock ex',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Regirock ex")}.DRI.101.${baseUniqueId + 101 - 1}.thumb.png`,
-    dataAiHint: 'Regirock ex rock peak pokemon',
-    rarity: 'Holo Rare',
-    type: 'Fighting', // Rock type
-    series: 'Destined Rivals',
-    pokedexNumber: '101/244',
-  },
-  {
-    id: 'dri-cynthias-gible-102',
-    name: "Cynthia's Gible",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Cynthia's Gible")}.DRI.102.${baseUniqueId + 102 - 1}.thumb.png`,
-    dataAiHint: "Cynthia Gible land shark pokemon",
-    rarity: 'Common',
-    type: 'Fighting', // Dragon/Ground usually Fighting or Dragon in TCG
-    series: 'Destined Rivals',
-    pokedexNumber: '102/244',
-  },
-  {
-    id: 'dri-cynthias-gabite-103',
-    name: "Cynthia's Gabite",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Cynthia's Gabite")}.DRI.103.${baseUniqueId + 103 - 1}.thumb.png`,
-    dataAiHint: "Cynthia Gabite cave pokemon",
-    rarity: 'Uncommon',
-    type: 'Fighting',
-    series: 'Destined Rivals',
-    pokedexNumber: '103/244',
-  },
-  {
-    id: 'dri-cynthias-garchomp-ex-104',
-    name: "Cynthia's Garchomp ex",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Cynthia's Garchomp ex")}.DRI.104.${baseUniqueId + 104 - 1}.thumb.png`,
-    dataAiHint: "Cynthia Garchomp ex mach pokemon",
-    rarity: 'Holo Rare',
-    type: 'Fighting',
-    series: 'Destined Rivals',
-    pokedexNumber: '104/244',
-  },
-  {
-    id: 'dri-hippopotas-105',
-    name: 'Hippopotas',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Hippopotas")}.DRI.105.${baseUniqueId + 105 - 1}.thumb.png`,
-    dataAiHint: 'Hippopotas hippo pokemon',
-    rarity: 'Common',
-    type: 'Fighting', // Ground type
-    series: 'Destined Rivals',
-    pokedexNumber: '105/244',
-  },
-  {
-    id: 'dri-hippowdon-106',
-    name: 'Hippowdon',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Hippowdon")}.DRI.106.${baseUniqueId + 106 - 1}.thumb.png`,
-    dataAiHint: 'Hippowdon heavyweight pokemon',
-    rarity: 'Uncommon',
-    type: 'Fighting', // Ground type
-    series: 'Destined Rivals',
-    pokedexNumber: '106/244',
-  },
-  {
-    id: 'dri-mudbray-107',
-    name: 'Mudbray',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Mudbray")}.DRI.107.${baseUniqueId + 107 - 1}.thumb.png`,
-    dataAiHint: 'Mudbray donkey pokemon',
-    rarity: 'Common',
-    type: 'Fighting', // Ground type
-    series: 'Destined Rivals',
-    pokedexNumber: '107/244',
-  },
-  {
-    id: 'dri-mudsdale-108',
-    name: 'Mudsdale',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Mudsdale")}.DRI.108.${baseUniqueId + 108 - 1}.thumb.png`,
-    dataAiHint: 'Mudsdale draft horse pokemon',
-    rarity: 'Uncommon',
-    type: 'Fighting', // Ground type
-    series: 'Destined Rivals',
-    pokedexNumber: '108/244',
-  },
-  {
-    id: 'dri-arvens-toedscool-109',
-    name: "Arven's Toedscool",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Arven's Toedscool")}.DRI.109.${baseUniqueId + 109 - 1}.thumb.png`,
-    dataAiHint: "Arven Toedscool woodear pokemon",
-    rarity: 'Common',
-    type: 'Fighting', // Ground/Grass
-    series: 'Destined Rivals',
-    pokedexNumber: '109/244',
-  },
-  {
-    id: 'dri-arvens-toedscruel-110',
-    name: "Arven's Toedscruel",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Arven's Toedscruel")}.DRI.110.${baseUniqueId + 110 - 1}.thumb.png`,
-    dataAiHint: "Arven Toedscruel woodear pokemon",
-    rarity: 'Uncommon',
-    type: 'Fighting',
-    series: 'Destined Rivals',
-    pokedexNumber: '110/244',
-  },
-  {
-    id: 'dri-cornerstone-mask-ogerpon-111',
-    name: 'Cornerstone Mask Ogerpon',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Cornerstone Mask Ogerpon")}.DRI.111.${baseUniqueId + 111 - 1}.thumb.png`,
-    dataAiHint: 'Cornerstone Mask Ogerpon rock',
-    rarity: 'Holo Rare',
-    type: 'Fighting', // Grass/Rock
-    series: 'Destined Rivals',
-    pokedexNumber: '111/244',
-  },
-  {
-    id: 'dri-team-rockets-ekans-112',
-    name: "Team Rocket's Ekans",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Ekans")}.DRI.112.${baseUniqueId + 112 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Ekans snake pokemon",
-    rarity: 'Common',
-    type: 'Grass', // Poison type typically Grass in early TCG, sometimes Psychic or Darkness
-    series: 'Destined Rivals',
-    pokedexNumber: '112/244',
-  },
-  {
-    id: 'dri-team-rockets-arbok-113',
-    name: "Team Rocket's Arbok",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Arbok")}.DRI.113.${baseUniqueId + 113 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Arbok cobra pokemon",
-    rarity: 'Uncommon',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '113/244',
-  },
-  {
-    id: 'dri-team-rockets-nidoran-f-114',
-    name: "Team Rocket's Nidoran♀",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Nidoran♀")}.DRI.114.${baseUniqueId + 114 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Nidoran female poison pin",
-    rarity: 'Common',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '114/244',
-  },
-  {
-    id: 'dri-team-rockets-nidorina-115',
-    name: "Team Rocket's Nidorina",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Nidorina")}.DRI.115.${baseUniqueId + 115 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Nidorina poison pin pokemon",
-    rarity: 'Uncommon',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '115/244',
-  },
-  {
-    id: 'dri-team-rockets-nidoqueen-116',
-    name: "Team Rocket's Nidoqueen",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Nidoqueen")}.DRI.116.${baseUniqueId + 116 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Nidoqueen drill pokemon",
-    rarity: 'Holo Rare',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '116/244',
-  },
-  {
-    id: 'dri-team-rockets-nidoran-m-117',
-    name: "Team Rocket's Nidoran♂",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Nidoran♂")}.DRI.117.${baseUniqueId + 117 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Nidoran male poison pin",
-    rarity: 'Common',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '117/244',
-  },
-  {
-    id: 'dri-team-rockets-nidorino-118',
-    name: "Team Rocket's Nidorino",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Nidorino")}.DRI.118.${baseUniqueId + 118 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Nidorino poison pin pokemon",
-    rarity: 'Uncommon',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '118/244',
-  },
-  {
-    id: 'dri-team-rockets-nidoking-ex-119',
-    name: "Team Rocket's Nidoking ex",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Nidoking ex")}.DRI.119.${baseUniqueId + 119 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Nidoking ex drill pokemon",
-    rarity: 'Holo Rare',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '119/244',
-  },
-  {
-    id: 'dri-team-rockets-zubat-120',
-    name: "Team Rocket's Zubat",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Zubat")}.DRI.120.${baseUniqueId + 120 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Zubat bat pokemon",
-    rarity: 'Common',
-    type: 'Grass', // Poison/Flying
-    series: 'Destined Rivals',
-    pokedexNumber: '120/244',
-  },
-  {
-    id: 'dri-team-rockets-golbat-121',
-    name: "Team Rocket's Golbat",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Golbat")}.DRI.121.${baseUniqueId + 121 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Golbat bat pokemon",
-    rarity: 'Uncommon',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '121/244',
-  },
-  {
-    id: 'dri-team-rockets-crobat-ex-122',
-    name: "Team Rocket's Crobat ex",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Crobat ex")}.DRI.122.${baseUniqueId + 122 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Crobat ex bat pokemon",
-    rarity: 'Holo Rare',
-    type: 'Darkness', // More fitting for Crobat's TCG theme
-    series: 'Destined Rivals',
-    pokedexNumber: '122/244',
-  },
-  {
-    id: 'dri-team-rockets-grimer-123',
-    name: "Team Rocket's Grimer",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Grimer")}.DRI.123.${baseUniqueId + 123 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Grimer sludge pokemon",
-    rarity: 'Common',
-    type: 'Grass', // Poison
-    series: 'Destined Rivals',
-    pokedexNumber: '123/244',
-  },
-  {
-    id: 'dri-team-rockets-muk-124',
-    name: "Team Rocket's Muk",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Muk")}.DRI.124.${baseUniqueId + 124 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Muk sludge pokemon",
-    rarity: 'Uncommon',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '124/244',
-  },
-  {
-    id: 'dri-team-rockets-koffing-125',
-    name: "Team Rocket's Koffing",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Koffing")}.DRI.125.${baseUniqueId + 125 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Koffing poison gas pokemon",
-    rarity: 'Common',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '125/244',
-  },
-  {
-    id: 'dri-team-rockets-weezing-126',
-    name: "Team Rocket's Weezing",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Weezing")}.DRI.126.${baseUniqueId + 126 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Weezing poison gas pokemon",
-    rarity: 'Holo Rare',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '126/244',
-  },
-  {
-    id: 'dri-team-rockets-murkrow-127',
-    name: "Team Rocket's Murkrow",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Murkrow")}.DRI.127.${baseUniqueId + 127 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Murkrow darkness pokemon",
-    rarity: 'Common',
-    type: 'Darkness',
-    series: 'Destined Rivals',
-    pokedexNumber: '127/244',
-  },
-  {
-    id: 'dri-team-rockets-sneasel-128',
-    name: "Team Rocket's Sneasel",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Sneasel")}.DRI.128.${baseUniqueId + 128 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Sneasel sharp claw pokemon",
-    rarity: 'Common',
-    type: 'Darkness', // Dark/Ice
-    series: 'Destined Rivals',
-    pokedexNumber: '128/244',
-  },
-  {
-    id: 'dri-cynthias-spiritomb-129',
-    name: "Cynthia's Spiritomb",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Cynthia's Spiritomb")}.DRI.129.${baseUniqueId + 129 - 1}.thumb.png`,
-    dataAiHint: "Cynthia Spiritomb forbidden pokemon",
-    rarity: 'Holo Rare', // Often Rare/Holo
-    type: 'Darkness', // Ghost/Dark
-    series: 'Destined Rivals',
-    pokedexNumber: '129/244',
-  },
-  {
-    id: 'dri-marnies-purrloin-130',
-    name: "Marnie's Purrloin",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Marnie's Purrloin")}.DRI.130.${baseUniqueId + 130 - 1}.thumb.png`,
-    dataAiHint: "Marnie Purrloin devious pokemon",
-    rarity: 'Common',
-    type: 'Darkness',
-    series: 'Destined Rivals',
-    pokedexNumber: '130/244',
-  },
-  {
-    id: 'dri-marnies-liepard-131',
-    name: "Marnie's Liepard",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Marnie's Liepard")}.DRI.131.${baseUniqueId + 131 - 1}.thumb.png`,
-    dataAiHint: "Marnie Liepard cruel pokemon",
-    rarity: 'Uncommon',
-    type: 'Darkness',
-    series: 'Destined Rivals',
-    pokedexNumber: '131/244',
-  },
-  {
-    id: 'dri-marnies-scraggy-132',
-    name: "Marnie's Scraggy",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Marnie's Scraggy")}.DRI.132.${baseUniqueId + 132 - 1}.thumb.png`,
-    dataAiHint: "Marnie Scraggy shedding pokemon",
-    rarity: 'Common',
-    type: 'Darkness', // Dark/Fighting
-    series: 'Destined Rivals',
-    pokedexNumber: '132/244',
-  },
-  {
-    id: 'dri-marnies-scrafty-133',
-    name: "Marnie's Scrafty",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Marnie's Scrafty")}.DRI.133.${baseUniqueId + 133 - 1}.thumb.png`,
-    dataAiHint: "Marnie Scrafty hoodlum pokemon",
-    rarity: 'Uncommon',
-    type: 'Darkness',
-    series: 'Destined Rivals',
-    pokedexNumber: '133/244',
-  },
-  {
-    id: 'dri-marnies-impidimp-134',
-    name: "Marnie's Impidimp",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Marnie's Impidimp")}.DRI.134.${baseUniqueId + 134 - 1}.thumb.png`,
-    dataAiHint: "Marnie Impidimp wily pokemon",
-    rarity: 'Common',
-    type: 'Darkness', // Dark/Fairy
-    series: 'Destined Rivals',
-    pokedexNumber: '134/244',
-  },
-  {
-    id: 'dri-marnies-morgrem-135',
-    name: "Marnie's Morgrem",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Marnie's Morgrem")}.DRI.135.${baseUniqueId + 135 - 1}.thumb.png`,
-    dataAiHint: "Marnie Morgrem devious pokemon",
-    rarity: 'Uncommon',
-    type: 'Darkness',
-    series: 'Destined Rivals',
-    pokedexNumber: '135/244',
-  },
-  {
-    id: 'dri-marnies-grimmsnarl-ex-136',
-    name: "Marnie's Grimmsnarl ex",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Marnie's Grimmsnarl ex")}.DRI.136.${baseUniqueId + 136 - 1}.thumb.png`,
-    dataAiHint: "Marnie Grimmsnarl ex bulk up pokemon",
-    rarity: 'Holo Rare',
-    type: 'Darkness',
-    series: 'Destined Rivals',
-    pokedexNumber: '136/244',
-  },
-  {
-    id: 'dri-marnies-morpeko-137',
-    name: "Marnie's Morpeko",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Marnie's Morpeko")}.DRI.137.${baseUniqueId + 137 - 1}.thumb.png`,
-    dataAiHint: "Marnie Morpeko two-sided pokemon",
-    rarity: 'Holo Rare',
-    type: 'Darkness', // Electric/Dark
-    series: 'Destined Rivals',
-    pokedexNumber: '137/244',
-  },
-  {
-    id: 'dri-arvens-maschiff-138',
-    name: "Arven's Maschiff",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Arven's Maschiff")}.DRI.138.${baseUniqueId + 138 - 1}.thumb.png`,
-    dataAiHint: "Arven Maschiff rascal pokemon",
-    rarity: 'Common',
-    type: 'Darkness',
-    series: 'Destined Rivals',
-    pokedexNumber: '138/244',
-  },
-  {
-    id: 'dri-arvens-mabosstiff-ex-139',
-    name: "Arven's Mabosstiff ex",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Arven's Mabosstiff ex")}.DRI.139.${baseUniqueId + 139 - 1}.thumb.png`,
-    dataAiHint: "Arven Mabosstiff ex boss pokemon",
-    rarity: 'Holo Rare',
-    type: 'Darkness',
-    series: 'Destined Rivals',
-    pokedexNumber: '139/244',
-  },
-  {
-    id: 'dri-forretress-140',
-    name: 'Forretress',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Forretress")}.DRI.140.${baseUniqueId + 140 - 1}.thumb.png`,
-    dataAiHint: 'Forretress bagworm pokemon',
-    rarity: 'Uncommon', // Steel/Bug
-    type: 'Metal',
-    series: 'Destined Rivals',
-    pokedexNumber: '140/244',
-  },
-  {
-    id: 'dri-skarmory-141',
-    name: 'Skarmory',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Skarmory")}.DRI.141.${baseUniqueId + 141 - 1}.thumb.png`,
-    dataAiHint: 'Skarmory armor bird pokemon',
-    rarity: 'Common',
-    type: 'Metal', // Steel/Flying
-    series: 'Destined Rivals',
-    pokedexNumber: '141/244',
-  },
-  {
-    id: 'dri-stevens-skarmory-142',
-    name: "Steven's Skarmory",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Steven's Skarmory")}.DRI.142.${baseUniqueId + 142 - 1}.thumb.png`,
-    dataAiHint: "Steven Skarmory armor bird pokemon",
-    rarity: 'Uncommon',
-    type: 'Metal',
-    series: 'Destined Rivals',
-    pokedexNumber: '142/244',
-  },
-  {
-    id: 'dri-stevens-beldum-143',
-    name: "Steven's Beldum",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Steven's Beldum")}.DRI.143.${baseUniqueId + 143 - 1}.thumb.png`,
-    dataAiHint: "Steven Beldum iron ball pokemon",
-    rarity: 'Common',
-    type: 'Metal', // Steel/Psychic
-    series: 'Destined Rivals',
-    pokedexNumber: '143/244',
-  },
-  {
-    id: 'dri-stevens-metang-144',
-    name: "Steven's Metang",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Steven's Metang")}.DRI.144.${baseUniqueId + 144 - 1}.thumb.png`,
-    dataAiHint: "Steven Metang iron claw pokemon",
-    rarity: 'Uncommon',
-    type: 'Metal',
-    series: 'Destined Rivals',
-    pokedexNumber: '144/244',
-  },
-  {
-    id: 'dri-stevens-metagross-ex-145',
-    name: "Steven's Metagross ex",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Steven's Metagross ex")}.DRI.145.${baseUniqueId + 145 - 1}.thumb.png`,
-    dataAiHint: "Steven Metagross ex iron leg pokemon",
-    rarity: 'Holo Rare',
-    type: 'Metal',
-    series: 'Destined Rivals',
-    pokedexNumber: '145/244',
-  },
-  {
-    id: 'dri-zamazenta-146',
-    name: 'Zamazenta',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Zamazenta")}.DRI.146.${baseUniqueId + 146 - 1}.thumb.png`,
-    dataAiHint: 'Zamazenta warrior pokemon',
-    rarity: 'Holo Rare',
-    type: 'Metal', // Fighting/Steel
-    series: 'Destined Rivals',
-    pokedexNumber: '146/244',
-  },
-  {
-    id: 'dri-team-rockets-rattata-147',
-    name: "Team Rocket's Rattata",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Rattata")}.DRI.147.${baseUniqueId + 147 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Rattata mouse pokemon",
-    rarity: 'Common',
-    type: 'Colorless',
-    series: 'Destined Rivals',
-    pokedexNumber: '147/244',
-  },
-  {
-    id: 'dri-team-rockets-raticate-148',
-    name: "Team Rocket's Raticate",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Raticate")}.DRI.148.${baseUniqueId + 148 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Raticate mouse pokemon",
-    rarity: 'Uncommon',
-    type: 'Colorless',
-    series: 'Destined Rivals',
-    pokedexNumber: '148/244',
-  },
-  {
-    id: 'dri-team-rockets-meowth-149',
-    name: "Team Rocket's Meowth",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Meowth")}.DRI.149.${baseUniqueId + 149 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Meowth scratch cat pokemon",
-    rarity: 'Common',
-    type: 'Colorless',
-    series: 'Destined Rivals',
-    pokedexNumber: '149/244',
-  },
-  {
-    id: 'dri-team-rockets-persian-ex-150',
-    name: "Team Rocket's Persian ex",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Persian ex")}.DRI.150.${baseUniqueId + 150 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Persian ex classy cat pokemon",
-    rarity: 'Holo Rare',
-    type: 'Colorless',
-    series: 'Destined Rivals',
-    pokedexNumber: '150/244',
-  },
-  {
-    id: 'dri-kangaskhan-151',
-    name: 'Kangaskhan',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Kangaskhan")}.DRI.151.${baseUniqueId + 151 - 1}.thumb.png`,
-    dataAiHint: 'Kangaskhan parent pokemon',
-    rarity: 'Holo Rare',
-    type: 'Colorless',
-    series: 'Destined Rivals',
-    pokedexNumber: '151/244',
-  },
-  {
-    id: 'dri-tauros-152',
-    name: 'Tauros',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Tauros")}.DRI.152.${baseUniqueId + 152 - 1}.thumb.png`,
-    dataAiHint: 'Tauros wild bull pokemon',
-    rarity: 'Uncommon',
-    type: 'Colorless',
-    series: 'Destined Rivals',
-    pokedexNumber: '152/244',
-  },
-  {
-    id: 'dri-team-rockets-porygon-153',
-    name: "Team Rocket's Porygon",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Porygon")}.DRI.153.${baseUniqueId + 153 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Porygon virtual pokemon",
-    rarity: 'Common',
-    type: 'Colorless',
-    series: 'Destined Rivals',
-    pokedexNumber: '153/244',
-  },
-  {
-    id: 'dri-team-rockets-porygon2-154',
-    name: "Team Rocket's Porygon2",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Porygon2")}.DRI.154.${baseUniqueId + 154 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Porygon2 virtual pokemon",
-    rarity: 'Uncommon',
-    type: 'Colorless',
-    series: 'Destined Rivals',
-    pokedexNumber: '154/244',
-  },
-  {
-    id: 'dri-team-rockets-porygon-z-155',
-    name: "Team Rocket's Porygon-Z",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Porygon-Z")}.DRI.155.${baseUniqueId + 155 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Porygon-Z virtual pokemon",
-    rarity: 'Holo Rare',
-    type: 'Colorless',
-    series: 'Destined Rivals',
-    pokedexNumber: '155/244',
-  },
-  {
-    id: 'dri-taillow-156',
-    name: 'Taillow',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Taillow")}.DRI.156.${baseUniqueId + 156 - 1}.thumb.png`,
-    dataAiHint: 'Taillow tiny swallow pokemon',
-    rarity: 'Common',
-    type: 'Colorless', // Normal/Flying
-    series: 'Destined Rivals',
-    pokedexNumber: '156/244',
-  },
-  {
-    id: 'dri-swellow-157',
-    name: 'Swellow',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Swellow")}.DRI.157.${baseUniqueId + 157 - 1}.thumb.png`,
-    dataAiHint: 'Swellow swallow pokemon',
-    rarity: 'Uncommon',
-    type: 'Colorless',
-    series: 'Destined Rivals',
-    pokedexNumber: '157/244',
-  },
-  {
-    id: 'dri-arvens-skwovet-158',
-    name: "Arven's Skwovet",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Arven's Skwovet")}.DRI.158.${baseUniqueId + 158 - 1}.thumb.png`,
-    dataAiHint: "Arven Skwovet cheeky pokemon",
-    rarity: 'Common',
-    type: 'Colorless',
-    series: 'Destined Rivals',
-    pokedexNumber: '158/244',
-  },
-  {
-    id: 'dri-arvens-greedent-159',
-    name: "Arven's Greedent",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Arven's Greedent")}.DRI.159.${baseUniqueId + 159 - 1}.thumb.png`,
-    dataAiHint: "Arven Greedent greedy pokemon",
-    rarity: 'Uncommon',
-    type: 'Colorless',
-    series: 'Destined Rivals',
-    pokedexNumber: '159/244',
-  },
-  {
-    id: 'dri-squawkabilly-160',
-    name: 'Squawkabilly', // No "ex" in user list here
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Squawkabilly")}.DRI.160.${baseUniqueId + 160 - 1}.thumb.png`,
-    dataAiHint: 'Squawkabilly parrot pokemon',
-    rarity: 'Holo Rare', // Often a rare/holo card
-    type: 'Colorless', // Normal/Flying
-    series: 'Destined Rivals',
-    pokedexNumber: '160/244',
-  },
-  {
-    id: 'dri-arvens-sandwich-161',
-    name: "Arven's Sandwich",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Arven's Sandwich")}.DRI.161.${baseUniqueId + 161 - 1}.thumb.png`,
-    dataAiHint: "Arven Sandwich item trainer",
-    rarity: 'Uncommon',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '161/244',
-  },
-  {
-    id: 'dri-cynthias-power-weight-162',
-    name: "Cynthia's Power Weight",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Cynthia's Power Weight")}.DRI.162.${baseUniqueId + 162 - 1}.thumb.png`,
-    dataAiHint: "Cynthia Power Weight item trainer",
-    rarity: 'Uncommon',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '162/244',
-  },
-  {
-    id: 'dri-emcees-hype-163',
-    name: "Emcee's Hype",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Emcee's Hype")}.DRI.163.${baseUniqueId + 163 - 1}.thumb.png`,
-    dataAiHint: "Emcee Hype supporter trainer",
-    rarity: 'Holo Rare', // Looks like a Full Art
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '163/244',
-  },
-  {
-    id: 'dri-energy-recycler-164',
-    name: 'Energy Recycler',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Energy Recycler")}.DRI.164.${baseUniqueId + 164 - 1}.thumb.png`,
-    dataAiHint: 'Energy Recycler item trainer',
-    rarity: 'Uncommon',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '164/244',
-  },
-  {
-    id: 'dri-ethans-adventure-165',
-    name: "Ethan's Adventure",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Ethan's Adventure")}.DRI.165.${baseUniqueId + 165 - 1}.thumb.png`,
-    dataAiHint: "Ethan Adventure supporter trainer",
-    rarity: 'Holo Rare', // Looks like a Full Art
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '165/244',
-  },
-  {
-    id: 'dri-granite-cave-166',
-    name: 'Granite Cave',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Granite Cave")}.DRI.166.${baseUniqueId + 166 - 1}.thumb.png`,
-    dataAiHint: 'Granite Cave stadium trainer',
-    rarity: 'Uncommon',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '166/244',
-  },
-  {
-    id: 'dri-judge-167',
-    name: 'Judge',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Judge")}.DRI.167.${baseUniqueId + 167 - 1}.thumb.png`,
-    dataAiHint: 'Judge supporter trainer',
-    rarity: 'Holo Rare', // Looks like a Full Art
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '167/244',
-  },
-  {
-    id: 'dri-sacred-ash-168',
-    name: 'Sacred Ash',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Sacred Ash")}.DRI.168.${baseUniqueId + 168 - 1}.thumb.png`,
-    dataAiHint: 'Sacred Ash item trainer',
-    rarity: 'Uncommon',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '168/244',
-  },
-  {
-    id: 'dri-spikemuth-gym-169',
-    name: 'Spikemuth Gym',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Spikemuth Gym")}.DRI.169.${baseUniqueId + 169 - 1}.thumb.png`,
-    dataAiHint: 'Spikemuth Gym stadium trainer',
-    rarity: 'Uncommon',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '169/244',
-  },
-  {
-    id: 'dri-team-rockets-archer-170',
-    name: "Team Rocket's Archer",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Archer")}.DRI.170.${baseUniqueId + 170 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Archer supporter trainer",
-    rarity: 'Holo Rare', // Looks like Full Art
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '170/244',
-  },
-  {
-    id: 'dri-team-rockets-ariana-171',
-    name: "Team Rocket's Ariana",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Ariana")}.DRI.171.${baseUniqueId + 171 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Ariana supporter trainer",
-    rarity: 'Holo Rare',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '171/244',
-  },
-  {
-    id: 'dri-team-rockets-bother-bot-172',
-    name: "Team Rocket's Bother-Bot",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Bother-Bot")}.DRI.172.${baseUniqueId + 172 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Bother Bot item trainer",
-    rarity: 'Uncommon',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '172/244',
-  },
-  {
-    id: 'dri-team-rockets-factory-173',
-    name: "Team Rocket's Factory",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Factory")}.DRI.173.${baseUniqueId + 173 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Factory stadium trainer",
-    rarity: 'Uncommon',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '173/244',
-  },
-  {
-    id: 'dri-team-rockets-giovanni-174',
-    name: "Team Rocket's Giovanni",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Giovanni")}.DRI.174.${baseUniqueId + 174 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Giovanni supporter trainer",
-    rarity: 'Holo Rare',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '174/244',
-  },
-  {
-    id: 'dri-team-rockets-great-ball-175',
-    name: "Team Rocket's Great Ball",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Great Ball")}.DRI.175.${baseUniqueId + 175 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Great Ball item trainer",
-    rarity: 'Uncommon',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '175/244',
-  },
-  {
-    id: 'dri-team-rockets-petrel-176',
-    name: "Team Rocket's Petrel",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Petrel")}.DRI.176.${baseUniqueId + 176 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Petrel supporter trainer",
-    rarity: 'Holo Rare',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '176/244',
-  },
-  {
-    id: 'dri-team-rockets-proton-177',
-    name: "Team Rocket's Proton",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Proton")}.DRI.177.${baseUniqueId + 177 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Proton supporter trainer",
-    rarity: 'Holo Rare',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '177/244',
-  },
-  {
-    id: 'dri-team-rockets-transceiver-178',
-    name: "Team Rocket's Transceiver",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Transceiver")}.DRI.178.${baseUniqueId + 178 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Transceiver item trainer",
-    rarity: 'Uncommon',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '178/244',
-  },
-  {
-    id: 'dri-team-rockets-venture-bomb-179',
-    name: "Team Rocket's Venture Bomb",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Venture Bomb")}.DRI.179.${baseUniqueId + 179 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Venture Bomb item trainer",
-    rarity: 'Uncommon',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '179/244',
-  },
-  {
-    id: 'dri-team-rockets-watchtower-180',
-    name: "Team Rocket's Watchtower",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Watchtower")}.DRI.180.${baseUniqueId + 180 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Watchtower stadium trainer",
-    rarity: 'Uncommon',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '180/244',
-  },
-  {
-    id: 'dri-tm-machine-181',
-    name: 'TM Machine',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("TM Machine")}.DRI.181.${baseUniqueId + 181 - 1}.thumb.png`,
-    dataAiHint: 'TM Machine item trainer',
-    rarity: 'Uncommon',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '181/244',
-  },
-  {
-    id: 'dri-team-rockets-energy-182',
-    name: "Team Rocket's Energy",
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Energy")}.DRI.182.${baseUniqueId + 182 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Energy special energy",
-    rarity: 'Uncommon', // Special energies are often uncommon
-    type: 'Energy',
-    series: 'Destined Rivals',
-    pokedexNumber: '182/244',
-  },
-  {
-    id: 'dri-yanma-183',
-    name: 'Yanma', // Repeat name, likely different art/rarity
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Yanma")}.DRI.183.${baseUniqueId + 183 - 1}.thumb.png`,
-    dataAiHint: 'Yanma bug flying art',
-    rarity: 'Holo Rare', // Illustration Rare
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '183/244',
-  },
-  {
-    id: 'dri-cynthias-roserade-184',
-    name: "Cynthia's Roserade", // Repeat name
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Cynthia's Roserade")}.DRI.184.${baseUniqueId + 184 - 1}.thumb.png`,
-    dataAiHint: "Cynthia Roserade bouquet art",
-    rarity: 'Holo Rare', // Illustration Rare
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '184/244',
-  },
-  {
-    id: 'dri-shaymin-185',
-    name: 'Shaymin', // Repeat name
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Shaymin")}.DRI.185.${baseUniqueId + 185 - 1}.thumb.png`,
-    dataAiHint: 'Shaymin gratitude art',
-    rarity: 'Holo Rare', // Special Illustration Rare
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '185/244',
-  },
-  {
-    id: 'dri-crustle-186',
-    name: 'Crustle', // Repeat name
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Crustle")}.DRI.186.${baseUniqueId + 186 - 1}.thumb.png`,
-    dataAiHint: 'Crustle stone home art',
-    rarity: 'Holo Rare', // Illustration Rare
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '186/244',
-  },
-  {
-    id: 'dri-team-rockets-spidops-187',
-    name: "Team Rocket's Spidops", // Repeat name
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Spidops")}.DRI.187.${baseUniqueId + 187 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Spidops trap art",
-    rarity: 'Holo Rare', // Illustration Rare
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '187/244',
-  },
-  {
-    id: 'dri-hydrapple-188',
-    name: 'Hydrapple', // Repeat name
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Hydrapple")}.DRI.188.${baseUniqueId + 188 - 1}.thumb.png`,
-    dataAiHint: 'Hydrapple apple hydra art',
-    rarity: 'Holo Rare', // Illustration Rare
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '188/244',
-  },
-  {
-    id: 'dri-rapidash-189',
-    name: 'Rapidash', // Repeat name
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Rapidash")}.DRI.189.${baseUniqueId + 189 - 1}.thumb.png`,
-    dataAiHint: 'Rapidash fire horse art',
-    rarity: 'Holo Rare', // Illustration Rare
-    type: 'Fire',
-    series: 'Destined Rivals',
-    pokedexNumber: '189/244',
-  },
-  {
-    id: 'dri-ethans-typhlosion-190',
-    name: "Ethan's Typhlosion", // Repeat name
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Ethan's Typhlosion")}.DRI.190.${baseUniqueId + 190 - 1}.thumb.png`,
-    dataAiHint: "Ethan Typhlosion volcano art",
-    rarity: 'Holo Rare', // Illustration Rare
-    type: 'Fire',
-    series: 'Destined Rivals',
-    pokedexNumber: '190/244',
-  },
-  {
-    id: 'dri-team-rockets-houndoom-191',
-    name: "Team Rocket's Houndoom", // Repeat name
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Houndoom")}.DRI.191.${baseUniqueId + 191 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Houndoom dark art",
-    rarity: 'Holo Rare', // Illustration Rare
-    type: 'Fire',
-    series: 'Destined Rivals',
-    pokedexNumber: '191/244',
-  },
-  {
-    id: 'dri-blaziken-192',
-    name: 'Blaziken', // Repeat name
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Blaziken")}.DRI.192.${baseUniqueId + 192 - 1}.thumb.png`,
-    dataAiHint: 'Blaziken blaze art',
-    rarity: 'Holo Rare', // Illustration Rare
-    type: 'Fire',
-    series: 'Destined Rivals',
-    pokedexNumber: '192/244',
-  },
-  {
-    id: 'dri-mistys-psyduck-193',
-    name: "Misty's Psyduck", // Repeat name
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Misty's Psyduck")}.DRI.193.${baseUniqueId + 193 - 1}.thumb.png`,
-    dataAiHint: "Misty Psyduck duck art",
-    rarity: 'Holo Rare', // Illustration Rare
-    type: 'Water',
-    series: 'Destined Rivals',
-    pokedexNumber: '193/244',
-  },
-  {
-    id: 'dri-mistys-lapras-194',
-    name: "Misty's Lapras", // Repeat name
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Misty's Lapras")}.DRI.194.${baseUniqueId + 194 - 1}.thumb.png`,
-    dataAiHint: "Misty Lapras transport art",
-    rarity: 'Holo Rare', // Illustration Rare
-    type: 'Water',
-    series: 'Destined Rivals',
-    pokedexNumber: '194/244',
-  },
-  {
-    id: 'dri-clamperl-195',
-    name: 'Clamperl', // Repeat name
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Clamperl")}.DRI.195.${baseUniqueId + 195 - 1}.thumb.png`,
-    dataAiHint: 'Clamperl bivalve art',
-    rarity: 'Holo Rare', // Illustration Rare
-    type: 'Water',
-    series: 'Destined Rivals',
-    pokedexNumber: '195/244',
-  },
-  {
-    id: 'dri-electrike-196',
-    name: 'Electrike', // Repeat name
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Electrike")}.DRI.196.${baseUniqueId + 196 - 1}.thumb.png`,
-    dataAiHint: 'Electrike lightning art',
-    rarity: 'Holo Rare', // Illustration Rare
-    type: 'Lightning',
-    series: 'Destined Rivals',
-    pokedexNumber: '196/244',
-  },
-  {
-    id: 'dri-rotom-197',
-    name: 'Rotom', // Repeat name
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Rotom")}.DRI.197.${baseUniqueId + 197 - 1}.thumb.png`,
-    dataAiHint: 'Rotom plasma art',
-    rarity: 'Holo Rare', // Illustration Rare
-    type: 'Lightning',
-    series: 'Destined Rivals',
-    pokedexNumber: '197/244',
-  },
-  {
-    id: 'dri-team-rockets-orbeetle-198',
-    name: "Team Rocket's Orbeetle", // Repeat name
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Orbeetle")}.DRI.198.${baseUniqueId + 198 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Orbeetle seven spot art",
-    rarity: 'Holo Rare', // Illustration Rare
-    type: 'Psychic',
-    series: 'Destined Rivals',
-    pokedexNumber: '198/244',
-  },
-  {
-    id: 'dri-team-rockets-weezing-199',
-    name: "Team Rocket's Weezing", // Repeat name
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Weezing")}.DRI.199.${baseUniqueId + 199 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Weezing poison gas art",
-    rarity: 'Holo Rare', // Illustration Rare
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '199/244',
-  },
-  {
-    id: 'dri-team-rockets-murkrow-200',
-    name: "Team Rocket's Murkrow", // Repeat name
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Murkrow")}.DRI.200.${baseUniqueId + 200 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Murkrow darkness art",
-    rarity: 'Holo Rare', // Illustration Rare
-    type: 'Darkness',
-    series: 'Destined Rivals',
-    pokedexNumber: '200/244',
-  },
-  {
-    id: 'dri-zamazenta-201',
-    name: 'Zamazenta', // Repeat name
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Zamazenta")}.DRI.201.${baseUniqueId + 201 - 1}.thumb.png`,
-    dataAiHint: 'Zamazenta warrior art',
-    rarity: 'Holo Rare', // Illustration Rare
-    type: 'Metal',
-    series: 'Destined Rivals',
-    pokedexNumber: '201/244',
-  },
-  {
-    id: 'dri-team-rockets-raticate-202',
-    name: "Team Rocket's Raticate", // Repeat name
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Raticate")}.DRI.202.${baseUniqueId + 202 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Raticate mouse art",
-    rarity: 'Holo Rare', // Illustration Rare
-    type: 'Colorless',
-    series: 'Destined Rivals',
-    pokedexNumber: '202/244',
-  },
-  {
-    id: 'dri-team-rockets-meowth-203',
-    name: "Team Rocket's Meowth", // Repeat name
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Meowth")}.DRI.203.${baseUniqueId + 203 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Meowth scratch cat art",
-    rarity: 'Holo Rare', // Illustration Rare
-    type: 'Colorless',
-    series: 'Destined Rivals',
-    pokedexNumber: '203/244',
-  },
-  {
-    id: 'dri-kangaskhan-204',
-    name: 'Kangaskhan', // Repeat name
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Kangaskhan")}.DRI.204.${baseUniqueId + 204 - 1}.thumb.png`,
-    dataAiHint: 'Kangaskhan parent art',
-    rarity: 'Holo Rare', // Illustration Rare
-    type: 'Colorless',
-    series: 'Destined Rivals',
-    pokedexNumber: '204/244',
-  },
-  {
-    id: 'dri-arvens-greedent-205',
-    name: "Arven's Greedent", // Repeat name
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Arven's Greedent")}.DRI.205.${baseUniqueId + 205 - 1}.thumb.png`,
-    dataAiHint: "Arven Greedent greedy art",
-    rarity: 'Holo Rare', // Illustration Rare
-    type: 'Colorless',
-    series: 'Destined Rivals',
-    pokedexNumber: '205/244',
-  },
-  {
-    id: 'dri-yanmega-ex-206',
-    name: 'Yanmega ex', // Repeat name, Full Art
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Yanmega ex")}.DRI.206.${baseUniqueId + 206 - 1}.thumb.png`,
-    dataAiHint: 'Yanmega ex bug flying full art',
-    rarity: 'Holo Rare',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '206/244',
-  },
-  {
-    id: 'dri-arboliva-ex-207',
-    name: 'Arboliva ex', // Repeat name, Full Art
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Arboliva ex")}.DRI.207.${baseUniqueId + 207 - 1}.thumb.png`,
-    dataAiHint: 'Arboliva ex olive full art',
-    rarity: 'Holo Rare',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '207/244',
-  },
-  {
-    id: 'dri-team-rockets-moltres-ex-208',
-    name: "Team Rocket's Moltres ex", // Repeat name, Full Art
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Moltres ex")}.DRI.208.${baseUniqueId + 208 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Moltres ex flame full art",
-    rarity: 'Holo Rare',
-    type: 'Fire',
-    series: 'Destined Rivals',
-    pokedexNumber: '208/244',
-  },
-  {
-    id: 'dri-ethans-ho-oh-ex-209',
-    name: "Ethan's Ho-Oh ex", // Repeat name, Full Art
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Ethan's Ho-Oh ex")}.DRI.209.${baseUniqueId + 209 - 1}.thumb.png`,
-    dataAiHint: "Ethan Ho-Oh ex rainbow full art",
-    rarity: 'Holo Rare',
-    type: 'Fire',
-    series: 'Destined Rivals',
-    pokedexNumber: '209/244',
-  },
-  {
-    id: 'dri-cetitan-ex-210',
-    name: 'Cetitan ex', // Repeat name, Full Art
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Cetitan ex")}.DRI.210.${baseUniqueId + 210 - 1}.thumb.png`,
-    dataAiHint: 'Cetitan ex terra whale full art',
-    rarity: 'Holo Rare',
-    type: 'Water',
-    series: 'Destined Rivals',
-    pokedexNumber: '210/244',
-  },
-  {
-    id: 'dri-dondozo-ex-211',
-    name: 'Dondozo ex', // Repeat name, Full Art
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Dondozo ex")}.DRI.211.${baseUniqueId + 211 - 1}.thumb.png`,
-    dataAiHint: 'Dondozo ex big cat full art',
-    rarity: 'Holo Rare',
-    type: 'Water',
-    series: 'Destined Rivals',
-    pokedexNumber: '211/244',
-  },
-  {
-    id: 'dri-electivire-ex-212',
-    name: 'Electivire ex', // Repeat name, Full Art
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Electivire ex")}.DRI.212.${baseUniqueId + 212 - 1}.thumb.png`,
-    dataAiHint: 'Electivire ex thunderbolt full art',
-    rarity: 'Holo Rare',
-    type: 'Lightning',
-    series: 'Destined Rivals',
-    pokedexNumber: '212/244',
-  },
-  {
-    id: 'dri-team-rockets-mewtwo-ex-213',
-    name: "Team Rocket's Mewtwo ex", // Repeat name, Full Art
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Mewtwo ex")}.DRI.213.${baseUniqueId + 213 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Mewtwo ex genetic full art",
-    rarity: 'Holo Rare',
-    type: 'Psychic',
-    series: 'Destined Rivals',
-    pokedexNumber: '213/244',
-  },
-  {
-    id: 'dri-regirock-ex-214',
-    name: 'Regirock ex', // Repeat name, Full Art
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Regirock ex")}.DRI.214.${baseUniqueId + 214 - 1}.thumb.png`,
-    dataAiHint: 'Regirock ex rock peak full art',
-    rarity: 'Holo Rare',
-    type: 'Fighting',
-    series: 'Destined Rivals',
-    pokedexNumber: '214/244',
-  },
-  {
-    id: 'dri-cynthias-garchomp-ex-215',
-    name: "Cynthia's Garchomp ex", // Repeat name, Full Art
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Cynthia's Garchomp ex")}.DRI.215.${baseUniqueId + 215 - 1}.thumb.png`,
-    dataAiHint: "Cynthia Garchomp ex mach full art",
-    rarity: 'Holo Rare',
-    type: 'Fighting',
-    series: 'Destined Rivals',
-    pokedexNumber: '215/244',
-  },
-  {
-    id: 'dri-team-rockets-nidoking-ex-216',
-    name: "Team Rocket's Nidoking ex", // Repeat name, Full Art
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Nidoking ex")}.DRI.216.${baseUniqueId + 216 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Nidoking ex drill full art",
-    rarity: 'Holo Rare',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '216/244',
-  },
-  {
-    id: 'dri-team-rockets-crobat-ex-217',
-    name: "Team Rocket's Crobat ex", // Repeat name, Full Art
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Crobat ex")}.DRI.217.${baseUniqueId + 217 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Crobat ex bat full art",
-    rarity: 'Holo Rare',
-    type: 'Darkness',
-    series: 'Destined Rivals',
-    pokedexNumber: '217/244',
-  },
-  {
-    id: 'dri-arvens-mabosstiff-ex-218',
-    name: "Arven's Mabosstiff ex", // Repeat name, Full Art
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Arven's Mabosstiff ex")}.DRI.218.${baseUniqueId + 218 - 1}.thumb.png`,
-    dataAiHint: "Arven Mabosstiff ex boss full art",
-    rarity: 'Holo Rare',
-    type: 'Darkness',
-    series: 'Destined Rivals',
-    pokedexNumber: '218/244',
-  },
-  {
-    id: 'dri-team-rockets-persian-ex-219',
-    name: "Team Rocket's Persian ex", // Repeat name, Full Art
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Persian ex")}.DRI.219.${baseUniqueId + 219 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Persian ex classy cat full art",
-    rarity: 'Holo Rare',
-    type: 'Colorless',
-    series: 'Destined Rivals',
-    pokedexNumber: '219/244',
-  },
-  {
-    id: 'dri-emcees-hype-220',
-    name: "Emcee's Hype", // Repeat name, Full Art Supporter
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Emcee's Hype")}.DRI.220.${baseUniqueId + 220 - 1}.thumb.png`,
-    dataAiHint: "Emcee Hype supporter full art",
-    rarity: 'Holo Rare',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '220/244',
-  },
-  {
-    id: 'dri-ethans-adventure-221',
-    name: "Ethan's Adventure", // Repeat name, Full Art Supporter
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Ethan's Adventure")}.DRI.221.${baseUniqueId + 221 - 1}.thumb.png`,
-    dataAiHint: "Ethan Adventure supporter full art",
-    rarity: 'Holo Rare',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '221/244',
-  },
-  {
-    id: 'dri-judge-222',
-    name: 'Judge', // Repeat name, Full Art Supporter
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Judge")}.DRI.222.${baseUniqueId + 222 - 1}.thumb.png`,
-    dataAiHint: 'Judge supporter full art',
-    rarity: 'Holo Rare',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '222/244',
-  },
-  {
-    id: 'dri-team-rockets-archer-223',
-    name: "Team Rocket's Archer", // Repeat name, Full Art Supporter
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Archer")}.DRI.223.${baseUniqueId + 223 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Archer supporter full art",
-    rarity: 'Holo Rare',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '223/244',
-  },
-  {
-    id: 'dri-team-rockets-ariana-224',
-    name: "Team Rocket's Ariana", // Repeat name, Full Art Supporter
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Ariana")}.DRI.224.${baseUniqueId + 224 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Ariana supporter full art",
-    rarity: 'Holo Rare',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '224/244',
-  },
-  {
-    id: 'dri-team-rockets-giovanni-225',
-    name: "Team Rocket's Giovanni", // Repeat name, Full Art Supporter
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Giovanni")}.DRI.225.${baseUniqueId + 225 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Giovanni supporter full art",
-    rarity: 'Holo Rare',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '225/244',
-  },
-  {
-    id: 'dri-team-rockets-petrel-226',
-    name: "Team Rocket's Petrel", // Repeat name, Full Art Supporter
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Petrel")}.DRI.226.${baseUniqueId + 226 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Petrel supporter full art",
-    rarity: 'Holo Rare',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '226/244',
-  },
-  {
-    id: 'dri-team-rockets-proton-227',
-    name: "Team Rocket's Proton", // Repeat name, Full Art Supporter
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Proton")}.DRI.227.${baseUniqueId + 227 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Proton supporter full art",
-    rarity: 'Holo Rare',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '227/244',
-  },
-  {
-    id: 'dri-yanmega-ex-228',
-    name: 'Yanmega ex', // Repeat name, Special Illustration Rare
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Yanmega ex")}.DRI.228.${baseUniqueId + 228 - 1}.thumb.png`,
-    dataAiHint: 'Yanmega ex bug flying special art',
-    rarity: 'Holo Rare',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '228/244',
-  },
-  {
-    id: 'dri-team-rockets-moltres-ex-229',
-    name: "Team Rocket's Moltres ex", // Repeat name, Special Illustration Rare
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Moltres ex")}.DRI.229.${baseUniqueId + 229 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Moltres ex flame special art",
-    rarity: 'Holo Rare',
-    type: 'Fire',
-    series: 'Destined Rivals',
-    pokedexNumber: '229/244',
-  },
-  {
-    id: 'dri-ethans-ho-oh-ex-230',
-    name: "Ethan's Ho-Oh ex", // Repeat name, Special Illustration Rare
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Ethan's Ho-Oh ex")}.DRI.230.${baseUniqueId + 230 - 1}.thumb.png`,
-    dataAiHint: "Ethan Ho-Oh ex rainbow special art",
-    rarity: 'Holo Rare',
-    type: 'Fire',
-    series: 'Destined Rivals',
-    pokedexNumber: '230/244',
-  },
-  {
-    id: 'dri-team-rockets-mewtwo-ex-231',
-    name: "Team Rocket's Mewtwo ex", // Repeat name, Special Illustration Rare
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Mewtwo ex")}.DRI.231.${baseUniqueId + 231 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Mewtwo ex genetic special art",
-    rarity: 'Holo Rare',
-    type: 'Psychic',
-    series: 'Destined Rivals',
-    pokedexNumber: '231/244',
-  },
-  {
-    id: 'dri-cynthias-garchomp-ex-232',
-    name: "Cynthia's Garchomp ex", // Repeat name, Special Illustration Rare
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Cynthia's Garchomp ex")}.DRI.232.${baseUniqueId + 232 - 1}.thumb.png`,
-    dataAiHint: "Cynthia Garchomp ex mach special art",
-    rarity: 'Holo Rare',
-    type: 'Fighting',
-    series: 'Destined Rivals',
-    pokedexNumber: '232/244',
-  },
-  {
-    id: 'dri-team-rockets-nidoking-ex-233',
-    name: "Team Rocket's Nidoking ex", // Repeat name, Special Illustration Rare
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Nidoking ex")}.DRI.233.${baseUniqueId + 233 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Nidoking ex drill special art",
-    rarity: 'Holo Rare',
-    type: 'Grass',
-    series: 'Destined Rivals',
-    pokedexNumber: '233/244',
-  },
-  {
-    id: 'dri-team-rockets-crobat-ex-234',
-    name: "Team Rocket's Crobat ex", // Repeat name, Special Illustration Rare
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Crobat ex")}.DRI.234.${baseUniqueId + 234 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Crobat ex bat special art",
-    rarity: 'Holo Rare',
-    type: 'Darkness',
-    series: 'Destined Rivals',
-    pokedexNumber: '234/244',
-  },
-  {
-    id: 'dri-arvens-mabosstiff-ex-235',
-    name: "Arven's Mabosstiff ex", // Repeat name, Special Illustration Rare
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Arven's Mabosstiff ex")}.DRI.235.${baseUniqueId + 235 - 1}.thumb.png`,
-    dataAiHint: "Arven Mabosstiff ex boss special art",
-    rarity: 'Holo Rare',
-    type: 'Darkness',
-    series: 'Destined Rivals',
-    pokedexNumber: '235/244',
-  },
-  {
-    id: 'dri-ethans-adventure-236',
-    name: "Ethan's Adventure", // Repeat name, Special Illustration Rare Supporter
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Ethan's Adventure")}.DRI.236.${baseUniqueId + 236 - 1}.thumb.png`,
-    dataAiHint: "Ethan Adventure supporter special art",
-    rarity: 'Holo Rare',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '236/244',
-  },
-  {
-    id: 'dri-team-rockets-ariana-237',
-    name: "Team Rocket's Ariana", // Repeat name, Special Illustration Rare Supporter
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Ariana")}.DRI.237.${baseUniqueId + 237 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Ariana supporter special art",
-    rarity: 'Holo Rare',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '237/244',
-  },
-  {
-    id: 'dri-team-rockets-giovanni-238',
-    name: "Team Rocket's Giovanni", // Repeat name, Special Illustration Rare Supporter
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Giovanni")}.DRI.238.${baseUniqueId + 238 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Giovanni supporter special art",
-    rarity: 'Holo Rare',
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '238/244',
-  },
-  {
-    id: 'dri-ethans-ho-oh-ex-239',
-    name: "Ethan's Ho-Oh ex", // Repeat name, Hyper Rare (Gold)
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Ethan's Ho-Oh ex")}.DRI.239.${baseUniqueId + 239 - 1}.thumb.png`,
-    dataAiHint: "Ethan Ho-Oh ex rainbow gold",
-    rarity: 'Holo Rare',
-    type: 'Fire',
-    series: 'Destined Rivals',
-    pokedexNumber: '239/244',
-  },
-  {
-    id: 'dri-team-rockets-mewtwo-ex-240',
-    name: "Team Rocket's Mewtwo ex", // Repeat name, Hyper Rare (Gold)
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Mewtwo ex")}.DRI.240.${baseUniqueId + 240 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Mewtwo ex genetic gold",
-    rarity: 'Holo Rare',
-    type: 'Psychic',
-    series: 'Destined Rivals',
-    pokedexNumber: '240/244',
-  },
-  {
-    id: 'dri-cynthias-garchomp-ex-241',
-    name: "Cynthia's Garchomp ex", // Repeat name, Hyper Rare (Gold)
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Cynthia's Garchomp ex")}.DRI.241.${baseUniqueId + 241 - 1}.thumb.png`,
-    dataAiHint: "Cynthia Garchomp ex mach gold",
-    rarity: 'Holo Rare',
-    type: 'Fighting',
-    series: 'Destined Rivals',
-    pokedexNumber: '241/244',
-  },
-  {
-    id: 'dri-team-rockets-crobat-ex-242',
-    name: "Team Rocket's Crobat ex", // Repeat name, Hyper Rare (Gold)
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Team Rocket's Crobat ex")}.DRI.242.${baseUniqueId + 242 - 1}.thumb.png`,
-    dataAiHint: "Team Rocket Crobat ex bat gold",
-    rarity: 'Holo Rare',
-    type: 'Darkness',
-    series: 'Destined Rivals',
-    pokedexNumber: '242/244',
-  },
-  {
-    id: 'dri-jamming-tower-243',
-    name: 'Jamming Tower',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Jamming Tower")}.DRI.243.${baseUniqueId + 243 - 1}.thumb.png`,
-    dataAiHint: 'Jamming Tower stadium gold',
-    rarity: 'Holo Rare', // Gold Stadium
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '243/244',
-  },
-  {
-    id: 'dri-levincia-244',
-    name: 'Levincia',
-    image: `https://den-cards.pokellector.com/412/${formatNameForUrl("Levincia")}.DRI.244.${baseUniqueId + 244 - 1}.thumb.png`,
-    dataAiHint: 'Levincia stadium gold',
-    rarity: 'Holo Rare', // Gold Stadium
-    type: 'Trainer',
-    series: 'Destined Rivals',
-    pokedexNumber: '244/244',
-  },
+
+const cardListData = [
+  { name: "Ethan's Pinsir", type: 'Grass', rarity: 'Holo Rare' },
+  { name: 'Yanma', type: 'Grass', rarity: 'Common' },
+  { name: 'Yanmega ex', type: 'Grass', rarity: 'Holo Rare' },
+  { name: 'Pineco', type: 'Grass', rarity: 'Common' },
+  { name: 'Shroomish', type: 'Grass', rarity: 'Common' },
+  { name: 'Breloom', type: 'Grass', rarity: 'Uncommon' },
+  { name: "Cynthia's Roselia", type: 'Grass', rarity: 'Uncommon' },
+  { name: "Cynthia's Roserade", type: 'Grass', rarity: 'Holo Rare' },
+  { name: 'Mow Rotom', type: 'Grass', rarity: 'Holo Rare' },
+  { name: 'Shaymin', type: 'Grass', rarity: 'Holo Rare' },
+  { name: 'Dwebble', type: 'Grass', rarity: 'Common' },
+  { name: 'Crustle', type: 'Grass', rarity: 'Uncommon' },
+  { name: 'Fomantis', type: 'Grass', rarity: 'Common' },
+  { name: 'Lurantis', type: 'Grass', rarity: 'Holo Rare' },
+  { name: "Team Rocket's Blipbug", type: 'Grass', rarity: 'Common' },
+  { name: 'Applin', type: 'Grass', rarity: 'Common' },
+  { name: 'Dipplin', type: 'Grass', rarity: 'Uncommon' },
+  { name: 'Hydrapple', type: 'Grass', rarity: 'Holo Rare' },
+  { name: "Team Rocket's Tarountula", type: 'Grass', rarity: 'Common' },
+  { name: "Team Rocket's Spidops", type: 'Grass', rarity: 'Uncommon' },
+  { name: 'Smoliv', type: 'Grass', rarity: 'Common' },
+  { name: 'Dolliv', type: 'Grass', rarity: 'Uncommon' },
+  { name: 'Arboliva ex', type: 'Grass', rarity: 'Holo Rare' },
+  { name: 'Rellor', type: 'Grass', rarity: 'Common' },
+  { name: 'Rabsca ex', type: 'Grass', rarity: 'Holo Rare' },
+  { name: 'Teal Mask Ogerpon', type: 'Grass', rarity: 'Holo Rare' },
+  { name: 'Growlithe', type: 'Fire', rarity: 'Common' },
+  { name: 'Arcanine', type: 'Fire', rarity: 'Uncommon' },
+  { name: 'Ponyta', type: 'Fire', rarity: 'Common' },
+  { name: 'Rapidash', type: 'Fire', rarity: 'Uncommon' },
+  { name: "Team Rocket's Moltres ex", type: 'Fire', rarity: 'Holo Rare' },
+  { name: "Ethan's Cyndaquil", type: 'Fire', rarity: 'Common' },
+  { name: "Ethan's Quilava", type: 'Fire', rarity: 'Uncommon' },
+  { name: "Ethan's Typhlosion", type: 'Fire', rarity: 'Holo Rare' }, // Card 34
+  { name: "Ethan's Slugma", type: 'Fire', rarity: 'Common' }, // Card 35
+  { name: "Ethan's Magcargo", type: 'Fire', rarity: 'Uncommon' },
+  { name: "Team Rocket's Houndour", type: 'Fire', rarity: 'Common' },
+  { name: "Team Rocket's Houndoom", type: 'Fire', rarity: 'Holo Rare' },
+  { name: "Ethan's Ho-Oh ex", type: 'Fire', rarity: 'Holo Rare' },
+  { name: 'Torchic', type: 'Fire', rarity: 'Common' },
+  { name: 'Combusken', type: 'Fire', rarity: 'Uncommon' },
+  { name: 'Blaziken', type: 'Fire', rarity: 'Holo Rare' },
+  { name: 'Heat Rotom', type: 'Fire', rarity: 'Holo Rare' },
+  { name: 'Hearthflame Mask Ogerpon', type: 'Fire', rarity: 'Holo Rare' },
+  { name: "Misty's Psyduck", type: 'Water', rarity: 'Common' },
+  { name: "Misty's Staryu", type: 'Water', rarity: 'Common' },
+  { name: "Misty's Starmie", type: 'Water', rarity: 'Uncommon' },
+  { name: "Misty's Magikarp", type: 'Water', rarity: 'Common' },
+  { name: "Misty's Gyarados", type: 'Water', rarity: 'Holo Rare' },
+  { name: "Misty's Lapras", type: 'Water', rarity: 'Holo Rare' },
+  { name: "Team Rocket's Articuno", type: 'Water', rarity: 'Holo Rare' },
+  { name: "Cynthia's Feebas", type: 'Water', rarity: 'Common' },
+  { name: "Cynthia's Milotic", type: 'Water', rarity: 'Holo Rare' },
+  { name: 'Clamperl', type: 'Water', rarity: 'Common' },
+  { name: 'Huntail', type: 'Water', rarity: 'Uncommon' },
+  { name: 'Gorebyss', type: 'Water', rarity: 'Uncommon' },
+  { name: 'Buizel', type: 'Water', rarity: 'Common' },
+  { name: 'Floatzel', type: 'Water', rarity: 'Uncommon' },
+  { name: 'Snover', type: 'Water', rarity: 'Common' }, // Grass/Ice -> Water
+  { name: 'Abomasnow', type: 'Water', rarity: 'Uncommon' }, // Grass/Ice -> Water
+  { name: 'Wash Rotom', type: 'Water', rarity: 'Holo Rare' },
+  { name: 'Arrokuda', type: 'Water', rarity: 'Common' },
+  { name: 'Barraskewda', type: 'Water', rarity: 'Uncommon' },
+  { name: 'Cetoddle', type: 'Water', rarity: 'Common' },
+  { name: 'Cetitan ex', type: 'Water', rarity: 'Holo Rare' },
+  { name: 'Dondozo ex', type: 'Water', rarity: 'Holo Rare' },
+  { name: 'Wellspring Mask Ogerpon', type: 'Water', rarity: 'Holo Rare' },
+  { name: 'Electabuzz', type: 'Lightning', rarity: 'Common' },
+  { name: 'Electivire ex', type: 'Lightning', rarity: 'Holo Rare' },
+  { name: "Team Rocket's Zapdos", type: 'Lightning', rarity: 'Holo Rare' },
+  { name: "Ethan's Pichu", type: 'Lightning', rarity: 'Common' },
+  { name: "Team Rocket's Mareep", type: 'Lightning', rarity: 'Common' },
+  { name: "Team Rocket's Flaaffy", type: 'Lightning', rarity: 'Uncommon' },
+  { name: "Team Rocket's Ampharos", type: 'Lightning', rarity: 'Holo Rare' },
+  { name: 'Electrike', type: 'Lightning', rarity: 'Common' },
+  { name: 'Manectric', type: 'Lightning', rarity: 'Uncommon' },
+  { name: 'Rotom', type: 'Lightning', rarity: 'Holo Rare' },
+  { name: 'Zeraora', type: 'Lightning', rarity: 'Holo Rare' },
+  { name: "Team Rocket's Drowzee", type: 'Psychic', rarity: 'Common' },
+  { name: "Team Rocket's Hypno", type: 'Psychic', rarity: 'Uncommon' },
+  { name: "Team Rocket's Mewtwo ex", type: 'Psychic', rarity: 'Holo Rare' },
+  { name: "Team Rocket's Wobbuffet", type: 'Psychic', rarity: 'Uncommon' },
+  { name: "Steven's Baltoy", type: 'Psychic', rarity: 'Common' }, // Ground/Psychic
+  { name: "Steven's Claydol", type: 'Psychic', rarity: 'Uncommon' }, // Ground/Psychic
+  { name: "Team Rocket's Chingling", type: 'Psychic', rarity: 'Common' },
+  { name: "Steven's Carbink", type: 'Psychic', rarity: 'Uncommon' }, // Rock/Fairy
+  { name: "Team Rocket's Mimikyu", type: 'Psychic', rarity: 'Holo Rare' }, // Ghost/Fairy
+  { name: "Team Rocket's Dottler", type: 'Psychic', rarity: 'Uncommon' }, // Bug/Psychic
+  { name: "Team Rocket's Orbeetle", type: 'Psychic', rarity: 'Holo Rare' }, // Bug/Psychic
+  { name: 'Mankey', type: 'Fighting', rarity: 'Common' },
+  { name: 'Primeape', type: 'Fighting', rarity: 'Uncommon' },
+  { name: 'Annihilape', type: 'Fighting', rarity: 'Holo Rare' }, // Assumed Holo Rare, could be non-ex Rare too
+  { name: "Ethan's Sudowoodo", type: 'Fighting', rarity: 'Uncommon' }, // Rock
+  { name: "Team Rocket's Larvitar", type: 'Fighting', rarity: 'Common' }, // Rock/Ground
+  { name: "Team Rocket's Pupitar", type: 'Fighting', rarity: 'Uncommon' }, // Rock/Ground
+  { name: "Team Rocket's Tyranitar", type: 'Fighting', rarity: 'Holo Rare' }, // Rock/Dark
+  { name: 'Nosepass', type: 'Fighting', rarity: 'Common' }, // Rock
+  { name: 'Probopass', type: 'Fighting', rarity: 'Uncommon' }, // Rock/Steel
+  { name: 'Meditite', type: 'Fighting', rarity: 'Common' },
+  { name: 'Medicham', type: 'Fighting', rarity: 'Uncommon' },
+  { name: 'Regirock ex', type: 'Fighting', rarity: 'Holo Rare' }, // Rock
+  { name: "Cynthia's Gible", type: 'Fighting', rarity: 'Common' }, // Dragon/Ground
+  { name: "Cynthia's Gabite", type: 'Fighting', rarity: 'Uncommon' }, // Dragon/Ground
+  { name: "Cynthia's Garchomp ex", type: 'Fighting', rarity: 'Holo Rare' }, // Dragon/Ground
+  { name: 'Hippopotas', type: 'Fighting', rarity: 'Common' }, // Ground
+  { name: 'Hippowdon', type: 'Fighting', rarity: 'Uncommon' }, // Ground
+  { name: 'Mudbray', type: 'Fighting', rarity: 'Common' }, // Ground
+  { name: 'Mudsdale', type: 'Fighting', rarity: 'Uncommon' }, // Ground
+  { name: "Arven's Toedscool", type: 'Fighting', rarity: 'Common' }, // Ground/Grass
+  { name: "Arven's Toedscruel", type: 'Fighting', rarity: 'Uncommon' }, // Ground/Grass
+  { name: 'Cornerstone Mask Ogerpon', type: 'Fighting', rarity: 'Holo Rare' }, // Grass/Rock
+  { name: "Team Rocket's Ekans", type: 'Grass', rarity: 'Common' }, // Poison
+  { name: "Team Rocket's Arbok", type: 'Grass', rarity: 'Uncommon' }, // Poison
+  { name: "Team Rocket's Nidoran♀", type: 'Grass', rarity: 'Common' }, // Poison
+  { name: "Team Rocket's Nidorina", type: 'Grass', rarity: 'Uncommon' }, // Poison
+  { name: "Team Rocket's Nidoqueen", type: 'Grass', rarity: 'Holo Rare' }, // Poison/Ground
+  { name: "Team Rocket's Nidoran♂", type: 'Grass', rarity: 'Common' }, // Poison
+  { name: "Team Rocket's Nidorino", type: 'Grass', rarity: 'Uncommon' }, // Poison
+  { name: "Team Rocket's Nidoking ex", type: 'Grass', rarity: 'Holo Rare' }, // Poison/Ground
+  { name: "Team Rocket's Zubat", type: 'Grass', rarity: 'Common' }, // Poison/Flying
+  { name: "Team Rocket's Golbat", type: 'Grass', rarity: 'Uncommon' }, // Poison/Flying
+  { name: "Team Rocket's Crobat ex", type: 'Darkness', rarity: 'Holo Rare' }, // Poison/Flying -> Darkness
+  { name: "Team Rocket's Grimer", type: 'Grass', rarity: 'Common' }, // Poison
+  { name: "Team Rocket's Muk", type: 'Grass', rarity: 'Uncommon' }, // Poison
+  { name: "Team Rocket's Koffing", type: 'Grass', rarity: 'Common' }, // Poison
+  { name: "Team Rocket's Weezing", type: 'Grass', rarity: 'Holo Rare' }, // Poison
+  { name: "Team Rocket's Murkrow", type: 'Darkness', rarity: 'Common' }, // Dark/Flying
+  { name: "Team Rocket's Sneasel", type: 'Darkness', rarity: 'Common' }, // Dark/Ice
+  { name: "Cynthia's Spiritomb", type: 'Darkness', rarity: 'Holo Rare' }, // Ghost/Dark
+  { name: "Marnie's Purrloin", type: 'Darkness', rarity: 'Common' },
+  { name: "Marnie's Liepard", type: 'Darkness', rarity: 'Uncommon' },
+  { name: "Marnie's Scraggy", type: 'Darkness', rarity: 'Common' }, // Dark/Fighting
+  { name: "Marnie's Scrafty", type: 'Darkness', rarity: 'Uncommon' }, // Dark/Fighting
+  { name: "Marnie's Impidimp", type: 'Darkness', rarity: 'Common' }, // Dark/Fairy
+  { name: "Marnie's Morgrem", type: 'Darkness', rarity: 'Uncommon' }, // Dark/Fairy
+  { name: "Marnie's Grimmsnarl ex", type: 'Darkness', rarity: 'Holo Rare' }, // Dark/Fairy
+  { name: "Marnie's Morpeko", type: 'Darkness', rarity: 'Holo Rare' }, // Electric/Dark
+  { name: "Arven's Maschiff", type: 'Darkness', rarity: 'Common' },
+  { name: "Arven's Mabosstiff ex", type: 'Darkness', rarity: 'Holo Rare' },
+  { name: 'Forretress', type: 'Metal', rarity: 'Uncommon' }, // Bug/Steel
+  { name: 'Skarmory', type: 'Metal', rarity: 'Common' }, // Steel/Flying
+  { name: "Steven's Skarmory", type: 'Metal', rarity: 'Uncommon' }, // Steel/Flying
+  { name: "Steven's Beldum", type: 'Metal', rarity: 'Common' }, // Steel/Psychic
+  { name: "Steven's Metang", type: 'Metal', rarity: 'Uncommon' }, // Steel/Psychic
+  { name: "Steven's Metagross ex", type: 'Metal', rarity: 'Holo Rare' }, // Steel/Psychic
+  { name: 'Zamazenta', type: 'Metal', rarity: 'Holo Rare' }, // Fighting/Steel
+  { name: "Team Rocket's Rattata", type: 'Colorless', rarity: 'Common' },
+  { name: "Team Rocket's Raticate", type: 'Colorless', rarity: 'Uncommon' },
+  { name: "Team Rocket's Meowth", type: 'Colorless', rarity: 'Common' },
+  { name: "Team Rocket's Persian ex", type: 'Colorless', rarity: 'Holo Rare' },
+  { name: 'Kangaskhan', type: 'Colorless', rarity: 'Holo Rare' },
+  { name: 'Tauros', type: 'Colorless', rarity: 'Uncommon' },
+  { name: "Team Rocket's Porygon", type: 'Colorless', rarity: 'Common' },
+  { name: "Team Rocket's Porygon2", type: 'Colorless', rarity: 'Uncommon' },
+  { name: "Team Rocket's Porygon-Z", type: 'Colorless', rarity: 'Holo Rare' },
+  { name: 'Taillow', type: 'Colorless', rarity: 'Common' },
+  { name: 'Swellow', type: 'Colorless', rarity: 'Uncommon' },
+  { name: "Arven's Skwovet", type: 'Colorless', rarity: 'Common' },
+  { name: "Arven's Greedent", type: 'Colorless', rarity: 'Uncommon' },
+  { name: 'Squawkabilly', type: 'Colorless', rarity: 'Holo Rare' },
+  { name: "Arven's Sandwich", type: 'Trainer', rarity: 'Uncommon' },
+  { name: "Cynthia's Power Weight", type: 'Trainer', rarity: 'Uncommon' },
+  { name: "Emcee's Hype", type: 'Trainer', rarity: 'Holo Rare' }, // Supporter Full Art style
+  { name: 'Energy Recycler', type: 'Trainer', rarity: 'Uncommon' },
+  { name: "Ethan's Adventure", type: 'Trainer', rarity: 'Holo Rare' }, // Supporter Full Art style
+  { name: 'Granite Cave', type: 'Trainer', rarity: 'Uncommon' }, // Stadium
+  { name: 'Judge', type: 'Trainer', rarity: 'Holo Rare' }, // Supporter Full Art style
+  { name: 'Sacred Ash', type: 'Trainer', rarity: 'Uncommon' },
+  { name: 'Spikemuth Gym', type: 'Trainer', rarity: 'Uncommon' }, // Stadium
+  { name: "Team Rocket's Archer", type: 'Trainer', rarity: 'Holo Rare' }, // Supporter Full Art style
+  { name: "Team Rocket's Ariana", type: 'Trainer', rarity: 'Holo Rare' }, // Supporter Full Art style
+  { name: "Team Rocket's Bother-Bot", type: 'Trainer', rarity: 'Uncommon' },
+  { name: "Team Rocket's Factory", type: 'Trainer', rarity: 'Uncommon' }, // Stadium
+  { name: "Team Rocket's Giovanni", type: 'Trainer', rarity: 'Holo Rare' }, // Supporter Full Art style
+  { name: "Team Rocket's Great Ball", type: 'Trainer', rarity: 'Uncommon' },
+  { name: "Team Rocket's Petrel", type: 'Trainer', rarity: 'Holo Rare' }, // Supporter Full Art style
+  { name: "Team Rocket's Proton", type: 'Trainer', rarity: 'Holo Rare' }, // Supporter Full Art style
+  { name: "Team Rocket's Transceiver", type: 'Trainer', rarity: 'Uncommon' },
+  { name: "Team Rocket's Venture Bomb", type: 'Trainer', rarity: 'Uncommon' },
+  { name: "Team Rocket's Watchtower", type: 'Trainer', rarity: 'Uncommon' }, // Stadium
+  { name: 'TM Machine', type: 'Trainer', rarity: 'Uncommon' },
+  { name: "Team Rocket's Energy", type: 'Energy', rarity: 'Holo Rare' }, // Special Energy, often Holo or Uncommon
+  { name: 'Yanma', type: 'Grass', rarity: 'Holo Rare' }, // Illustration Rare
+  { name: "Cynthia's Roserade", type: 'Grass', rarity: 'Holo Rare' }, // Illustration Rare
+  { name: 'Shaymin', type: 'Grass', rarity: 'Holo Rare' }, // Illustration Rare
+  { name: 'Crustle', type: 'Grass', rarity: 'Holo Rare' }, // Illustration Rare
+  { name: "Team Rocket's Spidops", type: 'Grass', rarity: 'Holo Rare' }, // Illustration Rare
+  { name: 'Hydrapple', type: 'Grass', rarity: 'Holo Rare' }, // Illustration Rare
+  { name: 'Rapidash', type: 'Fire', rarity: 'Holo Rare' }, // Illustration Rare
+  { name: "Ethan's Typhlosion", type: 'Fire', rarity: 'Holo Rare' }, // Illustration Rare
+  { name: "Team Rocket's Houndoom", type: 'Fire', rarity: 'Holo Rare' }, // Illustration Rare
+  { name: 'Blaziken', type: 'Fire', rarity: 'Holo Rare' }, // Illustration Rare
+  { name: "Misty's Psyduck", type: 'Water', rarity: 'Holo Rare' }, // Illustration Rare
+  { name: "Misty's Lapras", type: 'Water', rarity: 'Holo Rare' }, // Illustration Rare
+  { name: 'Clamperl', type: 'Water', rarity: 'Holo Rare' }, // Illustration Rare
+  { name: 'Electrike', type: 'Lightning', rarity: 'Holo Rare' }, // Illustration Rare
+  { name: 'Rotom', type: 'Lightning', rarity: 'Holo Rare' }, // Illustration Rare
+  { name: "Team Rocket's Orbeetle", type: 'Psychic', rarity: 'Holo Rare' }, // Illustration Rare
+  { name: "Team Rocket's Weezing", type: 'Grass', rarity: 'Holo Rare' }, // Illustration Rare
+  { name: "Team Rocket's Murkrow", type: 'Darkness', rarity: 'Holo Rare' }, // Illustration Rare
+  { name: 'Zamazenta', type: 'Metal', rarity: 'Holo Rare' }, // Illustration Rare
+  { name: "Team Rocket's Raticate", type: 'Colorless', rarity: 'Holo Rare' }, // Illustration Rare
+  { name: "Team Rocket's Meowth", type: 'Colorless', rarity: 'Holo Rare' }, // Illustration Rare
+  { name: 'Kangaskhan', type: 'Colorless', rarity: 'Holo Rare' }, // Illustration Rare
+  { name: "Arven's Greedent", type: 'Colorless', rarity: 'Holo Rare' }, // Illustration Rare
+  { name: 'Yanmega ex', type: 'Grass', rarity: 'Holo Rare' }, // Full Art
+  { name: 'Arboliva ex', type: 'Grass', rarity: 'Holo Rare' }, // Full Art
+  { name: "Team Rocket's Moltres ex", type: 'Fire', rarity: 'Holo Rare' }, // Full Art
+  { name: "Ethan's Ho-Oh ex", type: 'Fire', rarity: 'Holo Rare' }, // Full Art
+  { name: 'Cetitan ex', type: 'Water', rarity: 'Holo Rare' }, // Full Art
+  { name: 'Dondozo ex', type: 'Water', rarity: 'Holo Rare' }, // Full Art
+  { name: 'Electivire ex', type: 'Lightning', rarity: 'Holo Rare' }, // Full Art
+  { name: "Team Rocket's Mewtwo ex", type: 'Psychic', rarity: 'Holo Rare' }, // Full Art
+  { name: 'Regirock ex', type: 'Fighting', rarity: 'Holo Rare' }, // Full Art
+  { name: "Cynthia's Garchomp ex", type: 'Fighting', rarity: 'Holo Rare' }, // Full Art
+  { name: "Team Rocket's Nidoking ex", type: 'Grass', rarity: 'Holo Rare' }, // Full Art
+  { name: "Team Rocket's Crobat ex", type: 'Darkness', rarity: 'Holo Rare' }, // Full Art
+  { name: "Arven's Mabosstiff ex", type: 'Darkness', rarity: 'Holo Rare' }, // Full Art
+  { name: "Team Rocket's Persian ex", type: 'Colorless', rarity: 'Holo Rare' }, // Full Art
+  { name: "Emcee's Hype", type: 'Trainer', rarity: 'Holo Rare' }, // Full Art Supporter
+  { name: "Ethan's Adventure", type: 'Trainer', rarity: 'Holo Rare' }, // Full Art Supporter
+  { name: 'Judge', type: 'Trainer', rarity: 'Holo Rare' }, // Full Art Supporter
+  { name: "Team Rocket's Archer", type: 'Trainer', rarity: 'Holo Rare' }, // Full Art Supporter
+  { name: "Team Rocket's Ariana", type: 'Trainer', rarity: 'Holo Rare' }, // Full Art Supporter
+  { name: "Team Rocket's Giovanni", type: 'Trainer', rarity: 'Holo Rare' }, // Full Art Supporter
+  { name: "Team Rocket's Petrel", type: 'Trainer', rarity: 'Holo Rare' }, // Full Art Supporter
+  { name: "Team Rocket's Proton", type: 'Trainer', rarity: 'Holo Rare' }, // Full Art Supporter
+  { name: 'Yanmega ex', type: 'Grass', rarity: 'Holo Rare' }, // Special Illustration Rare
+  { name: "Team Rocket's Moltres ex", type: 'Fire', rarity: 'Holo Rare' }, // Special Illustration Rare
+  { name: "Ethan's Ho-Oh ex", type: 'Fire', rarity: 'Holo Rare' }, // Special Illustration Rare
+  { name: "Team Rocket's Mewtwo ex", type: 'Psychic', rarity: 'Holo Rare' }, // Special Illustration Rare
+  { name: "Cynthia's Garchomp ex", type: 'Fighting', rarity: 'Holo Rare' }, // Special Illustration Rare
+  { name: "Team Rocket's Nidoking ex", type: 'Grass', rarity: 'Holo Rare' }, // Special Illustration Rare
+  { name: "Team Rocket's Crobat ex", type: 'Darkness', rarity: 'Holo Rare' }, // Special Illustration Rare
+  { name: "Arven's Mabosstiff ex", type: 'Darkness', rarity: 'Holo Rare' }, // Special Illustration Rare
+  { name: "Ethan's Adventure", type: 'Trainer', rarity: 'Holo Rare' }, // Special Illustration Rare Supporter
+  { name: "Team Rocket's Ariana", type: 'Trainer', rarity: 'Holo Rare' }, // Special Illustration Rare Supporter
+  { name: "Team Rocket's Giovanni", type: 'Trainer', rarity: 'Holo Rare' }, // Special Illustration Rare Supporter
+  { name: "Ethan's Ho-Oh ex", type: 'Fire', rarity: 'Holo Rare' }, // Hyper Rare (Gold)
+  { name: "Team Rocket's Mewtwo ex", type: 'Psychic', rarity: 'Holo Rare' }, // Hyper Rare (Gold)
+  { name: "Cynthia's Garchomp ex", type: 'Fighting', rarity: 'Holo Rare' }, // Hyper Rare (Gold)
+  { name: "Team Rocket's Crobat ex", type: 'Darkness', rarity: 'Holo Rare' }, // Hyper Rare (Gold)
+  { name: 'Jamming Tower', type: 'Trainer', rarity: 'Holo Rare' }, // Hyper Rare (Gold Stadium)
+  { name: 'Levincia', type: 'Trainer', rarity: 'Holo Rare' }, // Hyper Rare (Gold Stadium)
 ];
+
+export const destinedRivalsCards: PokemonCard[] = cardListData.map((card, index) => {
+  const cardNumberInSet = index + 1;
+  const uniqueID = getUniqueId(cardNumberInSet);
+  const formattedName = formatNameForUrl(card.name);
+  // Construct the ID for the card
+  const cardId = `dri-${formattedName.toLowerCase().replace(/-+/g, '-')}-${String(cardNumberInSet).padStart(3, '0')}`;
+
+  return {
+    id: cardId,
+    name: card.name,
+    image: `https://den-cards.pokellector.com/412/${formattedName}.DRI.${cardNumberInSet}.${uniqueID}.thumb.png`,
+    dataAiHint: `${card.name} ${card.type.toLowerCase()}`, // Basic hint
+    rarity: card.rarity as PokemonCard['rarity'], // Explicitly cast rarity
+    type: card.type as PokemonCard['type'], // Explicitly cast type
+    series: 'Destined Rivals',
+    pokedexNumber: `${cardNumberInSet}/244`,
+  };
+});
