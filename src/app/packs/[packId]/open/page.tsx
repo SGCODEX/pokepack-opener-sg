@@ -102,7 +102,7 @@ export default function PackOpeningPage() {
         { rarity: 'Hyper Rare', weight: 6 },
         { rarity: 'Special Illustration Rare', weight: 12 },
         { rarity: 'Illustration Rare', weight: 10 },
-        { rarity: 'Ultra Rare', weight: 22 },
+        { rarity: 'Ultra Rare', weight: 15 }, // Reduced from 22
         { rarity: 'Double Rare', weight: 25 },
         { rarity: 'Rare', weight: 30 },
       ];
@@ -269,8 +269,8 @@ export default function PackOpeningPage() {
         let finalOverallHasRareNonHolo: boolean;
 
         if (packData.id === 'destined-rivals-booster-001') {
-            finalOverallHasHolo = ['Hyper Rare', 'Special Illustration Rare', 'Illustration Rare'].includes(finalOverallHighestRarity);
-            finalOverallHasRareNonHolo = !finalOverallHasHolo && ['Ultra Rare', 'Double Rare', 'Rare'].includes(finalOverallHighestRarity);
+            finalOverallHasHolo = ['Ultra Rare', 'Hyper Rare', 'Special Illustration Rare', 'Illustration Rare'].includes(finalOverallHighestRarity);
+            finalOverallHasRareNonHolo = !finalOverallHasHolo && ['Double Rare', 'Rare'].includes(finalOverallHighestRarity);
         } else {
             const oldSetHoloRarities: CardRarity[] = ['Holo Rare'];
             const oldSetHighTierNonHolo: CardRarity[] = ['Rare'];
@@ -306,8 +306,8 @@ export default function PackOpeningPage() {
     let packSpecificHasRareNonHolo: boolean;
 
     if (packData.id === 'destined-rivals-booster-001') {
-        packSpecificHasHolo = ['Hyper Rare', 'Special Illustration Rare', 'Illustration Rare'].includes(currentPackHighestRarity);
-        packSpecificHasRareNonHolo = !packSpecificHasHolo && ['Ultra Rare', 'Double Rare', 'Rare'].includes(currentPackHighestRarity);
+        packSpecificHasHolo = ['Ultra Rare', 'Hyper Rare', 'Special Illustration Rare', 'Illustration Rare'].includes(currentPackHighestRarity);
+        packSpecificHasRareNonHolo = !packSpecificHasHolo && ['Double Rare', 'Rare'].includes(currentPackHighestRarity);
     } else {
         const oldSetHoloRarities: CardRarity[] = ['Holo Rare'];
         const oldSetHighTierNonHolo: CardRarity[] = ['Rare'];
@@ -485,8 +485,8 @@ export default function PackOpeningPage() {
     let finalOverallHasRareNonHolo: boolean;
 
     if (packData.id === 'destined-rivals-booster-001') {
-        finalOverallHasHolo = ['Hyper Rare', 'Special Illustration Rare', 'Illustration Rare'].includes(finalHighestRarity);
-        finalOverallHasRareNonHolo = !finalOverallHasHolo && ['Ultra Rare', 'Double Rare', 'Rare'].includes(finalHighestRarity);
+        finalOverallHasHolo = ['Ultra Rare', 'Hyper Rare', 'Special Illustration Rare', 'Illustration Rare'].includes(finalHighestRarity);
+        finalOverallHasRareNonHolo = !finalOverallHasHolo && ['Double Rare', 'Rare'].includes(finalHighestRarity);
     } else {
         const oldSetHoloRarities: CardRarity[] = ['Holo Rare'];
         const oldSetHighTierNonHolo: CardRarity[] = ['Rare'];
@@ -557,8 +557,8 @@ export default function PackOpeningPage() {
     <div className={cn(
         "transition-colors duration-1000 flex flex-col min-h-[calc(100vh-10rem)]",
         stage === 'all-revealed' ? 'bg-white text-black' :
-        (hasHolo && (stage === 'opening' || stage === 'stack-reveal') && stage !== 'transitioning') ? 'holo-blue-wave-background-active animate-holo-blue-wave-shimmer text-primary-foreground dark:text-foreground' :
-        (hasRareNonHolo && (stage === 'opening' || stage === 'stack-reveal') && stage !== 'transitioning') ? 'rare-gold-holo-background-active animate-rare-gold-shimmer text-primary-foreground dark:text-foreground' :
+        (hasHolo && (stage === 'opening' || stage === 'stack-reveal') && stage !== 'transitioning') ? 'holo-blue-wave-background-active animate-holo-blue-wave-shimmer text-white dark:text-white' :
+        (hasRareNonHolo && (stage === 'opening' || stage === 'stack-reveal') && stage !== 'transitioning') ? 'rare-gold-holo-background-active animate-rare-gold-shimmer text-black dark:text-black' :
         'bg-background text-foreground'
       )}>
       <Button
@@ -570,8 +570,8 @@ export default function PackOpeningPage() {
             stage === 'all-revealed'
                 ? "text-black border-black dark:text-black dark:border-black"
                 : activeOpeningStages.includes(stage)
-                    ? "text-white border-white"
-                    : "dark:border-[hsl(var(--border))]"
+                    ? "text-white border-white" // White outline for active opening on any background
+                    : "text-foreground border-foreground dark:border-[hsl(var(--border))]" // Default theme-aware for initial
         )}
       >
         <ArrowLeft className="mr-2 h-4 w-4" /> {backButtonText}
@@ -587,8 +587,8 @@ export default function PackOpeningPage() {
              stage === 'all-revealed'
                 ? "text-black border-black dark:text-black dark:border-black"
                 : activeOpeningStages.includes(stage)
-                    ? "text-white border-white"
-                    : "dark:border-[hsl(var(--border))]"
+                    ? "text-white border-white" // White outline for active opening on any background
+                    : "text-foreground border-foreground dark:border-[hsl(var(--border))]" // Default theme-aware
           )}
           disabled={!packData}
         >
@@ -598,7 +598,10 @@ export default function PackOpeningPage() {
       <header className="relative z-5 pt-8 pb-4 text-center">
         <h1 className={cn(
           "text-4xl font-headline font-bold",
-           stage === 'all-revealed' ? 'text-black' : 'text-primary-foreground dark:text-foreground'
+           stage === 'all-revealed' ? 'text-black' :
+           (hasHolo && activeOpeningStages.includes(stage) && stage !== 'transitioning') ? 'text-white' :
+           (hasRareNonHolo && activeOpeningStages.includes(stage) && stage !== 'transitioning') ? 'text-black' :
+           'text-primary-foreground dark:text-foreground'
            )}>Pack Opening: {packData.name}</h1>
       </header>
 
@@ -649,7 +652,12 @@ export default function PackOpeningPage() {
               />
             </>
           )}
-           <p className="text-2xl font-semibold text-primary-foreground dark:text-foreground animate-pulse">
+           <p className={cn(
+            "text-2xl font-semibold animate-pulse",
+            (hasHolo && activeOpeningStages.includes(stage) && stage !== 'transitioning') ? 'text-white' :
+            (hasRareNonHolo && activeOpeningStages.includes(stage) && stage !== 'transitioning') ? 'text-black' :
+            'text-primary-foreground dark:text-foreground'
+            )}>
                 {displayPackCountText}
             </p>
         </div>
@@ -657,7 +665,12 @@ export default function PackOpeningPage() {
 
       {stage === 'transitioning' && isProcessingBulk && (
         <div className="flex flex-col items-center space-y-6 flex-grow justify-center">
-            <p className="text-2xl font-semibold text-primary-foreground dark:text-foreground animate-pulse">
+            <p className={cn(
+              "text-2xl font-semibold animate-pulse",
+              (hasHolo && activeOpeningStages.includes(stage) && stage !== 'transitioning') ? 'text-white' :
+              (hasRareNonHolo && activeOpeningStages.includes(stage) && stage !== 'transitioning') ? 'text-black' :
+              'text-primary-foreground dark:text-foreground'
+            )}>
                 Gotta Catch 'em all!
             </p>
         </div>
@@ -666,7 +679,12 @@ export default function PackOpeningPage() {
       {stage === 'stack-reveal' && (
         <div className="flex flex-col items-center justify-center flex-grow relative">
           {isProcessingBulk && (
-            <p className="text-xl font-semibold text-primary-foreground dark:text-foreground mb-4">
+            <p className={cn(
+              "text-xl font-semibold mb-4",
+              (hasHolo && activeOpeningStages.includes(stage) && stage !== 'transitioning') ? 'text-white' :
+              (hasRareNonHolo && activeOpeningStages.includes(stage) && stage !== 'transitioning') ? 'text-black' :
+              'text-primary-foreground dark:text-foreground'
+            )}>
               {`Pack ${currentPackInBulkLoop + 1} of ${totalPacksInBulkLoop}`}
             </p>
           )}
@@ -725,7 +743,12 @@ export default function PackOpeningPage() {
             </div>
           ) : (
             <div
-              className="relative w-[240px] h-[336px] mx-auto cursor-pointer select-none z-10 flex items-center justify-center text-muted-foreground animate-stack-arrive"
+              className={cn(
+                "relative w-[240px] h-[336px] mx-auto cursor-pointer select-none z-10 flex items-center justify-center animate-stack-arrive",
+                (hasHolo && activeOpeningStages.includes(stage) && stage !== 'transitioning') ? 'text-white/70' :
+                (hasRareNonHolo && activeOpeningStages.includes(stage) && stage !== 'transitioning') ? 'text-black/70' :
+                'text-muted-foreground'
+              )}
               onClick={!currentSwipingCard ? handleRevealNextCard : undefined}
               role="button"
               tabIndex={0}
@@ -772,7 +795,9 @@ export default function PackOpeningPage() {
               "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]",
               stage === 'all-revealed' 
                 ? "text-black border-black dark:text-black dark:border-black"
-                : ""
+                : activeOpeningStages.includes(stage) && (hasHolo || hasRareNonHolo)
+                    ? "text-white border-white" // White for special backgrounds during active opening
+                    : "text-foreground border-foreground" // Default for stack-reveal on normal background
             )}
           >
             <Package className="mr-2 h-5 w-5" /> Open Another Pack
@@ -786,7 +811,9 @@ export default function PackOpeningPage() {
                   "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]",
                   stage === 'all-revealed' 
                     ? "text-black border-black dark:text-black dark:border-black"
-                    : "" 
+                    : activeOpeningStages.includes(stage) && (hasHolo || hasRareNonHolo)
+                        ? "text-white border-white" // White for special backgrounds
+                        : "text-foreground border-foreground" // Default for stack-reveal on normal
                 )}
               >
                 <PackagePlus className="mr-2 h-5 w-5" /> Open 10 More Packs

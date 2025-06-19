@@ -39,7 +39,7 @@ export function CardComponent({
       case 'Rare': return 'border-blue-400 hover:border-blue-500';
       case 'Holo Rare': return 'border-purple-500 hover:border-purple-600 animate-rarity-glow-holo shadow-lg';
       case 'Double Rare': return 'border-sky-400 hover:border-sky-500';
-      case 'Ultra Rare': return 'border-indigo-500 hover:border-indigo-600 shadow-md';
+      case 'Ultra Rare': return 'border-indigo-500 hover:border-indigo-600 animate-rarity-glow-holo shadow-md';
       case 'Illustration Rare': return 'border-teal-400 hover:border-teal-500 animate-rarity-glow-holo shadow-lg';
       case 'Special Illustration Rare': return 'border-pink-500 hover:border-pink-600 animate-rarity-glow-holo shadow-xl';
       case 'Hyper Rare': return 'border-amber-400 hover:border-amber-500 animate-rarity-glow-holo shadow-xl';
@@ -63,7 +63,7 @@ export function CardComponent({
   };
 
   const actualIsCollected = viewContext === 'pokedex' ? collectedCount > 0 : isCollected;
-  const holoLikeRarities: PokemonCard['rarity'][] = ['Holo Rare', 'Illustration Rare', 'Special Illustration Rare', 'Hyper Rare'];
+  const holoLikeRarities: PokemonCard['rarity'][] = ['Holo Rare', 'Ultra Rare', 'Illustration Rare', 'Special Illustration Rare', 'Hyper Rare'];
 
 
   if (viewContext === 'pokedex') {
