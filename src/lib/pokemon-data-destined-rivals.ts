@@ -75,7 +75,7 @@ function getDestinedRivalsUniqueID(cardNumberInSet: number): number {
 // Types are based on typical TCG representations.
 // initialRarity is now DIRECTLY from the user-provided image list (Pokellector DRI Rarity)
 const cardListData: { name: string, type: PokemonCard['type'], initialRarity: CardRarity }[] = [
-  { name: "Ethan's Pinsir", type: 'Grass', initialRarity: 'Illustration Rare' }, // 1
+  { name: "Ethan's Pinsir", type: 'Grass', initialRarity: 'Uncommon' }, // 1 - Changed from Illustration Rare
   { name: 'Yanma', type: 'Grass', initialRarity: 'Common' }, // 2
   { name: 'Yanmega ex', type: 'Grass', initialRarity: 'Double Rare' }, // 3
   { name: 'Pineco', type: 'Grass', initialRarity: 'Common' }, // 4
@@ -352,3 +352,4 @@ export const destinedRivalsCards: PokemonCard[] = cardListData.map((cardData, in
     pokedexNumber: `${cardNumberInSet}/244`,
   };
 });
+
