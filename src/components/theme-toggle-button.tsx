@@ -34,7 +34,7 @@ export function ThemeToggleButton() {
         )}
         aria-hidden="true" 
       >
-        <Sun className={cn("h-[1.2rem] w-[1.2rem]", isNavbarDarkStyle && "group-hover:text-white")} /> 
+        <Sun className={cn("h-[1.2rem] w-[1.2rem]", isNavbarDarkStyle && "text-white")} /> 
       </Button>
     );
   }
@@ -51,11 +51,12 @@ export function ThemeToggleButton() {
       aria-label={`Switch to ${resolvedTheme === 'light' ? 'dark' : 'light'} mode`}
     >
       {resolvedTheme === "light" ? (
-        <Sun className={cn("h-[1.2rem] w-[1.2rem]", isNavbarDarkStyle && "group-hover:text-white")} />
+        <Sun className={cn("h-[1.2rem] w-[1.2rem]", isNavbarDarkStyle && "text-white")} />
       ) : (
-        <Moon className={cn("h-[1.2rem] w-[1.2rem]", isNavbarDarkStyle && "group-hover:text-white")} />
+        <Moon className={cn("h-[1.2rem] w-[1.2rem]", isNavbarDarkStyle && "text-white")} />
       )}
       <span className="sr-only">Toggle theme</span>
     </Button>
   );
 }
+
