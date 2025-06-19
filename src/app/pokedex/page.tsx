@@ -139,14 +139,13 @@ export default function PokedexPage() {
 
       {allSeriesNames.length > 0 ? (
         <Tabs value={activeSeriesTab} onValueChange={setActiveSeriesTab} className="w-full">
-          <TabsList className={cn(
-            "grid w-full mb-4",
-            `grid-cols-${allSeriesNames.length > 0 ? allSeriesNames.length : 1}`
-            )}>
-            {allSeriesNames.map(seriesName => (
-              <TabsTrigger key={seriesName} value={seriesName}>{seriesName}</TabsTrigger>
-            ))}
-          </TabsList>
+          <div className="w-full overflow-x-auto flex justify-center mb-4">
+            <TabsList>
+              {allSeriesNames.map(seriesName => (
+                <TabsTrigger key={seriesName} value={seriesName}>{seriesName}</TabsTrigger>
+              ))}
+            </TabsList>
+          </div>
 
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-6">
             <div className="bg-card text-card-foreground px-4 py-2 rounded-lg shadow-md border border-border flex items-center gap-2">
@@ -261,3 +260,4 @@ export default function PokedexPage() {
     </div>
   );
 }
+
