@@ -50,7 +50,7 @@ function getDestinedRivalsUniqueID(cardNumberInSet: number): number {
     return 57351 + (cardNumberInSet - 88);
   }
   // Note: Card 96 is an exception handled above.
-  if (cardNumberInSet >= 97 && cardNumberInSet <= 192) { // Ends before Misty's Psyduck (193)
+  if (cardNumberInSet >= 97 && cardNumberInSet <= 192) { 
     return 57359 + (cardNumberInSet - 97);
   }
   // Note: Card 193 is an exception.
@@ -74,13 +74,13 @@ function getDestinedRivalsUniqueID(cardNumberInSet: number): number {
     return 57489 + (cardNumberInSet - 235);
   }
   
-  // Fallback for any unhandled case (should not be reached if all 244 are covered)
   console.warn(`Unhandled card number for Destined Rivals UniqueID: ${cardNumberInSet}`);
   return 0; 
 }
 
 
 const cardListData: { name: string, type: PokemonCard['type'], rarity: PokemonCard['rarity'] }[] = [
+  // This list must have exactly 244 entries
   { name: "Ethan's Pinsir", type: 'Grass', rarity: 'Holo Rare' }, // 1
   { name: 'Yanma', type: 'Grass', rarity: 'Common' }, // 2
   { name: 'Yanmega ex', type: 'Grass', rarity: 'Holo Rare' }, // 3
@@ -341,12 +341,13 @@ export const destinedRivalsCards: PokemonCard[] = cardListData.map((card, index)
      dataAiHint += ` trainer card`;
   }
 
-  // Apply specific URL overrides
   let imageUrl = `https://den-cards.pokellector.com/412/${formattedName}.DRI.${cardNumberInSet}.${uniqueID}.thumb.png`;
-  if (cardNumberInSet === 114) {
-    imageUrl = 'https://den-cards.pokellector.com/412/Team-Rockets-Nidoran-F.DRI.114.57376.thumb.png'; // Corrected URL format
-  } else if (cardNumberInSet === 117) {
-    imageUrl = 'https://den-cards.pokellector.com/412/Team-Rockets-Nidoran-M.DRI.117.57379.thumb.png'; // Corrected URL format
+
+  // Apply specific URL overrides for Nidoran gender variants AFTER general construction
+  if (cardNumberInSet === 114) { // Team Rocket's Nidoran♀
+    imageUrl = 'https://den-cards.pokellector.com/412/Team-Rockets-Nidoran.DRI.114.57376.thumb.png';
+  } else if (cardNumberInSet === 117) { // Team Rocket's Nidoran♂
+    imageUrl = 'https://den-cards.pokellector.com/412/Team-Rockets-Nidoran.DRI.117.57379.thumb.png';
   }
 
 
@@ -361,5 +362,3 @@ export const destinedRivalsCards: PokemonCard[] = cardListData.map((card, index)
     pokedexNumber: `${cardNumberInSet}/244`,
   };
 });
-
-    
