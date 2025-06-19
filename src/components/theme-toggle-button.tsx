@@ -23,23 +23,7 @@ export function ThemeToggleButton() {
   const isNavbarDarkStyle = true; // Navbar is always dark styled (blue)
 
   if (!mounted) {
-    // Determine which icon to render based on the initial theme (defaultTheme from server/first client render)
-    // This ensures the server-rendered hidden button matches the client's first pass.
-    const InitialIconToRender = resolvedTheme === "light" ? Sun : Moon;
-    return (
-      <Button
-        variant="outline"
-        size="icon"
-        className={cn(
-            isNavbarDarkStyle && "border-white hover:bg-[hsl(217,91%,50%)] focus-visible:ring-white",
-            "opacity-0 pointer-events-none" // Hide it visually but structure should match
-        )}
-        aria-hidden="true"
-        tabIndex={-1} // Make it unfocusable when hidden
-      >
-        <InitialIconToRender className={cn("h-[1.2rem] w-[1.2rem]", isNavbarDarkStyle && "text-white")} />
-      </Button>
-    );
+    return null; // Render nothing on the server and initial client render
   }
 
   // Once mounted, render the actual interactive button
@@ -50,7 +34,6 @@ export function ThemeToggleButton() {
       size="icon"
       onClick={toggleTheme}
       className={cn(
-        "group", // group class is not strictly needed for icon color anymore but kept for consistency
         isNavbarDarkStyle && "border-white hover:bg-[hsl(217,91%,50%)] focus-visible:ring-white"
       )}
       aria-label={`Switch to ${resolvedTheme === 'light' ? 'dark' : 'light'} mode`}
