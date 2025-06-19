@@ -118,7 +118,7 @@ export default function PokedexPage() {
   if (!pokedexLoaded) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[hsl(217,91%,60%)]"></div>
         <p className="ml-4 text-lg dark:text-foreground">Loading Pokedex...</p>
       </div>
     );
