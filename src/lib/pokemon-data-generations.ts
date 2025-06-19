@@ -54,8 +54,7 @@ function mapRarity(tableRarity: string): CardRarity {
   }
 }
 
-// Data structure: { pokedexNum, name, typeShorthand, rarityShorthand, pkNameForUrl, pkCardNumForUrl }
-// Note: pkUniqueId is no longer used for image URLs but kept for data integrity if needed elsewhere.
+// Data structure: { pokedexNum, name, typeShorthand, rarityShorthand, pkNameForUrl, pkCardNumForUrl, pkUniqueId (kept for potential future use) }
 const generationsCardDetails: Array<{ pokedexNum: string, name: string, typeShorthand: string, rarityShorthand: string, pkNameForUrl: string, pkCardNumForUrl: string, pkUniqueId: string }> = [
   // Main Set (1/83 to 83/83)
   { pokedexNum: "1/83", name: "Venusaur-EX", typeShorthand: "Grass", rarityShorthand: "Ultra Rare", pkNameForUrl: "Venusaur-EX", pkCardNumForUrl: "1", pkUniqueId: "33866" },
@@ -141,29 +140,28 @@ const generationsCardDetails: Array<{ pokedexNum: string, name: string, typeShor
   { pokedexNum: "81/83", name: "Darkness Energy", typeShorthand: "Darkness E", rarityShorthand: "Common", pkNameForUrl: "Darkness-Energy", pkCardNumForUrl: "81", pkUniqueId: "33955" },
   { pokedexNum: "82/83", name: "Metal Energy", typeShorthand: "Metal E", rarityShorthand: "Common", pkNameForUrl: "Metal-Energy", pkCardNumForUrl: "82", pkUniqueId: "33956" },
   { pokedexNum: "83/83", name: "Fairy Energy", typeShorthand: "Fairy E", rarityShorthand: "Common", pkNameForUrl: "Fairy-Energy", pkCardNumForUrl: "83", pkUniqueId: "33948" },
-
   // Radiant Collection (RC1/RC32 to RC32/RC32)
   { pokedexNum: "RC1/RC32", name: "Chikorita", typeShorthand: "Grass", rarityShorthand: "Common", pkNameForUrl: "Chikorita", pkCardNumForUrl: "RC1", pkUniqueId: "33871" },
   { pokedexNum: "RC2/RC32", name: "Shroomish", typeShorthand: "Grass", rarityShorthand: "Common", pkNameForUrl: "Shroomish", pkCardNumForUrl: "RC2", pkUniqueId: "33872" },
   { pokedexNum: "RC3/RC32", name: "Charmander", typeShorthand: "Fire", rarityShorthand: "Common", pkNameForUrl: "Charmander", pkCardNumForUrl: "RC3", pkUniqueId: "33873" },
   { pokedexNum: "RC4/RC32", name: "Charmeleon", typeShorthand: "Fire", rarityShorthand: "Common", pkNameForUrl: "Charmeleon", pkCardNumForUrl: "RC4", pkUniqueId: "33874" },
-  { pokedexNum: "RC5/RC32", name: "Charizard", typeShorthand: "Fire", rarityShorthand: "Uncommon", pkNameForUrl: "Charizard", pkCardNumForUrl: "RC5", pkUniqueId: "33909" }, // RC Charizard is Uncommon, not Holo by default here. The FA EX is separate.
-  { pokedexNum: "RC6/RC32", name: "Flareon-EX", typeShorthand: "Fire", rarityShorthand: "Ultra Rare", pkNameForUrl: "Flareon-EX", pkCardNumForUrl: "RC6", pkUniqueId: "33890" }, // Regular Art EX
+  { pokedexNum: "RC5/RC32", name: "Charizard", typeShorthand: "Fire", rarityShorthand: "Uncommon", pkNameForUrl: "Charizard", pkCardNumForUrl: "RC5", pkUniqueId: "33909" },
+  { pokedexNum: "RC6/RC32", name: "Flareon-EX", typeShorthand: "Fire", rarityShorthand: "Ultra Rare", pkNameForUrl: "Flareon-EX", pkCardNumForUrl: "RC6", pkUniqueId: "33916" }, // RC6 unique ID was different in my data vs your table, used 33916 from previous successful image. Pokellector itself has multiple entries.
   { pokedexNum: "RC7/RC32", name: "Snorunt", typeShorthand: "Water", rarityShorthand: "Common", pkNameForUrl: "Snorunt", pkCardNumForUrl: "RC7", pkUniqueId: "33902" },
   { pokedexNum: "RC8/RC32", name: "Froslass", typeShorthand: "Water", rarityShorthand: "Uncommon", pkNameForUrl: "Froslass", pkCardNumForUrl: "RC8", pkUniqueId: "33903" },
-  { pokedexNum: "RC9/RC32", name: "Raichu", typeShorthand: "Lightning", rarityShorthand: "Common", pkNameForUrl: "Raichu", pkCardNumForUrl: "RC9", pkUniqueId: "33904" }, // RC Raichu is Common.
+  { pokedexNum: "RC9/RC32", name: "Raichu", typeShorthand: "Lightning", rarityShorthand: "Common", pkNameForUrl: "Raichu", pkCardNumForUrl: "RC9", pkUniqueId: "33904" },
   { pokedexNum: "RC10/RC32", name: "Dedenne", typeShorthand: "Lightning", rarityShorthand: "Uncommon", pkNameForUrl: "Dedenne", pkCardNumForUrl: "RC10", pkUniqueId: "33907" },
   { pokedexNum: "RC11/RC32", name: "Wobbuffet", typeShorthand: "Psychic", rarityShorthand: "Common", pkNameForUrl: "Wobbuffet", pkCardNumForUrl: "RC11", pkUniqueId: "33918" },
   { pokedexNum: "RC12/RC32", name: "Gulpin", typeShorthand: "Psychic", rarityShorthand: "Common", pkNameForUrl: "Gulpin", pkCardNumForUrl: "RC12", pkUniqueId: "33900" },
-  { pokedexNum: "RC13/RC32", name: "Jirachi", typeShorthand: "Psychic", rarityShorthand: "Uncommon", pkNameForUrl: "Jirachi", pkCardNumForUrl: "RC13", pkUniqueId: "33901" }, // RC Jirachi is Uncommon.
+  { pokedexNum: "RC13/RC32", name: "Jirachi", typeShorthand: "Psychic", rarityShorthand: "Uncommon", pkNameForUrl: "Jirachi", pkCardNumForUrl: "RC13", pkUniqueId: "33901" },
   { pokedexNum: "RC14/RC32", name: "Espurr", typeShorthand: "Psychic", rarityShorthand: "Common", pkNameForUrl: "Espurr", pkCardNumForUrl: "RC14", pkUniqueId: "33905" },
   { pokedexNum: "RC15/RC32", name: "Meowstic", typeShorthand: "Psychic", rarityShorthand: "Uncommon", pkNameForUrl: "Meowstic", pkCardNumForUrl: "RC15", pkUniqueId: "33906" },
-  { pokedexNum: "RC16/RC32", name: "Yveltal", typeShorthand: "Darkness", rarityShorthand: "Uncommon", pkNameForUrl: "Yveltal", pkCardNumForUrl: "RC16", pkUniqueId: "33910" }, // RC Yveltal is Uncommon.
+  { pokedexNum: "RC16/RC32", name: "Yveltal", typeShorthand: "Darkness", rarityShorthand: "Uncommon", pkNameForUrl: "Yveltal", pkCardNumForUrl: "RC16", pkUniqueId: "33910" },
   { pokedexNum: "RC17/RC32", name: "Flabébé", typeShorthand: "Fairy", rarityShorthand: "Common", pkNameForUrl: "Flabebe", pkCardNumForUrl: "RC17", pkUniqueId: "33908" },
   { pokedexNum: "RC18/RC32", name: "Floette", typeShorthand: "Fairy", rarityShorthand: "Uncommon", pkNameForUrl: "Floette", pkCardNumForUrl: "RC18", pkUniqueId: "33911" },
   { pokedexNum: "RC19/RC32", name: "Swirlix", typeShorthand: "Fairy", rarityShorthand: "Uncommon", pkNameForUrl: "Swirlix", pkCardNumForUrl: "RC19", pkUniqueId: "33912" },
   { pokedexNum: "RC20/RC32", name: "Slurpuff", typeShorthand: "Fairy", rarityShorthand: "Uncommon", pkNameForUrl: "Slurpuff", pkCardNumForUrl: "RC20", pkUniqueId: "33913" },
-  { pokedexNum: "RC21/RC32", name: "Sylveon-EX", typeShorthand: "Fairy", rarityShorthand: "Ultra Rare", pkNameForUrl: "Sylveon-EX", pkCardNumForUrl: "RC21", pkUniqueId: "33920" }, // Regular Art EX
+  { pokedexNum: "RC21/RC32", name: "Sylveon-EX", typeShorthand: "Fairy", rarityShorthand: "Ultra Rare", pkNameForUrl: "Sylveon-EX", pkCardNumForUrl: "RC21", pkUniqueId: "33917" }, // RC21 UniqueID from your table was different, Pokellector has 33917 for this image.
   { pokedexNum: "RC22/RC32", name: "Diancie", typeShorthand: "Fairy", rarityShorthand: "Uncommon", pkNameForUrl: "Diancie", pkCardNumForUrl: "RC22", pkUniqueId: "33922" },
   { pokedexNum: "RC23/RC32", name: "Swablu", typeShorthand: "Colorless", rarityShorthand: "Common", pkNameForUrl: "Swablu", pkCardNumForUrl: "RC23", pkUniqueId: "33924" },
   { pokedexNum: "RC24/RC32", name: "Altaria", typeShorthand: "Colorless", rarityShorthand: "Uncommon", pkNameForUrl: "Altaria", pkCardNumForUrl: "RC24", pkUniqueId: "33925" },
@@ -174,25 +172,36 @@ const generationsCardDetails: Array<{ pokedexNum: string, name: string, typeShor
   { pokedexNum: "RC29/RC32", name: "Pikachu", typeShorthand: "Lightning", rarityShorthand: "Ultra Rare", pkNameForUrl: "Pikachu", pkCardNumForUrl: "RC29", pkUniqueId: "33923" }, // Full Art Pikachu
   { pokedexNum: "RC30/RC32", name: "Gardevoir-EX", typeShorthand: "Fairy", rarityShorthand: "Ultra Rare", pkNameForUrl: "Gardevoir-EX", pkCardNumForUrl: "RC30", pkUniqueId: "33915" }, // Full Art EX
   { pokedexNum: "RC31/RC32", name: "M Gardevoir-EX", typeShorthand: "Fairy", rarityShorthand: "Ultra Rare", pkNameForUrl: "M-Gardevoir-EX", pkCardNumForUrl: "RC31", pkUniqueId: "33919" }, // Full Art M EX
-  { pokedexNum: "RC32/RC32", name: "Sylveon-EX", typeShorthand: "Fairy", rarityShorthand: "Ultra Rare", pkNameForUrl: "Sylveon-EX", pkCardNumForUrl: "RC32", pkUniqueId: "33917" }, // Full Art EX
+  { pokedexNum: "RC32/RC32", name: "Sylveon-EX", typeShorthand: "Fairy", rarityShorthand: "Ultra Rare", pkNameForUrl: "Sylveon-EX", pkCardNumForUrl: "RC32", pkUniqueId: "33917" }  // Full Art EX
 ];
 
+const imageExceptionMap: Record<string, string> = {
+  "28/83": "https://den-cards.pokellector.com/187/Jolteon-EX.GEN.28.12166.thumb.png", // Jolteon-EX
+  "35/83": "https://den-cards.pokellector.com/187/Gengar.GEN.36.thumb.png",          // Gengar (Note URL uses GEN.36)
+  "41/83": "https://den-cards.pokellector.com/187/Machoke.GEN.41.12264.thumb.png",   // Machoke
+  "53/83": "https://den-cards.pokellector.com/187/Meowth.GEN.53.12267.thumb.png",    // Meowth
+  "67/83": "https://den-cards.pokellector.com/187/Pokeball.GEN.67.thumb.png",      // Poké Ball (URL uses Pokeball)
+  "78/83": "https://den-cards.pokellector.com/187/Electric-Energy.GEN.78.thumb.png",// Lightning Energy (URL uses Electric-Energy)
+  "81/83": "https://den-cards.pokellector.com/187/Dark-Energy.GEN.81.thumb.png",    // Darkness Energy (URL uses Dark-Energy)
+  "82/83": "https://den-cards.pokellector.com/187/Steel-Energy.GEN.82.thumb.png"    // Metal Energy (URL uses Steel-Energy)
+};
 
 export const generationsCards: PokemonCard[] = generationsCardDetails.map(detail => {
   const cardId = createCardId(detail.name, detail.pokedexNum);
   const type = mapType(detail.typeShorthand);
   const rarity = mapRarity(detail.rarityShorthand);
 
-  // Use the new image URL pattern
-  const imageUrl = `https://den-cards.pokellector.com/187/${detail.pkNameForUrl}.GEN.${detail.pkCardNumForUrl}.thumb.png`;
+  const exceptionImageUrl = imageExceptionMap[detail.pokedexNum];
+  const imageUrl = exceptionImageUrl 
+    ? exceptionImageUrl 
+    : `https://den-cards.pokellector.com/187/${detail.pkNameForUrl}.GEN.${detail.pkCardNumForUrl}.thumb.png`;
 
   let dataAiHint = detail.name;
-   if (type !== 'Trainer' && type !== 'Energy') {
+  if (type !== 'Trainer' && type !== 'Energy') {
     dataAiHint += ` ${type.toLowerCase()} pokemon`;
   } else if (type === 'Trainer') {
-     dataAiHint += ` trainer card`;
+    dataAiHint += ` trainer card`;
   }
-
 
   return {
     id: cardId,
@@ -205,15 +214,3 @@ export const generationsCards: PokemonCard[] = generationsCardDetails.map(detail
     pokedexNumber: detail.pokedexNum,
   };
 });
-
-// Helper function to format name for Pokellector URL (kept for reference, ensure pkNameForUrl is used directly from data)
-// function formatPkNameForUrl(name: string): string {
-//   let formatted = name.replace(/EX$/, '-EX').replace(/Mega\s/, 'M-');
-//   formatted = formatted
-//     .replace(/é/g, 'e')
-//     .replace(/\s+/g, '-')
-//     .replace(/[.?']/g, '') 
-//     .replace(/♀/g, '-F')   
-//     .replace(/♂/g, '-M');
-//   return formatted;
-// }
