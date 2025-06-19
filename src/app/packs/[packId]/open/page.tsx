@@ -157,41 +157,44 @@ export default function PackOpeningPage() {
     } else { // Handles Base Set and other generic packs
       const availableCardsInPack = allCards.filter(card => packData.possibleCards.includes(card.id));
       if (availableCardsInPack.length === 0) return [];
-
-      const pullCardByRarity = (rarity: CardRarity): PokemonCard | undefined => {
-        const potentialCards = availableCardsInPack.filter(c => c.rarity === rarity);
-        if (potentialCards.length === 0) return undefined;
-        return potentialCards[Math.floor(Math.random() * potentialCards.length)];
-      };
+      
+      let rareSlotCard: PokemonCard | undefined;
 
       // 1. Pull Commons
       for (let i = 0; i < packData.rarityDistribution.common; i++) {
-        if (packCards.length >= packData.cardsPerPack) break;
-        let card = pullCardByRarity('Common');
-        if (!card && availableCardsInPack.length > 0) {
+        if (packCards.length >= packData.cardsPerPack -1) break; // Leave space for rare slot
+        let card = availableCardsInPack.find(c => c.rarity === 'Common' && !packCards.some(pc => pc.id === c.id));
+        if (!card) { // Fallback if unique commons run out or not found
             const commonPool = availableCardsInPack.filter(c => c.rarity === 'Common');
             if(commonPool.length > 0) card = commonPool[Math.floor(Math.random() * commonPool.length)];
-            else card = availableCardsInPack[Math.floor(Math.random() * availableCardsInPack.length)];
+            else { // Broader fallback
+                const nonRarePool = availableCardsInPack.filter(c => c.rarity !== 'Rare' && c.rarity !== 'Holo Rare');
+                if (nonRarePool.length > 0) card = nonRarePool[Math.floor(Math.random() * nonRarePool.length)];
+                else if (availableCardsInPack.length > 0) card = availableCardsInPack[Math.floor(Math.random() * availableCardsInPack.length)];
+            }
         }
         if (card) packCards.push(card);
       }
 
       // 2. Pull Uncommons
       for (let i = 0; i < packData.rarityDistribution.uncommon; i++) {
-        if (packCards.length >= packData.cardsPerPack) break;
-        let card = pullCardByRarity('Uncommon');
-        if (!card && availableCardsInPack.length > 0) {
+        if (packCards.length >= packData.cardsPerPack -1) break; // Leave space for rare slot
+        let card = availableCardsInPack.find(c => c.rarity === 'Uncommon' && !packCards.some(pc => pc.id === c.id));
+        if (!card) { // Fallback
             const uncommonPool = availableCardsInPack.filter(c => c.rarity === 'Uncommon');
-            if(uncommonPool.length > 0) card = uncommonPool[Math.floor(Math.random() * uncommonPool.length)];
-            else card = availableCardsInPack[Math.floor(Math.random() * availableCardsInPack.length)];
+             if(uncommonPool.length > 0) card = uncommonPool[Math.floor(Math.random() * uncommonPool.length)];
+             else { // Broader fallback
+                const nonRarePool = availableCardsInPack.filter(c => c.rarity !== 'Rare' && c.rarity !== 'Holo Rare' && !packCards.some(pc => pc.id === c.id));
+                if (nonRarePool.length > 0) card = nonRarePool[Math.floor(Math.random() * nonRarePool.length)];
+                else if (availableCardsInPack.length > 0) card = availableCardsInPack[Math.floor(Math.random() * availableCardsInPack.length)];
+            }
         }
         if (card) packCards.push(card);
       }
-
-      // 3. Pull Rare Slot card (Holo Rare or Rare for Base Set) - This will be added last.
-      let rareSlotCard: PokemonCard | undefined;
-      if (packData.rarityDistribution.rareSlot > 0) { // Check if packData specifies a rare slot
-          const isHoloAttempt = Math.random() < 0.30; // 30% chance for a Holo Rare in Base Set
+      
+      // 3. Determine Rare Slot card (Holo Rare or Rare for Base Set)
+      if (packData.rarityDistribution.rareSlot > 0) {
+          const isHoloAttempt = Math.random() < 0.30; 
 
           if (isHoloAttempt) {
             const potentialHoloRares = availableCardsInPack.filter(c => c.rarity === 'Holo Rare');
@@ -206,25 +209,31 @@ export default function PackOpeningPage() {
               rareSlotCard = potentialRares[Math.floor(Math.random() * potentialRares.length)];
             }
           }
-
-          if (!rareSlotCard) {
+          
+          if (!rareSlotCard) { // Fallback if specific rare/holo not found
             const potentialAnyRareSlot = availableCardsInPack.filter(c => c.rarity === 'Holo Rare' || c.rarity === 'Rare');
             if (potentialAnyRareSlot.length > 0) {
               rareSlotCard = potentialAnyRareSlot[Math.floor(Math.random() * potentialAnyRareSlot.length)];
-            } else if (availableCardsInPack.length > 0) { // Fallback to any card if no rares/holos
+            } else if (availableCardsInPack.length > 0) { 
               rareSlotCard = availableCardsInPack[Math.floor(Math.random() * availableCardsInPack.length)];
             }
           }
       }
 
       // 4. Fill pack if still not full (e.g. distribution doesn't sum to cardsPerPack)
+      // This fills up to cardsPerPack -1, to leave space for the rareSlotCard if it exists
       let fillAttempts = 0;
       while(packCards.length < (packData.cardsPerPack - (rareSlotCard ? 1:0) ) && availableCardsInPack.length > 0 && fillAttempts < 20) {
-        let card = pullCardByRarity('Common') || pullCardByRarity('Uncommon');
-        if (!card) {
-            card = availableCardsInPack[Math.floor(Math.random() * availableCardsInPack.length)];
+        let cardToFill = availableCardsInPack.find(c => c.rarity === 'Common' && !packCards.some(pc => pc.id === c.id));
+        if (!cardToFill) cardToFill = availableCardsInPack.find(c => c.rarity === 'Uncommon' && !packCards.some(pc => pc.id === c.id));
+        if (!cardToFill) { // Broader fallback if unique commons/uncommons are exhausted
+            cardToFill = availableCardsInPack.filter(c => c.rarity !== 'Rare' && c.rarity !== 'Holo Rare' && !packCards.some(pc => pc.id === c.id))[0];
+            if (!cardToFill) cardToFill = availableCardsInPack.filter(c => !packCards.some(pc => pc.id === c.id))[0];
         }
-        if (card) packCards.push(card);
+        if (!cardToFill && availableCardsInPack.length > 0) { // Absolute fallback to any random non-duplicate card
+            cardToFill = availableCardsInPack.filter(c => !packCards.some(pc => pc.id === c.id))[Math.floor(Math.random() * availableCardsInPack.filter(c => !packCards.some(pc => pc.id === c.id)).length)];
+        }
+        if(cardToFill) packCards.push(cardToFill); else break; // Break if no card can be found
         fillAttempts++;
       }
 
@@ -236,10 +245,13 @@ export default function PackOpeningPage() {
       // Final fill to ensure pack size if anything is missing after specific pulls
       fillAttempts = 0;
       while(packCards.length < packData.cardsPerPack && availableCardsInPack.length > 0 && fillAttempts < 10) {
-        packCards.push(availableCardsInPack[Math.floor(Math.random() * availableCardsInPack.length)]);
+        let finalFillCard = availableCardsInPack.filter(c => !packCards.some(pc => pc.id === c.id))[0];
+        if (!finalFillCard && availableCardsInPack.length > 0) { // Fallback to any card if no non-duplicates left
+            finalFillCard = availableCardsInPack[Math.floor(Math.random() * availableCardsInPack.length)];
+        }
+        if (finalFillCard) packCards.push(finalFillCard); else break;
         fillAttempts++;
       }
-
       return packCards;
     }
   }, [packData]);
@@ -390,7 +402,7 @@ export default function PackOpeningPage() {
     }
 
     const swipeDirection = Math.random() < 0.5 ? 'left' : 'right';
-    setCurrentSwipingCard({ id: cardToSwipe.id + '-' + currentStackIndex, direction: swipeDirection });
+    setCurrentSwipingCard({ id: cardToSwipe.id + '-stack-' + currentStackIndex, direction: swipeDirection });
 
 
     setTimeout(() => {
@@ -840,3 +852,5 @@ export default function PackOpeningPage() {
     </div>
   );
 }
+
+    
