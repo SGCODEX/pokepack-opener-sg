@@ -372,7 +372,7 @@ export default function PackOpeningPage() {
 
   const handleRevealNextCard = () => {
     if (isSkippingAnimations) return;
-    if (stage !== 'stack-reveal' || currentStackIndex >= openedCards.length || currentSwipingCard) {
+     if (stage !== 'stack-reveal' || currentStackIndex >= openedCards.length || currentSwipingCard) {
       if (stage === 'stack-reveal' && currentStackIndex >= openedCards.length && openedCards.length === 0 && !isProcessingBulk && !currentSwipingCard) {
           setIsProcessingBulk(false);
           setStage('all-revealed');
@@ -380,10 +380,10 @@ export default function PackOpeningPage() {
       }
       return;
     }
-
+    
     const cardToSwipe = openedCards[currentStackIndex];
     const swipeDirection = Math.random() < 0.5 ? 'left' : 'right';
-    setCurrentSwipingCard({ id: cardToSwipe.id + '-stack-' + currentStackIndex, direction: swipeDirection });
+    setCurrentSwipingCard({ id: `${cardToSwipe.id}-stack-${currentStackIndex}`, direction: swipeDirection });
 
 
     setTimeout(() => {
@@ -557,7 +557,7 @@ export default function PackOpeningPage() {
         stage === 'all-revealed' ? 'bg-white text-black' :
         (hasHolo && (stage === 'opening' || stage === 'stack-reveal') && stage !== 'transitioning') ? 'holo-blue-wave-background-active animate-holo-blue-wave-shimmer text-primary-foreground dark:text-foreground' :
         (hasRareNonHolo && (stage === 'opening' || stage === 'stack-reveal') && stage !== 'transitioning') ? 'rare-gold-holo-background-active animate-rare-gold-shimmer text-primary-foreground dark:text-foreground' :
-        'bg-background text-foreground' // Default for initial, transitioning, or plain opening/stack-reveal
+        'bg-background text-foreground' 
       )}>
       <Button
         variant="outline"
@@ -565,7 +565,9 @@ export default function PackOpeningPage() {
         className={cn(
             "absolute top-24 left-4 md:left-8 z-10",
             "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]",
-            stage === 'all-revealed' && "text-black border-black"
+            stage === 'all-revealed' 
+                ? "text-black border-black" 
+                : "dark:border-[hsl(var(--border))]"
         )}
       >
         <ArrowLeft className="mr-2 h-4 w-4" /> {backButtonText}
@@ -578,7 +580,9 @@ export default function PackOpeningPage() {
           className={cn(
             "absolute top-24 right-4 md:right-8 z-10",
             "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]",
-             stage === 'all-revealed' && "text-black border-black"
+             stage === 'all-revealed' 
+                ? "text-black border-black"
+                : "dark:border-[hsl(var(--border))]"
           )}
           disabled={!packData}
         >
@@ -760,7 +764,7 @@ export default function PackOpeningPage() {
             variant="outline"
             className={cn(
               "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]",
-              stage === 'all-revealed' && "text-black border-black" // Ensure outline button text/border is black on white bg
+              stage === 'all-revealed' && "text-black border-black" 
             )}
           >
             <Package className="mr-2 h-5 w-5" /> Open Another Pack
@@ -772,7 +776,7 @@ export default function PackOpeningPage() {
                 variant="outline"
                 className={cn(
                   "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]",
-                  stage === 'all-revealed' && "text-black border-black" // Ensure outline button text/border is black on white bg
+                  stage === 'all-revealed' && "text-black border-black" 
                 )}
               >
                 <PackagePlus className="mr-2 h-5 w-5" /> Open 10 More Packs
