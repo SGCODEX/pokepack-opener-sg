@@ -32,7 +32,6 @@ export function ClientProviders({ children }: { children: ReactNode }) {
 
 // Internal component to manage layout and loading state
 function AppContent({ children }: { children: ReactNode }) {
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
   const loadingCtx = useContext(LoadingContext);
 
   if (!loadingCtx) {
@@ -43,10 +42,6 @@ function AppContent({ children }: { children: ReactNode }) {
 
   const pathname = usePathname();
   const prevPathnameRef = useRef(pathname);
-
-  useEffect(() => {
-    setCurrentYear(new Date().getFullYear());
-  }, []);
 
   // Initial load effect
   useEffect(() => {
@@ -84,10 +79,10 @@ function AppContent({ children }: { children: ReactNode }) {
             target="_blank"
             rel="noopener noreferrer"
             className={cn(
-              "text-sm font-medium text-primary hover:text-white hover:underline transition-colors"
+              "text-sm font-medium text-white hover:underline transition-colors"
             )}
           >
-            &copy; {currentYear} PokePack Opener SG. Gotta open 'em all! Made by SGCODEX
+            © 2025 PokePack Opener SG. Made by SGCODEX
           </a>
         </Container>
       </footer>
