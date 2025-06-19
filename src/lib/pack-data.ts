@@ -13,11 +13,11 @@ export const allPacks: PokemonPack[] = [
     series: 'Base Set',
     image: 'https://img.tradera.net/large-fit/742/561209742_da1a2bc3-0d7e-489e-80e8-8ad8bda9d671.jpg',
     dataAiHint: 'Base Set booster pack charizard',
-    cardsPerPack: 10,
+    cardsPerPack: 10, // Base set had 11, but 1 was an energy. We simulate 10 non-basic energy pulls.
     rarityDistribution: {
       common: 6,
       uncommon: 3,
-      rareSlot: 1, 
+      rareSlot: 1, // This slot can be Rare or Holo Rare
     },
     possibleCards: baseSetPackCards,
   },
@@ -28,10 +28,10 @@ export const allPacks: PokemonPack[] = [
     image: 'https://pbs.twimg.com/media/Gmzw5Z9XgAAc9fc?format=jpg&name=large',
     dataAiHint: 'Destined Rivals pack Iron Thorns Armarouge',
     cardsPerPack: 10, 
-    rarityDistribution: { 
-      common: 3,      
+    rarityDistribution: { // Placeholder, actual logic is more complex in open/page.tsx
+      common: 3,      // Example: 4 common, 2 uncommon, 1 base rare, 3 "hit" slots from a pool
       uncommon: 2,    
-      rareSlot: 1, 
+      rareSlot: 1, // This is a simplification; Destined Rivals has more complex hit slots.
     },
     possibleCards: destinedRivalsPackCards,
   },
@@ -43,9 +43,9 @@ export const allPacks: PokemonPack[] = [
     dataAiHint: 'Generations booster pack charizard pikachu',
     cardsPerPack: 10, // Generations packs often had 10 cards + a code card
     rarityDistribution: {
-      common: 6,       // Approximation
-      uncommon: 3,     // Approximation
-      rareSlot: 1,     // Guaranteed Rare, Holo Rare, or Ultra Rare (EX, M EX, Full Art)
+      common: 6,       // Approximation, can include RC commons/uncommons
+      uncommon: 3,     // Approximation, can include RC commons/uncommons
+      rareSlot: 1,     // Guaranteed Rare, Holo Rare, or Ultra Rare (EX, M EX, Full Art from main set or RC)
     },
     possibleCards: generationsPackCards,
   },
