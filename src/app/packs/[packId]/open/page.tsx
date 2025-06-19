@@ -154,6 +154,7 @@ export default function PackOpeningPage() {
       }
 
       // Ensure pack reaches cardsPerPack if above logic didn't (e.g. extremely limited card pool)
+      // This will rarely be hit with 4+2+1 base + 3 hits = 10 cards.
       let fillAttempts = 0;
       while (packCards.length < packData.cardsPerPack && fillAttempts < 20 && availableCardsInSeries.length > 0) {
         let fillCard: PokemonCard | undefined;
@@ -245,7 +246,7 @@ export default function PackOpeningPage() {
         setOpenedCards(allOpenedCardsInSession); 
         
         const finalOverallHighestRarity = allOpenedCardsInSession.reduce((highest, card) => {
-            const rarityOrder: CardRarity[] = ['Common', 'Uncommon', 'Rare', 'Double Rare', 'Ultra Rare', 'Illustration Rare', 'Special Illustration Rare', 'Hyper Rare'];
+            const rarityOrder: CardRarity[] = ['Common', 'Uncommon', 'Rare', 'Double Rare', 'Ultra Rare', 'Illustration Rare', 'Special Illustration Rare', 'Hyper Rare', 'Holo Rare'];
             return rarityOrder.indexOf(card.rarity) > rarityOrder.indexOf(highest) ? card.rarity : highest;
         }, 'Common' as CardRarity);
 
@@ -282,7 +283,7 @@ export default function PackOpeningPage() {
     }
     
     const currentPackHighestRarity = currentSinglePackCards.reduce((highest, card) => {
-        const rarityOrder: CardRarity[] = ['Common', 'Uncommon', 'Rare', 'Double Rare', 'Ultra Rare', 'Illustration Rare', 'Special Illustration Rare', 'Hyper Rare'];
+        const rarityOrder: CardRarity[] = ['Common', 'Uncommon', 'Rare', 'Double Rare', 'Ultra Rare', 'Illustration Rare', 'Special Illustration Rare', 'Hyper Rare', 'Holo Rare'];
         return rarityOrder.indexOf(card.rarity) > rarityOrder.indexOf(highest) ? card.rarity : highest;
     }, 'Common' as CardRarity);
     
@@ -435,13 +436,20 @@ export default function PackOpeningPage() {
                     addCardsToCollection(newCardsForSession.map(c => c.id));
                 }
             } else if (stage === 'initial' || (stage !== 'initial' && openedCards.length > 0 && skippedCardsAccumulator.length === 0)) {
-                const cardsFromInitialPack = pullCardsForOnePack(); 
-                skippedCardsAccumulator.push(...cardsFromInitialPack);
-                 if (pokedexLoaded) {
-                    addCardsToCollection(cardsFromInitialPack.map(c => c.id));
+                // This branch handles skipping when initiateOpeningProcess has run (so totalPacksInBulkLoop > 0)
+                // but processPackLoopIteration hasn't populated `openedCards` for the current pack yet,
+                // or if it's the very first pack of a single pack opening.
+                if (totalPacksInBulkLoop > 0) { // Ensure a pack was intended to be opened
+                    const cardsFromInitialPack = pullCardsForOnePack(); 
+                    skippedCardsAccumulator.push(...cardsFromInitialPack);
+                    if (pokedexLoaded) {
+                        addCardsToCollection(cardsFromInitialPack.map(c => c.id));
+                    }
                 }
             }
        } else if (stage === 'initial' && totalPacksInBulkLoop > 0) { 
+           // This explicitly handles the case where "Skip" is hit right after clicking "Open X Packs"
+           // and `initiateOpeningProcess` has set `totalPacksInBulkLoop` but `processPackLoopIteration` hasn't run.
            const cardsFromFirstPack = pullCardsForOnePack();
            skippedCardsAccumulator.push(...cardsFromFirstPack);
            if (pokedexLoaded) {
@@ -453,17 +461,15 @@ export default function PackOpeningPage() {
     let packsAlreadyAccountedFor = 0;
     if (stage !== 'initial' && currentPackInBulkLoop < totalPacksInBulkLoop) {
         packsAlreadyAccountedFor = currentPackInBulkLoop + 1; 
+    } else if (stage === 'initial' && totalPacksInBulkLoop > 0 && skippedCardsAccumulator.length >= packData.cardsPerPack) {
+        // If we were in initial stage but simulated the first pack above
+        packsAlreadyAccountedFor = 1;
     } else if (stage === 'initial') {
         packsAlreadyAccountedFor = 0;
     } else { 
         packsAlreadyAccountedFor = totalPacksInBulkLoop;
     }
     
-    if (skippedCardsAccumulator.length >= packData.cardsPerPack && packsAlreadyAccountedFor === 0 && totalPacksInBulkLoop > 0) {
-        packsAlreadyAccountedFor = 1;
-    }
-
-
     const additionalPacksToSimulate = Math.max(0, totalPacksInBulkLoop - packsAlreadyAccountedFor);
   
     for (let i = 0; i < additionalPacksToSimulate; i++) {
@@ -478,7 +484,7 @@ export default function PackOpeningPage() {
     setOpenedCards(skippedCardsAccumulator); 
   
     const finalHighestRarity = skippedCardsAccumulator.reduce((highest, card) => {
-        const rarityOrder: CardRarity[] = ['Common', 'Uncommon', 'Rare', 'Double Rare', 'Ultra Rare', 'Illustration Rare', 'Special Illustration Rare', 'Hyper Rare'];
+        const rarityOrder: CardRarity[] = ['Common', 'Uncommon', 'Rare', 'Double Rare', 'Ultra Rare', 'Illustration Rare', 'Special Illustration Rare', 'Hyper Rare', 'Holo Rare'];
         return rarityOrder.indexOf(card.rarity) > rarityOrder.indexOf(highest) ? card.rarity : highest;
     }, 'Common' as CardRarity);
 
@@ -564,11 +570,12 @@ export default function PackOpeningPage() {
         <ArrowLeft className="mr-2 h-4 w-4" /> {backButtonText}
       </Button>
       {!isSkippingAnimations && 
-        (stage === 'opening' || stage === 'stack-reveal' || stage === 'initial' || (isProcessingBulk && stage === 'transitioning')) && (
+        (stage === 'opening' || stage === 'stack-reveal' || (isProcessingBulk && stage === 'transitioning')) && (
         <Button
           variant="outline"
           onClick={handleSkipToResults}
           className="absolute top-24 right-4 md:right-8 z-10"
+          disabled={!packData} // Disable if packData isn't loaded
         >
           <FastForward className="mr-2 h-4 w-4" /> Skip to Results
         </Button>
@@ -814,5 +821,6 @@ export default function PackOpeningPage() {
     
 
     
+
 
 
