@@ -33,7 +33,7 @@ export function PackItem({ pack }: PackItemProps) {
             className={cn(
               "w-full",
               "bg-[hsl(217,91%,60%)] hover:bg-[hsl(217,91%,50%)]", // Blue background, darker blue on hover
-              "text-primary hover:text-white" // Yellow text, white on hover
+              "text-white" // White text always
             )}
           >
             <Link href={`/packs/${pack.id}/open`}>
