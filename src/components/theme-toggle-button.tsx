@@ -29,12 +29,12 @@ export function ThemeToggleButton() {
         variant="outline"
         size="icon"
         className={cn(
-            isNavbarDarkStyle && "text-primary border-primary hover:bg-[hsl(217,91%,50%)]", 
+            isNavbarDarkStyle && "text-primary border-white hover:bg-[hsl(217,91%,50%)] focus-visible:ring-white", 
             "opacity-0 pointer-events-none" 
         )}
         aria-hidden="true" 
       >
-        <Sun className={cn("h-[1.2rem] w-[1.2rem]", isNavbarDarkStyle && "hover:text-white")} /> 
+        <Sun className={cn("h-[1.2rem] w-[1.2rem]", isNavbarDarkStyle && "group-hover:text-white")} /> 
       </Button>
     );
   }
@@ -46,7 +46,7 @@ export function ThemeToggleButton() {
       onClick={toggleTheme}
       className={cn(
         "group", 
-        isNavbarDarkStyle && "text-primary border-primary hover:bg-[hsl(217,91%,50%)] focus-visible:ring-white"
+        isNavbarDarkStyle && "text-primary border-white hover:bg-[hsl(217,91%,50%)] focus-visible:ring-white"
       )}
       aria-label={`Switch to ${resolvedTheme === 'light' ? 'dark' : 'light'} mode`}
     >
@@ -59,4 +59,3 @@ export function ThemeToggleButton() {
     </Button>
   );
 }
-
