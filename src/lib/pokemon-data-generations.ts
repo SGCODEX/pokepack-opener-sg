@@ -175,12 +175,11 @@ const generationsCardDetails: Array<{ pokedexNum: string, name: string, typeShor
   { pokedexNum: "RC32/RC32", name: "Sylveon-EX", typeShorthand: "Fairy", rarityShorthand: "Ultra Rare", pkNameForUrl: "Sylveon-EX", pkCardNumForUrl: "RC32" },
 ];
 
-// Specific image URL overrides. These will use the exact URL provided.
+// Specific image URL overrides. These will use the exact URL provided (non-thumbnail versions).
 // The key is the pokedexNum (e.g., "28/83").
-// For these exceptions, we will remove .thumb from the provided URLs.
 const imageExceptionMap: Record<string, string> = {
   "28/83": "https://den-cards.pokellector.com/187/Jolteon-EX.GEN.28.12166.png",
-  "35/83": "https://den-cards.pokellector.com/187/Gengar.GEN.35.png", // Gengar is 35/83. The user-provided exception for #35 was for GEN.36 which is Jynx. Corrected Gengar link.
+  "35/83": "https://den-cards.pokellector.com/187/Gengar.GEN.36.png", // User provided Gengar with card number 36 in URL
   "41/83": "https://den-cards.pokellector.com/187/Machoke.GEN.41.12264.png",
   "53/83": "https://den-cards.pokellector.com/187/Meowth.GEN.53.12267.png",
   "67/83": "https://den-cards.pokellector.com/187/Pokeball.GEN.67.png",
@@ -199,9 +198,9 @@ export const generationsCards: PokemonCard[] = generationsCardDetails.map(detail
   const exceptionImageUrl = imageExceptionMap[detail.pokedexNum];
 
   if (exceptionImageUrl) {
-    imageUrl = exceptionImageUrl; // Use the exact exception URL (already non-thumb)
+    imageUrl = exceptionImageUrl; // Use the exact exception URL (non-thumb)
   } else {
-    // General pattern: always remove .thumb
+    // General pattern: non-thumbnail
     imageUrl = `https://den-cards.pokellector.com/187/${detail.pkNameForUrl}.GEN.${detail.pkCardNumForUrl}.png`;
   }
   
@@ -223,4 +222,3 @@ export const generationsCards: PokemonCard[] = generationsCardDetails.map(detail
     pokedexNumber: detail.pokedexNum,
   };
 });
-
