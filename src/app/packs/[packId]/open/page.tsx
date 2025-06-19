@@ -154,7 +154,7 @@ export default function PackOpeningPage() {
     } else { // Handles Base Set and other generic packs
       const availableCardsInPack = allCards.filter(card => packData.possibleCards.includes(card.id));
       if (availableCardsInPack.length === 0) return [];
-      
+
       let rareSlotCard: PokemonCard | undefined;
 
       // 1. Pull Commons
@@ -188,10 +188,10 @@ export default function PackOpeningPage() {
         }
         if (card) packCards.push(card);
       }
-      
+
       // 3. Determine Rare Slot card (Holo Rare or Rare for Base Set)
       if (packData.rarityDistribution.rareSlot > 0) {
-          const isHoloAttempt = Math.random() < 0.30; 
+          const isHoloAttempt = Math.random() < 0.30;
 
           if (isHoloAttempt) {
             const potentialHoloRares = availableCardsInPack.filter(c => c.rarity === 'Holo Rare');
@@ -206,12 +206,12 @@ export default function PackOpeningPage() {
               rareSlotCard = potentialRares[Math.floor(Math.random() * potentialRares.length)];
             }
           }
-          
+
           if (!rareSlotCard) { // Fallback if specific rare/holo not found
             const potentialAnyRareSlot = availableCardsInPack.filter(c => c.rarity === 'Holo Rare' || c.rarity === 'Rare');
             if (potentialAnyRareSlot.length > 0) {
               rareSlotCard = potentialAnyRareSlot[Math.floor(Math.random() * potentialAnyRareSlot.length)];
-            } else if (availableCardsInPack.length > 0) { 
+            } else if (availableCardsInPack.length > 0) {
               rareSlotCard = availableCardsInPack[Math.floor(Math.random() * availableCardsInPack.length)];
             }
           }
@@ -238,7 +238,7 @@ export default function PackOpeningPage() {
       if (rareSlotCard) {
         packCards.push(rareSlotCard);
       }
-      
+
       // Final fill to ensure pack size if anything is missing after specific pulls
       fillAttempts = 0;
       while(packCards.length < packData.cardsPerPack && availableCardsInPack.length > 0 && fillAttempts < 10) {
@@ -380,7 +380,7 @@ export default function PackOpeningPage() {
       }
       return;
     }
-    
+
     const cardToSwipe = openedCards[currentStackIndex];
     const swipeDirection = Math.random() < 0.5 ? 'left' : 'right';
     setCurrentSwipingCard({ id: `${cardToSwipe.id}-stack-${currentStackIndex}`, direction: swipeDirection });
@@ -557,7 +557,7 @@ export default function PackOpeningPage() {
         stage === 'all-revealed' ? 'bg-white text-black' :
         (hasHolo && (stage === 'opening' || stage === 'stack-reveal') && stage !== 'transitioning') ? 'holo-blue-wave-background-active animate-holo-blue-wave-shimmer text-primary-foreground dark:text-foreground' :
         (hasRareNonHolo && (stage === 'opening' || stage === 'stack-reveal') && stage !== 'transitioning') ? 'rare-gold-holo-background-active animate-rare-gold-shimmer text-primary-foreground dark:text-foreground' :
-        'bg-background text-foreground' 
+        'bg-background text-foreground'
       )}>
       <Button
         variant="outline"
@@ -565,8 +565,8 @@ export default function PackOpeningPage() {
         className={cn(
             "absolute top-24 left-4 md:left-8 z-10",
             "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]",
-            stage === 'all-revealed' 
-                ? "text-black border-black" 
+            stage === 'all-revealed'
+                ? "text-black border-black"
                 : "dark:border-[hsl(var(--border))]"
         )}
       >
@@ -580,7 +580,7 @@ export default function PackOpeningPage() {
           className={cn(
             "absolute top-24 right-4 md:right-8 z-10",
             "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]",
-             stage === 'all-revealed' 
+             stage === 'all-revealed'
                 ? "text-black border-black"
                 : "dark:border-[hsl(var(--border))]"
           )}
@@ -593,7 +593,7 @@ export default function PackOpeningPage() {
         <h1 className={cn(
           "text-4xl font-headline font-bold",
            stage === 'all-revealed' ? 'text-black' : 'text-primary-foreground dark:text-foreground'
-           )}>{packData.name}</h1>
+           )}>Pack Opening: {packData.name}</h1>
       </header>
 
       {stage === 'initial' && (
@@ -696,7 +696,7 @@ export default function PackOpeningPage() {
                   <div
                     key={uniqueCardKey}
                     className={cn(
-                      "absolute top-0 left-0 w-full h-full", 
+                      "absolute top-0 left-0 w-full h-full",
                       "transition-all duration-300 ease-in-out",
                       isBeingSwiped && currentSwipingCard?.direction === 'left' ? 'animate-swipe-out-left' : '',
                       isBeingSwiped && currentSwipingCard?.direction === 'right' ? 'animate-swipe-out-right' : '',
@@ -711,7 +711,7 @@ export default function PackOpeningPage() {
                       card={card}
                       onClick={undefined}
                       showDetails={false}
-                      className="w-full h-full" 
+                      className="w-full h-full"
                     />
                   </div>
                 );
@@ -747,7 +747,7 @@ export default function PackOpeningPage() {
                     onClick={() => handleCardClickForModal(card)}
                     showDetails={true}
                     collectedCount={getCollectedCount(card.id)}
-                    className="w-40" 
+                    className="w-40"
                   />
                 ))}
               </div>
@@ -764,7 +764,7 @@ export default function PackOpeningPage() {
             variant="outline"
             className={cn(
               "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]",
-              stage === 'all-revealed' && "text-black border-black" 
+              stage === 'all-revealed' && "text-black border-black"
             )}
           >
             <Package className="mr-2 h-5 w-5" /> Open Another Pack
@@ -776,7 +776,7 @@ export default function PackOpeningPage() {
                 variant="outline"
                 className={cn(
                   "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]",
-                  stage === 'all-revealed' && "text-black border-black" 
+                  stage === 'all-revealed' && "text-black border-black"
                 )}
               >
                 <PackagePlus className="mr-2 h-5 w-5" /> Open 10 More Packs
@@ -809,4 +809,3 @@ export default function PackOpeningPage() {
     </div>
   );
 }
-
