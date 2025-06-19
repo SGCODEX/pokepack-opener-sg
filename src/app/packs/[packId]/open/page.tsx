@@ -16,8 +16,6 @@ import { cn } from '@/lib/utils';
 
 type PackOpeningStage = 'initial' | 'opening' | 'stack-reveal' | 'all-revealed' | 'transitioning';
 
-const NUM_BURST_PARTICLES = 12;
-
 export default function PackOpeningPage() {
   const router = useRouter();
   const params = useParams();
@@ -39,7 +37,6 @@ export default function PackOpeningPage() {
 
   const [hasHolo, setHasHolo] = useState(false);
   const [hasRareNonHolo, setHasRareNonHolo] = useState(false);
-  const [currentBurstRarity, setCurrentBurstRarity] = useState<CardRarity | null>(null);
 
   const [isProcessingBulk, setIsProcessingBulk] = useState(false);
   const [currentPackInBulkLoop, setCurrentPackInBulkLoop] = useState(0);
@@ -355,7 +352,6 @@ export default function PackOpeningPage() {
     setCurrentSwipingCard(null);
     setHasHolo(false);
     setHasRareNonHolo(false);
-    setCurrentBurstRarity(null);
     setDisplayPackCountText("");
     setIsSkippingAnimations(false);
 
@@ -376,8 +372,8 @@ export default function PackOpeningPage() {
 
   const handleRevealNextCard = () => {
     if (isSkippingAnimations) return;
-    if (stage !== 'stack-reveal' || currentStackIndex >= openedCards.length || currentSwipingCard || currentBurstRarity) {
-      if (stage === 'stack-reveal' && currentStackIndex >= openedCards.length && openedCards.length === 0 && !isProcessingBulk && !currentSwipingCard && !currentBurstRarity) {
+    if (stage !== 'stack-reveal' || currentStackIndex >= openedCards.length || currentSwipingCard) {
+      if (stage === 'stack-reveal' && currentStackIndex >= openedCards.length && openedCards.length === 0 && !isProcessingBulk && !currentSwipingCard) {
           setIsProcessingBulk(false);
           setStage('all-revealed');
           return;
@@ -386,21 +382,6 @@ export default function PackOpeningPage() {
     }
 
     const cardToSwipe = openedCards[currentStackIndex];
-
-    let highTierRaritiesForBurst: CardRarity[];
-    if (packData?.id === 'destined-rivals-booster-001') {
-      highTierRaritiesForBurst = ['Hyper Rare', 'Special Illustration Rare', 'Illustration Rare', 'Ultra Rare', 'Double Rare'];
-    } else {
-      highTierRaritiesForBurst = ['Holo Rare'];
-    }
-
-    if (highTierRaritiesForBurst.includes(cardToSwipe.rarity) || (cardToSwipe.rarity === 'Rare' && (packData?.id === 'base-set-booster-001'))) {
-      setCurrentBurstRarity(cardToSwipe.rarity);
-      setTimeout(() => {
-        setCurrentBurstRarity(null);
-      }, 1000);
-    }
-
     const swipeDirection = Math.random() < 0.5 ? 'left' : 'right';
     setCurrentSwipingCard({ id: cardToSwipe.id + '-stack-' + currentStackIndex, direction: swipeDirection });
 
@@ -542,7 +523,6 @@ export default function PackOpeningPage() {
     setCurrentSwipingCard(null);
     setHasHolo(false);
     setHasRareNonHolo(false);
-    setCurrentBurstRarity(null);
 
     setIsProcessingBulk(false);
     setCurrentPackInBulkLoop(0);
@@ -584,7 +564,8 @@ export default function PackOpeningPage() {
         onClick={() => router.push('/')}
         className={cn(
             "absolute top-24 left-4 md:left-8 z-10",
-            "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]"
+            "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]",
+            stage === 'all-revealed' && "text-black border-black"
         )}
       >
         <ArrowLeft className="mr-2 h-4 w-4" /> {backButtonText}
@@ -596,7 +577,8 @@ export default function PackOpeningPage() {
           onClick={handleSkipToResults}
           className={cn(
             "absolute top-24 right-4 md:right-8 z-10",
-            "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]"
+            "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]",
+             stage === 'all-revealed' && "text-black border-black"
           )}
           disabled={!packData}
         >
@@ -678,52 +660,13 @@ export default function PackOpeningPage() {
               {`Pack ${currentPackInBulkLoop + 1} of ${totalPacksInBulkLoop}`}
             </p>
           )}
-          {currentBurstRarity && (
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
-              <div className="relative w-1 h-1">
-                {Array.from({ length: NUM_BURST_PARTICLES }).map((_, i) => {
-                  const angle = (i / NUM_BURST_PARTICLES) * 360;
-
-                  let particleColor = 'bg-yellow-400';
-                  if (packData?.id === 'destined-rivals-booster-001') {
-                    const isVeryHighTierDRI = ['Hyper Rare', 'Special Illustration Rare'].includes(currentBurstRarity!);
-                    const isHighTierDRI = ['Illustration Rare', 'Ultra Rare'].includes(currentBurstRarity!);
-                     if (isVeryHighTierDRI) {
-                       particleColor = ['bg-purple-400', 'bg-pink-400', 'bg-cyan-300', 'bg-yellow-200'][i % 4];
-                    } else if (isHighTierDRI) {
-                       particleColor = ['bg-teal-300', 'bg-sky-300', 'bg-indigo-300'][i % 3];
-                    } else if (currentBurstRarity === 'Double Rare') {
-                       particleColor = ['bg-blue-400', 'bg-slate-300'][i % 2];
-                    }
-                  } else if (currentBurstRarity === 'Holo Rare') {
-                     particleColor = ['bg-pink-300', 'bg-indigo-300', 'bg-sky-200', 'bg-fuchsia-300'][i % 4];
-                  }
-
-
-                  return (
-                    <div
-                      key={`burst-${i}`}
-                      className={cn(
-                        "absolute w-4 h-4 rounded-full animate-star-fly-out",
-                        particleColor
-                      )}
-                      style={{
-                        transform: `rotate(${angle}deg) translateX(0px)`,
-                        animationDelay: `${Math.random() * 0.1}s`,
-                      }}
-                    />
-                  );
-                })}
-              </div>
-            </div>
-          )}
           {openedCards.length > 0 ? (
             <div
               className="relative w-[240px] h-[336px] mx-auto cursor-pointer select-none z-10 animate-stack-arrive"
-              onClick={!currentSwipingCard && !currentBurstRarity ? handleRevealNextCard : undefined}
+              onClick={!currentSwipingCard ? handleRevealNextCard : undefined}
               role="button"
               tabIndex={0}
-              onKeyPress={(e) => { if(e.key === 'Enter' || e.key === ' ') { if(!currentSwipingCard && !currentBurstRarity) handleRevealNextCard(); }}}
+              onKeyPress={(e) => { if(e.key === 'Enter' || e.key === ' ') { if(!currentSwipingCard) handleRevealNextCard(); }}}
               aria-label="Reveal next card"
             >
               {openedCards.map((card, index) => {
@@ -773,10 +716,10 @@ export default function PackOpeningPage() {
           ) : (
             <div
               className="relative w-[240px] h-[336px] mx-auto cursor-pointer select-none z-10 flex items-center justify-center text-muted-foreground animate-stack-arrive"
-              onClick={!currentSwipingCard && !currentBurstRarity ? handleRevealNextCard : undefined}
+              onClick={!currentSwipingCard ? handleRevealNextCard : undefined}
               role="button"
               tabIndex={0}
-              onKeyPress={(e) => { if(e.key === 'Enter' || e.key === ' ') { if(!currentSwipingCard && !currentBurstRarity) handleRevealNextCard(); }}}
+              onKeyPress={(e) => { if(e.key === 'Enter' || e.key === ' ') { if(!currentSwipingCard) handleRevealNextCard(); }}}
               aria-label="Advance from empty pack"
             >
               (Empty pack)
@@ -862,3 +805,4 @@ export default function PackOpeningPage() {
     </div>
   );
 }
+
