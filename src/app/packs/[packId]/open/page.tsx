@@ -566,16 +566,26 @@ export default function PackOpeningPage() {
         (hasRareNonHolo && (stage === 'opening' || stage === 'stack-reveal' || stage === 'all-revealed') && stage !== 'transitioning') && "rare-gold-holo-background-active animate-rare-gold-shimmer",
         (stage === 'transitioning') && "bg-background" 
       )}>
-      <Button variant="outline" onClick={() => router.push('/')} className="absolute top-24 left-4 md:left-8 z-10">
+      <Button 
+        variant="outline" 
+        onClick={() => router.push('/')} 
+        className={cn(
+            "absolute top-24 left-4 md:left-8 z-10",
+            "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]"
+        )}
+      >
         <ArrowLeft className="mr-2 h-4 w-4" /> {backButtonText}
       </Button>
-      {!isSkippingAnimations && 
+      {!isSkippingAnimations && stage !== 'initial' && 
         (stage === 'opening' || stage === 'stack-reveal' || (isProcessingBulk && stage === 'transitioning')) && (
         <Button
           variant="outline"
           onClick={handleSkipToResults}
-          className="absolute top-24 right-4 md:right-8 z-10"
-          disabled={!packData} // Disable if packData isn't loaded
+          className={cn(
+            "absolute top-24 right-4 md:right-8 z-10",
+            "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]"
+          )}
+          disabled={!packData} 
         >
           <FastForward className="mr-2 h-4 w-4" /> Skip to Results
         </Button>
@@ -821,6 +831,7 @@ export default function PackOpeningPage() {
     
 
     
+
 
 
 
