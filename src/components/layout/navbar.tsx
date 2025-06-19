@@ -6,7 +6,13 @@ import { Sparkles } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Container } from './container';
-import { ThemeToggleButton } from '@/components/theme-toggle-button';
+import dynamic from 'next/dynamic';
+
+// Dynamically import ThemeToggleButton to make it client-side only
+const ThemeToggleButton = dynamic(() =>
+  import('@/components/theme-toggle-button').then(mod => mod.ThemeToggleButton),
+  { ssr: false }
+);
 
 const navLinks = [
   { href: '/', label: 'Open Packs' },
