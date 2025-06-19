@@ -14,6 +14,7 @@ import { AlertTriangle, Search, BookCopy, Layers } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { cn } from '@/lib/utils';
 
 const cardTypes = ["All", "Fire", "Water", "Grass", "Lightning", "Psychic", "Fighting", "Colorless", "Darkness", "Metal", "Dragon", "Fairy", "Trainer", "Energy"];
 
@@ -52,12 +53,10 @@ export default function PokedexPage() {
     if (activeSeriesTab === 'Destined Rivals') {
       return destinedRivalsRarities;
     }
-    // Default to Base Set rarities or a more generic list if more series are added
     return baseSetRarities;
   }, [activeSeriesTab]);
 
   useEffect(() => {
-    // If the current filterRarity is not valid for the new activeSeriesTab, reset it to "All"
     if (!raritiesForFilter.includes(filterRarity)) {
       setFilterRarity("All");
     }
@@ -140,7 +139,7 @@ export default function PokedexPage() {
             ))}
           </TabsList>
 
-          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-4">
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-6">
             <div className="bg-card text-card-foreground px-4 py-2 rounded-lg shadow-md border border-border flex items-center gap-2">
               <BookCopy className="h-5 w-5 text-primary" />
               <div>
@@ -155,6 +154,14 @@ export default function PokedexPage() {
                   <span className="text-sm text-muted-foreground ml-1">Total Cards</span>
               </div>
             </div>
+             <Button 
+              onClick={handleResetPokedex}
+              className={cn(
+                "bg-[hsl(217,91%,60%)] hover:bg-[hsl(217,91%,50%)] text-white"
+              )}
+            >
+              Reset All Pokedex Data
+            </Button>
           </div>
 
           <div className="p-4 bg-card rounded-lg shadow space-y-4 md:flex md:items-end md:justify-between md:space-y-0 md:space-x-4 mb-6">
@@ -180,7 +187,7 @@ export default function PokedexPage() {
                 </Select>
 
                 <Select value={filterRarity} onValueChange={setFilterRarity}>
-                  <SelectTrigger className="w-full md:w-[180px]"> {/* Increased width for longer rarity names */}
+                  <SelectTrigger className="w-full md:w-[180px]">
                     <SelectValue placeholder="Filter by Rarity" />
                   </SelectTrigger>
                   <SelectContent>
@@ -202,7 +209,7 @@ export default function PokedexPage() {
           {allSeriesNames.map(seriesName => (
             <TabsContent key={seriesName} value={seriesName}>
               {filteredAndSortedCards.length > 0 ? (
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-x-4 gap-y-8 justify-items-center">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-x-4 gap-y-8 justify-items-center">
                   {filteredAndSortedCards.map((card) => {
                     const count = getCollectedCount(card.id);
                     return (
@@ -242,14 +249,6 @@ export default function PokedexPage() {
         />
       )}
       
-      <div className="text-center mt-8">
-        <Button 
-          variant="destructive" 
-          onClick={handleResetPokedex}
-        >
-          Reset All Pokedex Data
-        </Button>
-      </div>
     </div>
   );
 }
