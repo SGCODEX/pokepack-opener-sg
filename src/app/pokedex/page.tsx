@@ -18,12 +18,13 @@ import { cn } from '@/lib/utils';
 
 const cardTypes = ["All", "Fire", "Water", "Grass", "Lightning", "Psychic", "Fighting", "Colorless", "Darkness", "Metal", "Dragon", "Fairy", "Trainer", "Energy"];
 
-const baseSetRarities: string[] = ["All", "Common", "Uncommon", "Rare", "Holo Rare"];
+const baseSetRarities: string[] = ["All", "Common", "Uncommon", "Rare", "Holo Rare", "Ultra Rare"]; // Added Ultra Rare for EXs if any were mapped
 const destinedRivalsRarities: string[] = [
   "All", "Common", "Uncommon", "Rare", 
   "Double Rare", "Ultra Rare", "Illustration Rare", 
   "Special Illustration Rare", "Hyper Rare"
 ];
+const generationsRarities: string[] = ["All", "Common", "Uncommon", "Rare", "Holo Rare", "Ultra Rare"]; // For Generations set
 
 export default function PokedexPage() {
   const { 
@@ -45,6 +46,7 @@ export default function PokedexPage() {
     if (allSeriesNames.length > 0 && !allSeriesNames.includes(activeSeriesTab)) {
       setActiveSeriesTab(allSeriesNames[0]);
     } else if (allSeriesNames.length === 0) {
+      // Fallback if no series are loaded, though unlikely with static data
       setActiveSeriesTab('Base Set'); 
     }
   }, [allSeriesNames, activeSeriesTab]);
@@ -53,10 +55,14 @@ export default function PokedexPage() {
     if (activeSeriesTab === 'Destined Rivals') {
       return destinedRivalsRarities;
     }
-    return baseSetRarities;
+    if (activeSeriesTab === 'Generations') {
+      return generationsRarities;
+    }
+    return baseSetRarities; // Default or for "Base Set"
   }, [activeSeriesTab]);
 
   useEffect(() => {
+    // Reset rarity filter if it's not valid for the current series
     if (!raritiesForFilter.includes(filterRarity)) {
       setFilterRarity("All");
     }
@@ -133,7 +139,10 @@ export default function PokedexPage() {
 
       {allSeriesNames.length > 0 ? (
         <Tabs value={activeSeriesTab} onValueChange={setActiveSeriesTab} className="w-full">
-          <TabsList className={`grid w-full grid-cols-${allSeriesNames.length} mb-4`}>
+          <TabsList className={cn(
+            "grid w-full mb-4",
+            `grid-cols-${allSeriesNames.length > 0 ? allSeriesNames.length : 1}`
+            )}>
             {allSeriesNames.map(seriesName => (
               <TabsTrigger key={seriesName} value={seriesName}>{seriesName}</TabsTrigger>
             ))}

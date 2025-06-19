@@ -4,6 +4,7 @@ import { allCards } from './pokemon-data';
 
 const baseSetPackCards = allCards.filter(card => card.series === 'Base Set').map(card => card.id);
 const destinedRivalsPackCards = allCards.filter(card => card.series === 'Destined Rivals').map(card => card.id);
+const generationsPackCards = allCards.filter(card => card.series === 'Generations').map(card => card.id);
 
 export const allPacks: PokemonPack[] = [
   {
@@ -30,13 +31,26 @@ export const allPacks: PokemonPack[] = [
     rarityDistribution: { 
       common: 3,      
       uncommon: 2,    
-      rareSlot: 1, // Represents the guaranteed basic 'Rare'. 4 additional slots are dynamic "hits".
+      rareSlot: 1, 
     },
     possibleCards: destinedRivalsPackCards,
+  },
+  {
+    id: 'generations-booster-001',
+    name: 'Generations Booster Pack',
+    series: 'Generations',
+    image: 'https://product-images.tcgplayer.com/fit-in/437x437/109038.jpg',
+    dataAiHint: 'Generations booster pack charizard pikachu',
+    cardsPerPack: 10, // Generations packs often had 10 cards + a code card
+    rarityDistribution: {
+      common: 6,       // Approximation
+      uncommon: 3,     // Approximation
+      rareSlot: 1,     // Guaranteed Rare, Holo Rare, or Ultra Rare (EX, M EX, Full Art)
+    },
+    possibleCards: generationsPackCards,
   },
 ];
 
 export const getPackById = (id: string): PokemonPack | undefined => {
   return allPacks.find(pack => pack.id === id);
 };
-
