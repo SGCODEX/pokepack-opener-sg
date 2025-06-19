@@ -18,6 +18,7 @@ export type CardRarity =
   | 'Common'
   | 'Uncommon'
   | 'Rare'
+  | 'Holo Rare' // Added for Base Set
   | 'Double Rare' // Typically Pokémon ex
   | 'Ultra Rare' // Typically Full Arts, V, GX, VMAX
   | 'Illustration Rare'

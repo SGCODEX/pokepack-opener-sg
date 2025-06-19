@@ -3,7 +3,7 @@
 
 import { useState, useMemo, useEffect } from 'react';
 import { allCards, allSeriesNames, getCardById } from '@/lib/pokemon-data';
-import type { PokemonCard } from '@/lib/types';
+import type { PokemonCard, CardRarity } from '@/lib/types';
 import { CardComponent } from '@/components/card-component';
 import { CardDetailModal } from '@/components/card-detail-modal';
 import { usePokedex } from '@/hooks/use-pokedex';
@@ -16,7 +16,13 @@ import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const cardTypes = ["All", "Fire", "Water", "Grass", "Lightning", "Psychic", "Fighting", "Colorless", "Darkness", "Metal", "Dragon", "Fairy", "Trainer", "Energy"];
-const rarities = ["All", "Common", "Uncommon", "Rare", "Holo Rare"];
+
+const baseSetRarities: string[] = ["All", "Common", "Uncommon", "Rare", "Holo Rare"];
+const destinedRivalsRarities: string[] = [
+  "All", "Common", "Uncommon", "Rare", 
+  "Double Rare", "Ultra Rare", "Illustration Rare", 
+  "Special Illustration Rare", "Hyper Rare"
+];
 
 export default function PokedexPage() {
   const { 
@@ -32,19 +38,30 @@ export default function PokedexPage() {
   const [filterType, setFilterType] = useState('All');
   const [filterRarity, setFilterRarity] = useState('All');
   const [showCollectedOnly, setShowCollectedOnly] = useState(false);
-  // Ensure a default active tab if allSeriesNames might be empty initially or after filtering
   const [activeSeriesTab, setActiveSeriesTab] = useState<string>(allSeriesNames.length > 0 ? allSeriesNames[0] : 'Base Set');
 
-  // Effect to set active tab if allSeriesNames loads/changes and current tab is not valid
   useEffect(() => {
     if (allSeriesNames.length > 0 && !allSeriesNames.includes(activeSeriesTab)) {
       setActiveSeriesTab(allSeriesNames[0]);
     } else if (allSeriesNames.length === 0) {
-      // Handle case where no series are available, maybe set to a default placeholder or clear
-      // For now, defaulting to 'Base Set' if list is empty or invalid tab.
       setActiveSeriesTab('Base Set'); 
     }
   }, [allSeriesNames, activeSeriesTab]);
+
+  const raritiesForFilter = useMemo(() => {
+    if (activeSeriesTab === 'Destined Rivals') {
+      return destinedRivalsRarities;
+    }
+    // Default to Base Set rarities or a more generic list if more series are added
+    return baseSetRarities;
+  }, [activeSeriesTab]);
+
+  useEffect(() => {
+    // If the current filterRarity is not valid for the new activeSeriesTab, reset it to "All"
+    if (!raritiesForFilter.includes(filterRarity)) {
+      setFilterRarity("All");
+    }
+  }, [raritiesForFilter, filterRarity]);
 
 
   const handleCardClick = (card: PokemonCard) => {
@@ -163,11 +180,11 @@ export default function PokedexPage() {
                 </Select>
 
                 <Select value={filterRarity} onValueChange={setFilterRarity}>
-                  <SelectTrigger className="w-full md:w-[150px]">
+                  <SelectTrigger className="w-full md:w-[180px]"> {/* Increased width for longer rarity names */}
                     <SelectValue placeholder="Filter by Rarity" />
                   </SelectTrigger>
                   <SelectContent>
-                    {rarities.map(rarity => <SelectItem key={rarity} value={rarity}>{rarity}</SelectItem>)}
+                    {raritiesForFilter.map(rarity => <SelectItem key={rarity} value={rarity}>{rarity}</SelectItem>)}
                   </SelectContent>
                 </Select>
             </div>
