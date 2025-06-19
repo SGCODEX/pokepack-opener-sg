@@ -577,7 +577,7 @@ export default function PackOpeningPage() {
         <ArrowLeft className="mr-2 h-4 w-4" /> {backButtonText}
       </Button>
       {!isSkippingAnimations &&
-        (stage === 'opening' || stage === 'stack-reveal' || (isProcessingBulk && stage === 'transitioning')) && (
+        (stage === 'opening' || stage === 'stack-reveal' || (isProcessingBulk && stage === 'transitioning')) && stage !== 'initial' && (
         <Button
           variant="outline"
           onClick={handleSkipToResults}
@@ -733,7 +733,7 @@ export default function PackOpeningPage() {
                   <div
                     key={uniqueCardKey}
                     className={cn(
-                      "absolute top-0 left-0 w-full h-full", // Changed to w-full h-full
+                      "absolute top-0 left-0 w-full h-full", 
                       "transition-all duration-300 ease-in-out",
                       isBeingSwiped && currentSwipingCard?.direction === 'left' ? 'animate-swipe-out-left' : '',
                       isBeingSwiped && currentSwipingCard?.direction === 'right' ? 'animate-swipe-out-right' : '',
@@ -748,7 +748,7 @@ export default function PackOpeningPage() {
                       card={card}
                       onClick={undefined}
                       showDetails={false}
-                      className="w-full h-full" // Ensure CardComponent fills its parent
+                      className="w-full h-full" 
                     />
                   </div>
                 );
@@ -776,7 +776,7 @@ export default function PackOpeningPage() {
               <h2 className="text-2xl font-headline font-semibold text-primary-foreground dark:text-foreground mb-4">
                 {totalPacksInBulkLoop > 1 ? `Your ${totalPacksInBulkLoop} Packs Yielded` : 'Your Cards!'}
               </h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-4 justify-items-center">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-items-center">
                 {allOpenedCardsInSession.map((card, index) => (
                   <CardComponent
                     key={`${card.id}-grid-${index}`}
@@ -784,7 +784,7 @@ export default function PackOpeningPage() {
                     onClick={() => handleCardClickForModal(card)}
                     showDetails={true}
                     collectedCount={getCollectedCount(card.id)}
-                    className="w-40" // Set specific width for grid cards
+                    className="w-40" 
                   />
                 ))}
               </div>
