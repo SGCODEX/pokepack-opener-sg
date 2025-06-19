@@ -14,7 +14,15 @@ export type PokemonType =
   | 'Trainer'
   | 'Energy';
 
-export type CardRarity = 'Common' | 'Uncommon' | 'Rare' | 'Holo Rare';
+export type CardRarity =
+  | 'Common'
+  | 'Uncommon'
+  | 'Rare'
+  | 'Double Rare' // Typically Pokémon ex
+  | 'Ultra Rare' // Typically Full Arts, V, GX, VMAX
+  | 'Illustration Rare'
+  | 'Special Illustration Rare'
+  | 'Hyper Rare'; // Typically Gold cards
 
 export interface PokemonCard {
   id: string;
@@ -37,7 +45,7 @@ export interface PokemonPack {
   rarityDistribution: {
     common: number;
     uncommon: number;
-    rareSlot: number; // Number of cards that can be rare or holo rare
+    rareSlot: number; // Number of cards that can be rare or any higher tier
   };
   possibleCards: string[]; // Array of card IDs that can be in this pack
 }
