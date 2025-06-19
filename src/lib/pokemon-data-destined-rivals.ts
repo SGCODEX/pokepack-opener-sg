@@ -5,7 +5,7 @@ import type { PokemonCard } from './types';
 // Removes content in parentheses, handles apostrophes, symbols, spaces, and colons.
 function formatNameForUrl(name: string): string {
   let cleanedName = name.replace(/\s*\(.*?\)\s*/g, ''); // Remove content in parentheses
-  
+
   return cleanedName
     .replace(/'s/g, 's') // Ethan's -> Ethans
     .replace(/'/g, '')   // Remove other apostrophes
@@ -23,21 +23,27 @@ function formatNameForUrl(name: string): string {
 function getUniqueId(cardNumberInSet: number): number {
   if (cardNumberInSet >= 1 && cardNumberInSet <= 33) {
     return 57267 + (cardNumberInSet - 1);
-  } else if (cardNumberInSet === 34) {
-    return 56855; // Ethan's Typhlosion
+  } else if (cardNumberInSet === 34) { // Ethan's Typhlosion
+    return 56855;
   } else if (cardNumberInSet >= 35 && cardNumberInSet <= 48) {
     return 57300 + (cardNumberInSet - 35);
-  } else if (cardNumberInSet === 49) {
-    return 56856; // Misty's Gyarados
-  } else if (cardNumberInSet >= 50 && cardNumberInSet <= 244) {
+  } else if (cardNumberInSet === 49) { // Misty's Gyarados
+    return 56856;
+  } else if (cardNumberInSet >= 50 && cardNumberInSet <= 86) {
     return 57314 + (cardNumberInSet - 50);
+  } else if (cardNumberInSet === 87) { // Team Rocket's Mimikyu
+    return 56857;
+  } else if (cardNumberInSet >= 88 && cardNumberInSet <= 244) {
+    return 57351 + (cardNumberInSet - 88);
   }
-  // Fallback for numbers outside the range (should not happen with a 244 card list)
+  // Fallback for numbers outside the range (should ideally not be hit with a complete list)
   console.warn(`Card number ${cardNumberInSet} is out of expected range for UniqueID generation.`);
-  return 0; 
+  return 0;
 }
 
-// List of card names provided by the user (244 cards)
+// Card details: Name, Type, Rarity (mapped from Pokellector to our system)
+// Series is "Destined Rivals" for all
+// PokedexNumber is "{CardNumberInSet}/244"
 const cardListData: { name: string, type: PokemonCard['type'], rarity: PokemonCard['rarity'] }[] = [
   { name: "Ethan's Pinsir", type: 'Grass', rarity: 'Holo Rare' },
   { name: 'Yanma', type: 'Grass', rarity: 'Common' },
@@ -97,7 +103,7 @@ const cardListData: { name: string, type: PokemonCard['type'], rarity: PokemonCa
   { name: 'Gorebyss', type: 'Water', rarity: 'Uncommon' },
   { name: 'Buizel', type: 'Water', rarity: 'Common' },
   { name: 'Floatzel', type: 'Water', rarity: 'Uncommon' },
-  { name: 'Snover', type: 'Water', rarity: 'Common' }, 
+  { name: 'Snover', type: 'Water', rarity: 'Common' },
   { name: 'Abomasnow', type: 'Water', rarity: 'Uncommon' },
   { name: 'Wash Rotom', type: 'Water', rarity: 'Holo Rare' },
   { name: 'Arrokuda', type: 'Water', rarity: 'Common' },
@@ -124,9 +130,9 @@ const cardListData: { name: string, type: PokemonCard['type'], rarity: PokemonCa
   { name: "Steven's Baltoy", type: 'Psychic', rarity: 'Common' },
   { name: "Steven's Claydol", type: 'Psychic', rarity: 'Uncommon' },
   { name: "Team Rocket's Chingling", type: 'Psychic', rarity: 'Common' },
-  { name: "Steven's Carbink", type: 'Psychic', rarity: 'Uncommon' }, 
-  { name: "Team Rocket's Mimikyu", type: 'Psychic', rarity: 'Holo Rare' },
-  { name: "Team Rocket's Dottler", type: 'Psychic', rarity: 'Uncommon' },
+  { name: "Steven's Carbink", type: 'Psychic', rarity: 'Uncommon' },
+  { name: "Team Rocket's Mimikyu", type: 'Psychic', rarity: 'Holo Rare' }, // Card 87
+  { name: "Team Rocket's Dottler", type: 'Psychic', rarity: 'Uncommon' }, // Card 88
   { name: "Team Rocket's Orbeetle", type: 'Psychic', rarity: 'Holo Rare' },
   { name: 'Mankey', type: 'Fighting', rarity: 'Common' },
   { name: 'Primeape', type: 'Fighting', rarity: 'Uncommon' },
@@ -150,21 +156,21 @@ const cardListData: { name: string, type: PokemonCard['type'], rarity: PokemonCa
   { name: "Arven's Toedscool", type: 'Fighting', rarity: 'Common' },
   { name: "Arven's Toedscruel", type: 'Fighting', rarity: 'Uncommon' },
   { name: 'Cornerstone Mask Ogerpon', type: 'Fighting', rarity: 'Holo Rare' },
-  { name: "Team Rocket's Ekans", type: 'Grass', rarity: 'Common' },
-  { name: "Team Rocket's Arbok", type: 'Grass', rarity: 'Uncommon' },
-  { name: "Team Rocket's Nidoran♀", type: 'Grass', rarity: 'Common' },
-  { name: "Team Rocket's Nidorina", type: 'Grass', rarity: 'Uncommon' },
-  { name: "Team Rocket's Nidoqueen", type: 'Grass', rarity: 'Holo Rare' },
-  { name: "Team Rocket's Nidoran♂", type: 'Grass', rarity: 'Common' },
-  { name: "Team Rocket's Nidorino", type: 'Grass', rarity: 'Uncommon' },
-  { name: "Team Rocket's Nidoking ex", type: 'Grass', rarity: 'Holo Rare' },
-  { name: "Team Rocket's Zubat", type: 'Grass', rarity: 'Common' },
-  { name: "Team Rocket's Golbat", type: 'Grass', rarity: 'Uncommon' },
-  { name: "Team Rocket's Crobat ex", type: 'Darkness', rarity: 'Holo Rare' },
-  { name: "Team Rocket's Grimer", type: 'Grass', rarity: 'Common' },
-  { name: "Team Rocket's Muk", type: 'Grass', rarity: 'Uncommon' },
-  { name: "Team Rocket's Koffing", type: 'Grass', rarity: 'Common' },
-  { name: "Team Rocket's Weezing", type: 'Grass', rarity: 'Holo Rare' },
+  { name: "Team Rocket's Ekans", type: 'Grass', rarity: 'Common' }, // Poison type mapped to Grass
+  { name: "Team Rocket's Arbok", type: 'Grass', rarity: 'Uncommon' }, // Poison type mapped to Grass
+  { name: "Team Rocket's Nidoran♀", type: 'Grass', rarity: 'Common' }, // Poison type mapped to Grass
+  { name: "Team Rocket's Nidorina", type: 'Grass', rarity: 'Uncommon' }, // Poison type mapped to Grass
+  { name: "Team Rocket's Nidoqueen", type: 'Grass', rarity: 'Holo Rare' }, // Poison type mapped to Grass
+  { name: "Team Rocket's Nidoran♂", type: 'Grass', rarity: 'Common' }, // Poison type mapped to Grass
+  { name: "Team Rocket's Nidorino", type: 'Grass', rarity: 'Uncommon' }, // Poison type mapped to Grass
+  { name: "Team Rocket's Nidoking ex", type: 'Grass', rarity: 'Holo Rare' }, // Poison type mapped to Grass
+  { name: "Team Rocket's Zubat", type: 'Grass', rarity: 'Common' }, // Poison type mapped to Grass
+  { name: "Team Rocket's Golbat", type: 'Grass', rarity: 'Uncommon' }, // Poison type mapped to Grass
+  { name: "Team Rocket's Crobat ex", type: 'Darkness', rarity: 'Holo Rare' }, // Dual type, choosing Darkness for TCG often
+  { name: "Team Rocket's Grimer", type: 'Grass', rarity: 'Common' }, // Poison type mapped to Grass
+  { name: "Team Rocket's Muk", type: 'Grass', rarity: 'Uncommon' }, // Poison type mapped to Grass
+  { name: "Team Rocket's Koffing", type: 'Grass', rarity: 'Common' }, // Poison type mapped to Grass
+  { name: "Team Rocket's Weezing", type: 'Grass', rarity: 'Holo Rare' }, // Poison type mapped to Grass
   { name: "Team Rocket's Murkrow", type: 'Darkness', rarity: 'Common' },
   { name: "Team Rocket's Sneasel", type: 'Darkness', rarity: 'Common' },
   { name: "Cynthia's Spiritomb", type: 'Darkness', rarity: 'Holo Rare' },
@@ -172,13 +178,13 @@ const cardListData: { name: string, type: PokemonCard['type'], rarity: PokemonCa
   { name: "Marnie's Liepard", type: 'Darkness', rarity: 'Uncommon' },
   { name: "Marnie's Scraggy", type: 'Darkness', rarity: 'Common' },
   { name: "Marnie's Scrafty", type: 'Darkness', rarity: 'Uncommon' },
-  { name: "Marnie's Impidimp", type: 'Darkness', rarity: 'Common' },
-  { name: "Marnie's Morgrem", type: 'Darkness', rarity: 'Uncommon' },
-  { name: "Marnie's Grimmsnarl ex", type: 'Darkness', rarity: 'Holo Rare' },
-  { name: "Marnie's Morpeko", type: 'Darkness', rarity: 'Holo Rare' },
+  { name: "Marnie's Impidimp", type: 'Darkness', rarity: 'Common' }, // Fairy/Dark, mapped to Darkness
+  { name: "Marnie's Morgrem", type: 'Darkness', rarity: 'Uncommon' }, // Fairy/Dark, mapped to Darkness
+  { name: "Marnie's Grimmsnarl ex", type: 'Darkness', rarity: 'Holo Rare' }, // Fairy/Dark, mapped to Darkness
+  { name: "Marnie's Morpeko", type: 'Darkness', rarity: 'Holo Rare' }, // Electric/Dark, mapped to Darkness for this variant
   { name: "Arven's Maschiff", type: 'Darkness', rarity: 'Common' },
   { name: "Arven's Mabosstiff ex", type: 'Darkness', rarity: 'Holo Rare' },
-  { name: 'Forretress', type: 'Metal', rarity: 'Uncommon' },
+  { name: 'Forretress', type: 'Metal', rarity: 'Uncommon' }, // Bug/Steel, mapped to Metal
   { name: 'Skarmory', type: 'Metal', rarity: 'Common' },
   { name: "Steven's Skarmory", type: 'Metal', rarity: 'Uncommon' },
   { name: "Steven's Beldum", type: 'Metal', rarity: 'Common' },
@@ -201,26 +207,26 @@ const cardListData: { name: string, type: PokemonCard['type'], rarity: PokemonCa
   { name: 'Squawkabilly', type: 'Colorless', rarity: 'Holo Rare' },
   { name: "Arven's Sandwich", type: 'Trainer', rarity: 'Uncommon' },
   { name: "Cynthia's Power Weight", type: 'Trainer', rarity: 'Uncommon' },
-  { name: "Emcee's Hype", type: 'Trainer', rarity: 'Holo Rare' },
+  { name: "Emcee's Hype", type: 'Trainer', rarity: 'Holo Rare' }, // Supporter
   { name: 'Energy Recycler', type: 'Trainer', rarity: 'Uncommon' },
-  { name: "Ethan's Adventure", type: 'Trainer', rarity: 'Holo Rare' },
-  { name: 'Granite Cave', type: 'Trainer', rarity: 'Uncommon' },
-  { name: 'Judge', type: 'Trainer', rarity: 'Holo Rare' },
+  { name: "Ethan's Adventure", type: 'Trainer', rarity: 'Holo Rare' }, // Supporter
+  { name: 'Granite Cave', type: 'Trainer', rarity: 'Uncommon' }, // Stadium
+  { name: 'Judge', type: 'Trainer', rarity: 'Holo Rare' }, // Supporter
   { name: 'Sacred Ash', type: 'Trainer', rarity: 'Uncommon' },
-  { name: 'Spikemuth Gym', type: 'Trainer', rarity: 'Uncommon' },
-  { name: "Team Rocket's Archer", type: 'Trainer', rarity: 'Holo Rare' },
-  { name: "Team Rocket's Ariana", type: 'Trainer', rarity: 'Holo Rare' },
+  { name: 'Spikemuth Gym', type: 'Trainer', rarity: 'Uncommon' }, // Stadium
+  { name: "Team Rocket's Archer", type: 'Trainer', rarity: 'Holo Rare' }, // Supporter
+  { name: "Team Rocket's Ariana", type: 'Trainer', rarity: 'Holo Rare' }, // Supporter
   { name: "Team Rocket's Bother-Bot", type: 'Trainer', rarity: 'Uncommon' },
-  { name: "Team Rocket's Factory", type: 'Trainer', rarity: 'Uncommon' },
-  { name: "Team Rocket's Giovanni", type: 'Trainer', rarity: 'Holo Rare' },
+  { name: "Team Rocket's Factory", type: 'Trainer', rarity: 'Uncommon' }, // Stadium
+  { name: "Team Rocket's Giovanni", type: 'Trainer', rarity: 'Holo Rare' }, // Supporter
   { name: "Team Rocket's Great Ball", type: 'Trainer', rarity: 'Uncommon' },
-  { name: "Team Rocket's Petrel", type: 'Trainer', rarity: 'Holo Rare' },
-  { name: "Team Rocket's Proton", type: 'Trainer', rarity: 'Holo Rare' },
+  { name: "Team Rocket's Petrel", type: 'Trainer', rarity: 'Holo Rare' }, // Supporter
+  { name: "Team Rocket's Proton", type: 'Trainer', rarity: 'Holo Rare' }, // Supporter
   { name: "Team Rocket's Transceiver", type: 'Trainer', rarity: 'Uncommon' },
   { name: "Team Rocket's Venture Bomb", type: 'Trainer', rarity: 'Uncommon' },
-  { name: "Team Rocket's Watchtower", type: 'Trainer', rarity: 'Uncommon' },
+  { name: "Team Rocket's Watchtower", type: 'Trainer', rarity: 'Uncommon' }, // Stadium
   { name: 'TM Machine', type: 'Trainer', rarity: 'Uncommon' },
-  { name: "Team Rocket's Energy", type: 'Energy', rarity: 'Holo Rare' },
+  { name: "Team Rocket's Energy", type: 'Energy', rarity: 'Holo Rare' }, // Special Energy
   { name: 'Yanma', type: 'Grass', rarity: 'Holo Rare' }, // Illustration Rare (183)
   { name: "Cynthia's Roserade", type: 'Grass', rarity: 'Holo Rare' }, // Illustration Rare (184)
   { name: 'Shaymin', type: 'Grass', rarity: 'Holo Rare' }, // Illustration Rare (185)
@@ -285,6 +291,7 @@ const cardListData: { name: string, type: PokemonCard['type'], rarity: PokemonCa
   { name: 'Levincia', type: 'Trainer', rarity: 'Holo Rare' }, // Hyper Rare (Gold Stadium) (244)
 ];
 
+
 export const destinedRivalsCards: PokemonCard[] = cardListData.map((card, index) => {
   const cardNumberInSet = index + 1;
   const uniqueID = getUniqueId(cardNumberInSet);
@@ -295,12 +302,10 @@ export const destinedRivalsCards: PokemonCard[] = cardListData.map((card, index)
     id: cardId,
     name: card.name,
     image: `https://den-cards.pokellector.com/412/${formattedName}.DRI.${cardNumberInSet}.${uniqueID}.thumb.png`,
-    dataAiHint: `${card.name} ${card.type.toLowerCase()}`,
+    dataAiHint: `${card.name} ${card.type.toLowerCase()}`, // Basic hint
     rarity: card.rarity,
     type: card.type,
     series: 'Destined Rivals',
     pokedexNumber: `${cardNumberInSet}/244`,
   };
 });
-
-    
