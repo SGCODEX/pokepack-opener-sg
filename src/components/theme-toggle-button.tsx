@@ -46,7 +46,7 @@ export function ThemeToggleButton() {
       onClick={toggleTheme}
       className={cn(
         "group", 
-        isNavbarDarkStyle && "text-primary border-primary hover:bg-[hsl(217,91%,50%)] focus-visible:ring-primary"
+        isNavbarDarkStyle && "text-primary border-primary hover:bg-[hsl(217,91%,50%)] focus-visible:ring-white"
       )}
       aria-label={`Switch to ${resolvedTheme === 'light' ? 'dark' : 'light'} mode`}
     >
@@ -59,3 +59,4 @@ export function ThemeToggleButton() {
     </Button>
   );
 }
+
