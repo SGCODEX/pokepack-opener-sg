@@ -37,9 +37,9 @@ export default function PackOpeningPage() {
   const [currentStackIndex, setCurrentStackIndex] = useState(0);
   const [currentSwipingCard, setCurrentSwipingCard] = useState<{ id: string, direction: 'left' | 'right' } | null>(null);
   
-  const [hasHolo, setHasHolo] = useState(false);
-  const [hasRareNonHolo, setHasRareNonHolo] = useState(false);
-  const [currentBurstRarity, setCurrentBurstRarity] = useState<CardRarity | null>(null);
+  const [hasHolo, setHasHolo] = useState(false); // Drives background effect
+  const [hasRareNonHolo, setHasRareNonHolo] = useState(false); // Drives background effect
+  const [currentBurstRarity, setCurrentBurstRarity] = useState<CardRarity | null>(null); // For card reveal particle burst
 
   const [isProcessingBulk, setIsProcessingBulk] = useState(false);
   const [currentPackInBulkLoop, setCurrentPackInBulkLoop] = useState(0); 
@@ -66,7 +66,6 @@ export default function PackOpeningPage() {
 
     if (packData.id === 'destined-rivals-booster-001') {
       const packCards: PokemonCard[] = [];
-      // Ensure we are only pulling from cards designated for this pack
       const availableCardsInSeries = allCards.filter(card => 
         packData.possibleCards.includes(card.id) && card.series === packData.series
       );
@@ -79,7 +78,6 @@ export default function PackOpeningPage() {
             const card = potentialCards[Math.floor(Math.random() * potentialCards.length)];
             packCards.push(card);
           } else {
-             // Fallback if no cards of targetRarity found, try a more common one
             const fallbackRarities: CardRarity[] = ['Rare', 'Uncommon', 'Common'];
             let foundFallback = false;
             for (const fr of fallbackRarities) {
@@ -90,26 +88,24 @@ export default function PackOpeningPage() {
                     break;
                 }
             }
-            if(!foundFallback && availableCardsInSeries.length > 0) { // Ultimate fallback
+            if(!foundFallback && availableCardsInSeries.length > 0) {
                 packCards.push(availableCardsInSeries[Math.floor(Math.random() * availableCardsInSeries.length)]);
             }
           }
         }
       };
 
-      // 1. Pull first 6 cards (3 Common, 2 Uncommon, 1 Rare)
       pullAndAddCardByRarity('Common', 3);
       pullAndAddCardByRarity('Uncommon', 2);
       pullAndAddCardByRarity('Rare', 1);
 
-      // 2. Pull next 4 "hit" cards
       const hitRarityPool: { rarity: CardRarity; weight: number }[] = [
-        { rarity: 'Hyper Rare', weight: 3 },
-        { rarity: 'Special Illustration Rare', weight: 7 },
-        { rarity: 'Illustration Rare', weight: 10 },
-        { rarity: 'Ultra Rare', weight: 20 },
-        { rarity: 'Double Rare', weight: 25 },
-        { rarity: 'Rare', weight: 35 }, 
+        { rarity: 'Hyper Rare', weight: 3 },                 // Low chance
+        { rarity: 'Special Illustration Rare', weight: 7 },  // Low chance
+        { rarity: 'Illustration Rare', weight: 10 },        // Moderate chance
+        { rarity: 'Ultra Rare', weight: 20 },               // High chance
+        { rarity: 'Double Rare', weight: 25 },              // High chance
+        { rarity: 'Rare', weight: 35 },                     // High chance (for an additional basic Rare)
       ];
       const totalWeight = hitRarityPool.reduce((sum, item) => sum + item.weight, 0);
       
@@ -150,12 +146,11 @@ export default function PackOpeningPage() {
         
         if (pulledHitCard) {
           packCards.push(pulledHitCard);
-        } else if (availableCardsInSeries.length > 0) { // Ultimate fallback for hit slot
+        } else if (availableCardsInSeries.length > 0) {
             packCards.push(availableCardsInSeries[Math.floor(Math.random() * availableCardsInSeries.length)]);
         }
       }
 
-      // 3. Final fill if pack is still not full
       let fillAttempts = 0;
       while (packCards.length < packData.cardsPerPack && fillAttempts < 20 && availableCardsInSeries.length > 0) {
         const fillCard = availableCardsInSeries[Math.floor(Math.random() * availableCardsInSeries.length)];
@@ -164,12 +159,11 @@ export default function PackOpeningPage() {
       }
       return packCards;
 
-    } else {
-      // Existing logic for other packs, modified to allow duplicates
+    } else { // Existing logic for other packs (e.g., Base Set)
       const packCards: PokemonCard[] = [];
       const availableCardsInPack = allCards.filter(card => packData.possibleCards.includes(card.id));
       
-      if (availableCardsInPack.length === 0) return []; // No cards to pull from
+      if (availableCardsInPack.length === 0) return [];
 
       const pullCardByRarity = (rarity: CardRarity): PokemonCard | undefined => {
         const potentialCards = availableCardsInPack.filter(c => c.rarity === rarity);
@@ -180,9 +174,6 @@ export default function PackOpeningPage() {
       let rareSlotCard: PokemonCard | undefined;
       const isHoloAttempt = Math.random() < 0.30; 
       if (isHoloAttempt) {
-        // In older sets, Holo Rare might be a distinct category. For new sets, this might need refinement.
-        // For simplicity, we assume 'Holo Rare' exists as a rarity type for this logic to work.
-        // If not, it will fall back.
         const potentialHoloRares = availableCardsInPack.filter(c => c.rarity === 'Holo Rare');
         if (potentialHoloRares.length > 0) {
           rareSlotCard = potentialHoloRares[Math.floor(Math.random() * potentialHoloRares.length)];
@@ -191,7 +182,6 @@ export default function PackOpeningPage() {
       if (!rareSlotCard) { 
         rareSlotCard = pullCardByRarity('Rare');
       }
-      // Broader fallback for rare slot if specific rarities not found
       if (!rareSlotCard) {
           const potentialAnyRare = availableCardsInPack.filter(c => c.rarity === 'Holo Rare' || c.rarity === 'Rare');
           if (potentialAnyRare.length > 0) {
@@ -201,15 +191,13 @@ export default function PackOpeningPage() {
       if (rareSlotCard) {
         packCards.push(rareSlotCard);
       } else if (availableCardsInPack.length > 0 && packCards.length < packData.cardsPerPack) {
-         // Fallback if no rare card could be pulled, add any card
          packCards.push(availableCardsInPack[Math.floor(Math.random() * availableCardsInPack.length)]);
       }
-
 
       for (let i = 0; i < packData.rarityDistribution.uncommon; i++) {
         if (packCards.length >= packData.cardsPerPack) break;
         let card = pullCardByRarity('Uncommon');
-        if (!card && availableCardsInPack.length > 0) card = availableCardsInPack[Math.floor(Math.random() * availableCardsInPack.length)]; // Fallback
+        if (!card && availableCardsInPack.length > 0) card = availableCardsInPack[Math.floor(Math.random() * availableCardsInPack.length)];
         if (card) { packCards.push(card); }
       }
       
@@ -217,15 +205,13 @@ export default function PackOpeningPage() {
       for (let i = 0; i < commonsToPull; i++) {
         if (packCards.length >= packData.cardsPerPack) break;
         let card = pullCardByRarity('Common');
-        if (!card && availableCardsInPack.length > 0) card = availableCardsInPack[Math.floor(Math.random() * availableCardsInPack.length)]; // Fallback
+        if (!card && availableCardsInPack.length > 0) card = availableCardsInPack[Math.floor(Math.random() * availableCardsInPack.length)];
         if (card) { packCards.push(card); }
       }
       
       let attempts = 0; 
       while(packCards.length < packData.cardsPerPack && availableCardsInPack.length > 0 && attempts < 20) {
-        // Prioritize common/uncommon for filling, then any card.
         let card = pullCardByRarity('Common') || pullCardByRarity('Uncommon') || availableCardsInPack[Math.floor(Math.random() * availableCardsInPack.length)];
-        
         if (card) {
           packCards.push(card);
         }
@@ -242,14 +228,25 @@ export default function PackOpeningPage() {
     if (currentPackInBulkLoop >= totalPacksInBulkLoop) {
         setOpenedCards(allOpenedCardsInSession); 
         
-        const finalHighestRarity = allOpenedCardsInSession.reduce((highest, card) => {
+        const finalOverallHighestRarity = allOpenedCardsInSession.reduce((highest, card) => {
             const rarityOrder: CardRarity[] = ['Common', 'Uncommon', 'Rare', 'Double Rare', 'Ultra Rare', 'Illustration Rare', 'Special Illustration Rare', 'Hyper Rare'];
             return rarityOrder.indexOf(card.rarity) > rarityOrder.indexOf(highest) ? card.rarity : highest;
         }, 'Common' as CardRarity);
 
-        setHasHolo(finalHighestRarity === 'Hyper Rare' || finalHighestRarity === 'Special Illustration Rare' || finalHighestRarity === 'Illustration Rare' || finalHighestRarity === 'Ultra Rare');
-        setHasRareNonHolo(finalHighestRarity === 'Double Rare' || (finalHighestRarity === 'Rare' && !hasHolo));
+        let finalOverallHasHolo: boolean;
+        let finalOverallHasRareNonHolo: boolean;
 
+        if (packData.id === 'destined-rivals-booster-001') {
+            finalOverallHasHolo = ['Hyper Rare', 'Special Illustration Rare', 'Illustration Rare'].includes(finalOverallHighestRarity);
+            finalOverallHasRareNonHolo = !finalOverallHasHolo && ['Ultra Rare', 'Double Rare', 'Rare'].includes(finalOverallHighestRarity);
+        } else { // For Base Set or other general packs
+            const generalHoloRarities: CardRarity[] = ['Holo Rare', 'Hyper Rare', 'Special Illustration Rare', 'Illustration Rare', 'Ultra Rare'];
+            const generalHighTierNonHoloRarities: CardRarity[] = ['Rare', 'Double Rare'];
+            finalOverallHasHolo = generalHoloRarities.includes(finalOverallHighestRarity);
+            finalOverallHasRareNonHolo = !finalOverallHasHolo && generalHighTierNonHoloRarities.includes(finalOverallHighestRarity);
+        }
+        setHasHolo(finalOverallHasHolo);
+        setHasRareNonHolo(finalOverallHasRareNonHolo);
 
         setIsProcessingBulk(false);
         setStage('all-revealed');
@@ -272,8 +269,22 @@ export default function PackOpeningPage() {
         return rarityOrder.indexOf(card.rarity) > rarityOrder.indexOf(highest) ? card.rarity : highest;
     }, 'Common' as CardRarity);
     
-    setHasHolo(currentPackHighestRarity === 'Hyper Rare' || currentPackHighestRarity === 'Special Illustration Rare' || currentPackHighestRarity === 'Illustration Rare' || currentPackHighestRarity === 'Ultra Rare');
-    setHasRareNonHolo(currentPackHighestRarity === 'Double Rare' || (currentPackHighestRarity === 'Rare' && !hasHolo));
+    let packSpecificHasHolo: boolean;
+    let packSpecificHasRareNonHolo: boolean;
+
+    if (packData.id === 'destined-rivals-booster-001') {
+        packSpecificHasHolo = ['Hyper Rare', 'Special Illustration Rare', 'Illustration Rare'].includes(currentPackHighestRarity);
+        packSpecificHasRareNonHolo = !packSpecificHasHolo && ['Ultra Rare', 'Double Rare', 'Rare'].includes(currentPackHighestRarity);
+    } else { // For Base Set or other general packs
+        const generalHoloRarities: CardRarity[] = ['Holo Rare', 'Hyper Rare', 'Special Illustration Rare', 'Illustration Rare', 'Ultra Rare'];
+        const generalHighTierNonHoloRarities: CardRarity[] = ['Rare', 'Double Rare']; 
+        
+        packSpecificHasHolo = generalHoloRarities.includes(currentPackHighestRarity);
+        packSpecificHasRareNonHolo = !packSpecificHasHolo && generalHighTierNonHoloRarities.includes(currentPackHighestRarity);
+    }
+    
+    setHasHolo(packSpecificHasHolo);
+    setHasRareNonHolo(packSpecificHasRareNonHolo);
     
     setOpenedCards(currentSinglePackCards); 
 
@@ -292,7 +303,6 @@ export default function PackOpeningPage() {
     pokedexLoaded, 
     allOpenedCardsInSession,
     isSkippingAnimations,
-    hasHolo 
   ]);
 
   const initiateOpeningProcess = useCallback((numPacksToOpen: number) => {
@@ -350,7 +360,7 @@ export default function PackOpeningPage() {
     }
 
     const swipeDirection = Math.random() < 0.5 ? 'left' : 'right';
-    setCurrentSwipingCard({ id: cardToSwipe.id + '-' + currentStackIndex, direction: swipeDirection }); // Append index for unique key if duplicates
+    setCurrentSwipingCard({ id: cardToSwipe.id + '-' + currentStackIndex, direction: swipeDirection });
 
     setTimeout(() => {
       if (isSkippingAnimations) return; 
@@ -385,9 +395,7 @@ export default function PackOpeningPage() {
 
     if (stage === 'opening' || stage === 'stack-reveal' || stage === 'initial') {
        if (openedCards.length > 0 && currentPackInBulkLoop < totalPacksInBulkLoop) {
-            // Add current pack's cards if not yet fully processed into allOpenedCardsInSession.
-            // This ensures cards from the pack being skipped are included.
-            const currentPackCardIdsInSession = new Set(allOpenedCardsInSession.slice(allOpenedCardsInSession.length - openedCards.length).map(c => c.id + c.pokedexNumber)); // Use a more unique identifier if duplicates are an issue
+            const currentPackCardIdsInSession = new Set(allOpenedCardsInSession.slice(allOpenedCardsInSession.length - openedCards.length).map(c => c.id + c.pokedexNumber)); 
             let newCardsForSession = openedCards.filter(c => !currentPackCardIdsInSession.has(c.id + c.pokedexNumber));
             
             if (newCardsForSession.length > 0 && stage !== 'initial') { 
@@ -396,16 +404,13 @@ export default function PackOpeningPage() {
                     addCardsToCollection(newCardsForSession.map(c => c.id));
                 }
             } else if (stage === 'initial' || (stage !== 'initial' && openedCards.length > 0 && skippedCardsAccumulator.length === 0)) {
-                // If skipping from initial, or if openedCards is populated but not yet in session (e.g. first pack of bulk)
-                const cardsFromInitialPack = pullCardsForOnePack(); // Pull the first pack
+                const cardsFromInitialPack = pullCardsForOnePack();
                 skippedCardsAccumulator.push(...cardsFromInitialPack);
                  if (pokedexLoaded) {
                     addCardsToCollection(cardsFromInitialPack.map(c => c.id));
                 }
             }
        } else if (stage === 'initial' && totalPacksInBulkLoop > 0) {
-           // Special case: skipping from initial state when a bulk opening was intended.
-           // Pull cards for the first pack explicitly.
            const cardsFromFirstPack = pullCardsForOnePack();
            skippedCardsAccumulator.push(...cardsFromFirstPack);
            if (pokedexLoaded) {
@@ -433,8 +438,21 @@ export default function PackOpeningPage() {
         return rarityOrder.indexOf(card.rarity) > rarityOrder.indexOf(highest) ? card.rarity : highest;
     }, 'Common' as CardRarity);
 
-    setHasHolo(finalHighestRarity === 'Hyper Rare' || finalHighestRarity === 'Special Illustration Rare' || finalHighestRarity === 'Illustration Rare' || finalHighestRarity === 'Ultra Rare');
-    setHasRareNonHolo(finalHighestRarity === 'Double Rare' || (finalHighestRarity === 'Rare' && !hasHolo));
+    let finalOverallHasHolo: boolean;
+    let finalOverallHasRareNonHolo: boolean;
+
+    if (packData.id === 'destined-rivals-booster-001') {
+        finalOverallHasHolo = ['Hyper Rare', 'Special Illustration Rare', 'Illustration Rare'].includes(finalHighestRarity);
+        finalOverallHasRareNonHolo = !finalOverallHasHolo && ['Ultra Rare', 'Double Rare', 'Rare'].includes(finalHighestRarity);
+    } else { // For Base Set or other general packs
+        const generalHoloRarities: CardRarity[] = ['Holo Rare', 'Hyper Rare', 'Special Illustration Rare', 'Illustration Rare', 'Ultra Rare'];
+        const generalHighTierNonHoloRarities: CardRarity[] = ['Rare', 'Double Rare'];
+        finalOverallHasHolo = generalHoloRarities.includes(finalHighestRarity);
+        finalOverallHasRareNonHolo = !finalOverallHasHolo && generalHighTierNonHoloRarities.includes(finalHighestRarity);
+    }
+  
+    setHasHolo(finalOverallHasHolo);
+    setHasRareNonHolo(finalOverallHasRareNonHolo);
   
     setStage('all-revealed');
     setIsProcessingBulk(false);
@@ -484,16 +502,6 @@ export default function PackOpeningPage() {
     );
   }
   
-  const cardsForBackgroundEffect = (stage === 'all-revealed' && allOpenedCardsInSession.length > 0) ? allOpenedCardsInSession : openedCards;
-  const highestRarityForEffect = cardsForBackgroundEffect.reduce((highest, card) => {
-      const rarityOrder: CardRarity[] = ['Common', 'Uncommon', 'Rare', 'Double Rare', 'Ultra Rare', 'Illustration Rare', 'Special Illustration Rare', 'Hyper Rare'];
-      return rarityOrder.indexOf(card.rarity) > rarityOrder.indexOf(highest) ? card.rarity : highest;
-  }, 'Common' as CardRarity);
-
-  const showHoloVisualEffect = highestRarityForEffect === 'Hyper Rare' || highestRarityForEffect === 'Special Illustration Rare' || highestRarityForEffect === 'Illustration Rare' || highestRarityForEffect === 'Ultra Rare';
-  const showRareVisualEffect = !showHoloVisualEffect && (highestRarityForEffect === 'Double Rare' || highestRarityForEffect === 'Rare');
-
-
   let backButtonText = "Back to Packs";
   if (isProcessingBulk && stage !== 'initial' && stage !== 'all-revealed') {
     backButtonText = "Back & Stop Opening";
@@ -503,8 +511,8 @@ export default function PackOpeningPage() {
   return (
     <div className={cn(
         "transition-colors duration-1000 flex flex-col min-h-[calc(100vh-10rem)]", 
-        (showHoloVisualEffect && (stage === 'opening' || stage === 'stack-reveal' || stage === 'all-revealed') && stage !== 'transitioning') && "holo-blue-wave-background-active animate-holo-blue-wave-shimmer",
-        (showRareVisualEffect && (stage === 'opening' || stage === 'stack-reveal' || stage === 'all-revealed') && stage !== 'transitioning') && "rare-gold-holo-background-active animate-rare-gold-shimmer",
+        (hasHolo && (stage === 'opening' || stage === 'stack-reveal' || stage === 'all-revealed') && stage !== 'transitioning') && "holo-blue-wave-background-active animate-holo-blue-wave-shimmer",
+        (hasRareNonHolo && (stage === 'opening' || stage === 'stack-reveal' || stage === 'all-revealed') && stage !== 'transitioning') && "rare-gold-holo-background-active animate-rare-gold-shimmer",
         (stage === 'transitioning') && "bg-background" 
       )}>
       <Button variant="outline" onClick={() => router.push('/')} className="absolute top-24 left-4 md:left-8 z-10">
@@ -547,7 +555,7 @@ export default function PackOpeningPage() {
               size="lg" 
               onClick={() => setTimeout(() => initiateOpeningProcess(10), 50)} 
               className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-6"
-              disabled={!pokedexLoaded || !packData || packData.possibleCards.length < packData.cardsPerPack} // Disable if not enough unique cards for a full pack even with duplicates
+              disabled={!pokedexLoaded || !packData || packData.possibleCards.length < packData.cardsPerPack}
             >
               <PackagePlus className="mr-2 h-6 w-6" /> Open 10 Booster Packs
             </Button>
@@ -635,7 +643,6 @@ export default function PackOpeningPage() {
               aria-label="Reveal next card"
             >
               {openedCards.map((card, index) => {
-                // Use a combination of card.id and index for unique key to handle duplicates
                 const uniqueCardKey = `${card.id}-stack-${index}`;
                 if (index < currentStackIndex && (!currentSwipingCard || currentSwipingCard.id !== uniqueCardKey)) return null;
 
@@ -703,7 +710,7 @@ export default function PackOpeningPage() {
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-8 gap-4 justify-items-center">
                 {allOpenedCardsInSession.map((card, index) => (
                   <CardComponent
-                    key={`${card.id}-grid-${index}`} // Ensure unique key for grid as well
+                    key={`${card.id}-grid-${index}`}
                     card={card}
                     onClick={() => handleCardClickForModal(card)}
                     showDetails={true}
@@ -751,3 +758,6 @@ export default function PackOpeningPage() {
     
 
 
+
+
+    
