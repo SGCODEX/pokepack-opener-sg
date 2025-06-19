@@ -574,9 +574,10 @@ export default function PackOpeningPage() {
   return (
     <div className={cn(
         "transition-colors duration-1000 flex flex-col min-h-[calc(100vh-10rem)]",
-        (hasHolo && (stage === 'opening' || stage === 'stack-reveal' || stage === 'all-revealed') && stage !== 'transitioning') && "holo-blue-wave-background-active animate-holo-blue-wave-shimmer",
-        (hasRareNonHolo && (stage === 'opening' || stage === 'stack-reveal' || stage === 'all-revealed') && stage !== 'transitioning') && "rare-gold-holo-background-active animate-rare-gold-shimmer",
-        (stage === 'transitioning') && "bg-background"
+        stage === 'all-revealed' ? 'bg-white text-black' :
+        (hasHolo && (stage === 'opening' || stage === 'stack-reveal') && stage !== 'transitioning') ? 'holo-blue-wave-background-active animate-holo-blue-wave-shimmer text-primary-foreground dark:text-foreground' :
+        (hasRareNonHolo && (stage === 'opening' || stage === 'stack-reveal') && stage !== 'transitioning') ? 'rare-gold-holo-background-active animate-rare-gold-shimmer text-primary-foreground dark:text-foreground' :
+        'bg-background text-foreground' // Default for initial, transitioning, or plain opening/stack-reveal
       )}>
       <Button
         variant="outline"
@@ -603,7 +604,10 @@ export default function PackOpeningPage() {
         </Button>
       )}
       <header className="relative z-5 pt-8 pb-4 text-center">
-        <h1 className="text-4xl font-headline font-bold text-primary-foreground dark:text-foreground">{packData.name}</h1>
+        <h1 className={cn(
+          "text-4xl font-headline font-bold",
+           stage === 'all-revealed' ? 'text-black' : 'text-primary-foreground dark:text-foreground'
+           )}>{packData.name}</h1>
       </header>
 
       {stage === 'initial' && (
@@ -785,7 +789,7 @@ export default function PackOpeningPage() {
         <div className="flex-grow flex flex-col items-center justify-center">
           {allOpenedCardsInSession.length > 0 && (
             <>
-              <h2 className="text-2xl font-headline font-semibold text-primary-foreground dark:text-foreground mb-4">
+              <h2 className="text-2xl font-headline font-semibold text-black mb-4">
                 {totalPacksInBulkLoop > 1 ? `Your ${totalPacksInBulkLoop} Packs Yielded` : 'Your Cards!'}
               </h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-items-center">
@@ -811,7 +815,10 @@ export default function PackOpeningPage() {
             size="lg"
             onClick={() => resetPackOpening(1)}
             variant="outline"
-            className="hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]"
+            className={cn(
+              "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]",
+              stage === 'all-revealed' && "text-black border-black" // Ensure outline button text/border is black on white bg
+            )}
           >
             <Package className="mr-2 h-5 w-5" /> Open Another Pack
           </Button>
@@ -820,7 +827,10 @@ export default function PackOpeningPage() {
                 size="lg"
                 onClick={() => resetPackOpening(10)}
                 variant="outline"
-                className="hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]"
+                className={cn(
+                  "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]",
+                  stage === 'all-revealed' && "text-black border-black" // Ensure outline button text/border is black on white bg
+                )}
               >
                 <PackagePlus className="mr-2 h-5 w-5" /> Open 10 More Packs
             </Button>
@@ -852,5 +862,3 @@ export default function PackOpeningPage() {
     </div>
   );
 }
-
-    
