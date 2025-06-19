@@ -77,14 +77,14 @@ function AppContent({ children }: { children: ReactNode }) {
         </Container>
       </main>
       <Toaster />
-      <footer className="bg-primary/10 text-center py-4">
+      <footer className="bg-[hsl(217,91%,60%)] text-center py-4">
         <Container>
           <a
             href="https://github.com/SGCODEX"
             target="_blank"
             rel="noopener noreferrer"
             className={cn(
-              "text-sm text-foreground/80 hover:text-foreground/100 hover:underline transition-colors"
+              "text-sm font-medium text-primary hover:text-white hover:underline transition-colors"
             )}
           >
             &copy; {currentYear} PokePack Opener SG. Gotta open 'em all! Made by SGCODEX
