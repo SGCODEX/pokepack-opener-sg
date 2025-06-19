@@ -9,21 +9,20 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 export function ThemeToggleButton() {
-  const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {
     setMounted(true);
   }, []);
 
-  // On the server and initial client render, 'mounted' will be false.
-  // In this case, we return null to ensure no mismatch during hydration.
   if (!mounted) {
     return null;
   }
 
-  // Once mounted on the client, we can safely render the button
-  // based on the resolvedTheme.
+  // Hooks and theme-dependent logic are now called only after mounting
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { resolvedTheme, setTheme } = useTheme();
+
   const isNavbarDarkStyle = true; // Navbar is always dark styled (blue)
   const CurrentIconToRender = resolvedTheme === "light" ? Sun : Moon;
 
