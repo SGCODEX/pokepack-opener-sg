@@ -1,7 +1,7 @@
 
 import Image from 'next/image';
 import type { PokemonCard } from '@/lib/types';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'; 
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { PokemonTypeIcon } from './pokemon-type-icon';
 import { cn } from '@/lib/utils';
@@ -10,27 +10,27 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 interface CardComponentProps {
   card: PokemonCard;
   onClick?: () => void;
-  isCollected?: boolean; // Maintained for general visual cue if needed elsewhere, or can be derived from collectedCount
+  isCollected?: boolean;
   className?: string;
   isRevealing?: boolean;
   animationDelay?: string;
   viewContext?: 'pokedex' | 'default';
-  pokedexNumber?: number | string; 
+  pokedexNumber?: number | string;
   showDetails?: boolean;
-  collectedCount?: number; // New prop for quantity
+  collectedCount?: number;
 }
 
-export function CardComponent({ 
-  card, 
-  onClick, 
-  isCollected, // Will now be driven by collectedCount > 0 in Pokedex context
-  className, 
-  isRevealing, 
+export function CardComponent({
+  card,
+  onClick,
+  isCollected,
+  className,
+  isRevealing,
   animationDelay,
   viewContext = 'default',
   pokedexNumber,
   showDetails = true,
-  collectedCount = 0, // Default to 0
+  collectedCount = 0,
 }: CardComponentProps) {
   const rarityColorClass = () => {
     switch (card.rarity) {
@@ -38,16 +38,28 @@ export function CardComponent({
       case 'Uncommon': return 'border-green-400 hover:border-green-500';
       case 'Rare': return 'border-blue-400 hover:border-blue-500';
       case 'Holo Rare': return 'border-purple-500 hover:border-purple-600 animate-rarity-glow-holo shadow-lg';
+      // Destined Rivals rarities might need specific border colors if desired,
+      // otherwise they can fall into a default or be handled by the existing ones.
+      case 'Double Rare': return 'border-sky-400 hover:border-sky-500';
+      case 'Ultra Rare': return 'border-indigo-500 hover:border-indigo-600 shadow-md';
+      case 'Illustration Rare': return 'border-teal-400 hover:border-teal-500 shadow-lg';
+      case 'Special Illustration Rare': return 'border-pink-500 hover:border-pink-600 animate-rarity-glow-holo shadow-xl';
+      case 'Hyper Rare': return 'border-amber-400 hover:border-amber-500 animate-rarity-glow-holo shadow-xl';
       default: return 'border-gray-300';
     }
   };
-  
+
   const rarityTextClass = () => {
     switch (card.rarity) {
       case 'Common': return 'text-gray-500';
       case 'Uncommon': return 'text-green-600';
       case 'Rare': return 'text-blue-600';
       case 'Holo Rare': return 'text-purple-700 font-semibold';
+      case 'Double Rare': return 'text-sky-600 font-semibold';
+      case 'Ultra Rare': return 'text-indigo-700 font-bold';
+      case 'Illustration Rare': return 'text-teal-600 font-bold';
+      case 'Special Illustration Rare': return 'text-pink-700 font-extrabold';
+      case 'Hyper Rare': return 'text-amber-600 font-extrabold';
       default: return 'text-gray-500';
     }
   };
@@ -72,8 +84,8 @@ export function CardComponent({
             >
               <div className={cn(
                 "relative w-[150px] h-[210px] sm:w-[180px] sm:h-[252px] rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-200 ease-in-out transform hover:-translate-y-1",
-                !actualIsCollected ? "grayscale" : "", // Use actualIsCollected
-                 rarityColorClass() 
+                !actualIsCollected ? "grayscale" : "",
+                 rarityColorClass()
               )}>
                 <Image
                   src={card.image}
@@ -81,11 +93,11 @@ export function CardComponent({
                   fill
                   className="object-cover"
                   data-ai-hint={card.dataAiHint || card.name}
-                  priority={typeof pokedexNumber === 'number' && pokedexNumber <= 12} 
+                  priority={typeof pokedexNumber === 'number' && pokedexNumber <= 12}
                 />
-                 {card.rarity === 'Holo Rare' && actualIsCollected && (
+                 {card.rarity === 'Holo Rare' && actualIsCollected && ( // Or other holo-like rarities
                   <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-lg">
-                    <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity duration-300" 
+                    <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity duration-300"
                          style={{
                            background: 'linear-gradient(45deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%)',
                            transform: 'skewY(-10deg) scale(1.5)',
@@ -116,28 +128,27 @@ export function CardComponent({
   return (
     <Card
       className={cn(
-        "w-[240px] overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 group",
+        "overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 ease-in-out transform hover:-translate-y-1 group", // Removed w-[240px]
         onClick ? "cursor-pointer" : "",
-        actualIsCollected === false && viewContext !== 'pokedex' ? "opacity-50 grayscale" : "opacity-100", // Consider if actualIsCollected is needed here or original isCollected
+        actualIsCollected === false && viewContext !== 'pokedex' ? "opacity-50 grayscale" : "opacity-100",
         rarityColorClass(),
         isRevealing ? "animate-card-reveal opacity-0" : "",
-        className
+        className // Allows width to be passed from parent, e.g., "w-40" for grid, or respects parent for stack
       )}
       style={isRevealing ? { animationDelay } : {}}
       onClick={onClick}
       aria-label={`Pokemon card: ${card.name}`}
     >
-      <CardHeader className="p-0 relative">
+      <CardHeader className="p-0 relative aspect-[240/336]"> {/* Added relative and aspect-ratio */}
         <Image
           src={card.image}
           alt={card.name}
-          width={240}
-          height={336} 
+          fill={true} // Changed to fill
           className="object-cover transition-transform duration-300 group-hover:scale-105"
           data-ai-hint={card.dataAiHint || card.name}
-          priority 
+          priority
         />
-        {actualIsCollected && showDetails && ( 
+        {actualIsCollected && showDetails && collectedCount > 0 && ( // Ensure collectedCount > 0 for badge
            <Badge variant="default" className="absolute top-2 right-2 bg-accent text-accent-foreground">Collected x{collectedCount}</Badge>
         )}
       </CardHeader>
@@ -152,9 +163,9 @@ export function CardComponent({
           </div>
         </CardContent>
       )}
-      {card.rarity === 'Holo Rare' && (
+      {(card.rarity === 'Holo Rare' || card.rarity === 'Special Illustration Rare' || card.rarity === 'Hyper Rare' || card.rarity === 'Illustration Rare') && ( // Apply holo effect to more rarities
         <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-lg">
-          <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity duration-300" 
+          <div className="absolute inset-0 opacity-20 group-hover:opacity-30 transition-opacity duration-300"
                style={{
                  background: 'linear-gradient(45deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.8) 50%, rgba(255,255,255,0) 100%)',
                  transform: 'skewY(-10deg) scale(1.5)',
