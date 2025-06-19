@@ -10,7 +10,7 @@ import { CardComponent } from '@/components/card-component';
 import { Button } from '@/components/ui/button';
 import { usePokedex } from '@/hooks/use-pokedex';
 import { CardDetailModal } from '@/components/card-detail-modal';
-import { ArrowLeft, PackageOpen, Eye, PackagePlus, Package, FastForward } from 'lucide-react';
+import { ArrowLeft, PackageOpen, Eye, PackagePlus, Package, FastForward, Home } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
@@ -418,7 +418,7 @@ export default function PackOpeningPage() {
   
     let skippedCardsAccumulator = [...allOpenedCardsInSession];
 
-    if (stage === 'opening' || stage === 'stack-reveal' || stage === 'initial') {
+    if (stage === 'opening' || stage === 'stack-reveal') { // Removed 'initial'
        if (openedCards.length > 0 && currentPackInBulkLoop < totalPacksInBulkLoop) {
             const currentPackCardIdsAndIndicesInSession = new Set(
                 allOpenedCardsInSession.slice(allOpenedCardsInSession.length - openedCards.length)
@@ -430,16 +430,13 @@ export default function PackOpeningPage() {
                 return !currentPackCardIdsAndIndicesInSession.has(uniqueKey);
             });
             
-            if (newCardsForSession.length > 0 && stage !== 'initial') { 
+            if (newCardsForSession.length > 0) { 
                 skippedCardsAccumulator.push(...newCardsForSession);
                 if (pokedexLoaded) {
                     addCardsToCollection(newCardsForSession.map(c => c.id));
                 }
-            } else if (stage === 'initial' || (stage !== 'initial' && openedCards.length > 0 && skippedCardsAccumulator.length === 0)) {
-                // This branch handles skipping when initiateOpeningProcess has run (so totalPacksInBulkLoop > 0)
-                // but processPackLoopIteration hasn't populated `openedCards` for the current pack yet,
-                // or if it's the very first pack of a single pack opening.
-                if (totalPacksInBulkLoop > 0) { // Ensure a pack was intended to be opened
+            } else if (openedCards.length > 0 && skippedCardsAccumulator.length === 0) {
+                 if (totalPacksInBulkLoop > 0) { 
                     const cardsFromInitialPack = pullCardsForOnePack(); 
                     skippedCardsAccumulator.push(...cardsFromInitialPack);
                     if (pokedexLoaded) {
@@ -447,9 +444,7 @@ export default function PackOpeningPage() {
                     }
                 }
             }
-       } else if (stage === 'initial' && totalPacksInBulkLoop > 0) { 
-           // This explicitly handles the case where "Skip" is hit right after clicking "Open X Packs"
-           // and `initiateOpeningProcess` has set `totalPacksInBulkLoop` but `processPackLoopIteration` hasn't run.
+       } else if (stage === 'opening' && totalPacksInBulkLoop > 0) { 
            const cardsFromFirstPack = pullCardsForOnePack();
            skippedCardsAccumulator.push(...cardsFromFirstPack);
            if (pokedexLoaded) {
@@ -461,10 +456,9 @@ export default function PackOpeningPage() {
     let packsAlreadyAccountedFor = 0;
     if (stage !== 'initial' && currentPackInBulkLoop < totalPacksInBulkLoop) {
         packsAlreadyAccountedFor = currentPackInBulkLoop + 1; 
-    } else if (stage === 'initial' && totalPacksInBulkLoop > 0 && skippedCardsAccumulator.length >= packData.cardsPerPack) {
-        // If we were in initial stage but simulated the first pack above
+    } else if (stage === 'opening' && totalPacksInBulkLoop > 0 && skippedCardsAccumulator.length >= packData.cardsPerPack) {
         packsAlreadyAccountedFor = 1;
-    } else if (stage === 'initial') {
+    } else if (stage === 'opening') {
         packsAlreadyAccountedFor = 0;
     } else { 
         packsAlreadyAccountedFor = totalPacksInBulkLoop;
@@ -576,7 +570,7 @@ export default function PackOpeningPage() {
       >
         <ArrowLeft className="mr-2 h-4 w-4" /> {backButtonText}
       </Button>
-      {!isSkippingAnimations && stage !== 'initial' && 
+      {!isSkippingAnimations && 
         (stage === 'opening' || stage === 'stack-reveal' || (isProcessingBulk && stage === 'transitioning')) && (
         <Button
           variant="outline"
@@ -793,15 +787,36 @@ export default function PackOpeningPage() {
 
       {(stage === 'all-revealed' || (stage === 'stack-reveal' && currentStackIndex >= openedCards.length && openedCards.length === 0 && !isProcessingBulk )) && (
         <div className="mt-auto py-6 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 relative z-5">
-          <Button size="lg" onClick={() => resetPackOpening(1)} variant="outline">
+          <Button 
+            size="lg" 
+            onClick={() => resetPackOpening(1)} 
+            variant="outline"
+            className="hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]"
+          >
             <Package className="mr-2 h-5 w-5" /> Open Another Pack
           </Button>
           {packData && packData.possibleCards.length >= packData.cardsPerPack * 10 && ( 
-             <Button size="lg" onClick={() => resetPackOpening(10)} variant="outline">
+             <Button 
+                size="lg" 
+                onClick={() => resetPackOpening(10)} 
+                variant="outline"
+                className="hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]"
+              >
                 <PackagePlus className="mr-2 h-5 w-5" /> Open 10 More Packs
             </Button>
           )}
-          <Button size="lg" onClick={() => router.push('/pokedex')} className="bg-primary hover:bg-primary/90 text-primary-foreground">
+          <Button 
+            size="lg" 
+            onClick={() => router.push('/')} 
+            className="bg-[hsl(217,91%,60%)] hover:bg-[hsl(217,91%,50%)] text-white"
+          >
+            <Home className="mr-2 h-5 w-5" /> Back to Home
+          </Button>
+          <Button 
+            size="lg" 
+            onClick={() => router.push('/pokedex')} 
+            className="bg-[hsl(217,91%,60%)] hover:bg-[hsl(217,91%,50%)] text-white"
+          >
             <Eye className="mr-2 h-5 w-5" /> View Pokedex
           </Button>
         </div>
@@ -817,21 +832,4 @@ export default function PackOpeningPage() {
     </div>
   );
 }
-    
-
-  
-
-    
-
-    
-
-
-
-
-    
-
-    
-
-
-
 
