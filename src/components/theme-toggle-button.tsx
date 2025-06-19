@@ -16,25 +16,25 @@ export function ThemeToggleButton() {
     setMounted(true);
   }, []);
 
-  const toggleTheme = () => {
-    setTheme(resolvedTheme === 'light' ? 'dark' : 'light');
-  };
-
-  const isNavbarDarkStyle = true; // Navbar is always dark styled (blue)
-
+  // On the server and initial client render, 'mounted' will be false.
+  // In this case, we return null to ensure no mismatch during hydration.
   if (!mounted) {
-    return null; // Render nothing on the server and initial client render
+    return null;
   }
 
-  // Once mounted, render the actual interactive button
+  // Once mounted on the client, we can safely render the button
+  // based on the resolvedTheme.
+  const isNavbarDarkStyle = true; // Navbar is always dark styled (blue)
   const CurrentIconToRender = resolvedTheme === "light" ? Sun : Moon;
+
   return (
     <Button
       variant="outline"
       size="icon"
-      onClick={toggleTheme}
+      onClick={() => setTheme(resolvedTheme === 'light' ? 'dark' : 'light')}
       className={cn(
-        isNavbarDarkStyle && "border-white hover:bg-[hsl(217,91%,50%)] focus-visible:ring-white"
+        // When on the dark navbar, ensure border and text are white, hover changes background
+        isNavbarDarkStyle && "border-white hover:bg-[hsl(217,91%,50%)] focus-visible:ring-white text-white"
       )}
       aria-label={`Switch to ${resolvedTheme === 'light' ? 'dark' : 'light'} mode`}
     >
