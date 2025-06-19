@@ -27,10 +27,10 @@ export const allPacks: PokemonPack[] = [
     series: 'Destined Rivals',
     image: 'https://pbs.twimg.com/media/Gmzw5Z9XgAAc9fc?format=jpg&name=large',
     dataAiHint: 'Destined Rivals pack Iron Thorns Armarouge',
-    cardsPerPack: 10, 
+    cardsPerPack: 10,
     rarityDistribution: { // Placeholder, actual logic is more complex in open/page.tsx
       common: 3,      // Example: 4 common, 2 uncommon, 1 base rare, 3 "hit" slots from a pool
-      uncommon: 2,    
+      uncommon: 2,
       rareSlot: 1, // This is a simplification; Destined Rivals has more complex hit slots.
     },
     possibleCards: destinedRivalsPackCards,
@@ -39,7 +39,7 @@ export const allPacks: PokemonPack[] = [
     id: 'generations-booster-001',
     name: 'Generations Booster Pack',
     series: 'Generations',
-    image: 'https://product-images.tcgplayer.com/fit-in/437x437/109038.jpg',
+    image: 'https://bananagames.ca/cdn/shop/files/187238_in_1000x1000_db43e300-d14a-4678-b114-b398af9727b7.jpg?v=1729205256',
     dataAiHint: 'Generations booster pack charizard pikachu',
     cardsPerPack: 10, // Generations packs often had 10 cards + a code card
     rarityDistribution: {
@@ -54,3 +54,4 @@ export const allPacks: PokemonPack[] = [
 export const getPackById = (id: string): PokemonPack | undefined => {
   return allPacks.find(pack => pack.id === id);
 };
+

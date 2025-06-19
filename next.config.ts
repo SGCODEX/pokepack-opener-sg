@@ -38,12 +38,17 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'i.ebayimg.com', 
+        hostname: 'i.ebayimg.com',
         pathname: '/**',
       },
       {
         protocol: 'https',
         hostname: 'pbs.twimg.com', // Added for Destined Rivals pack image
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'bananagames.ca', // Added for new Generations pack image
         pathname: '/**',
       }
     ],
