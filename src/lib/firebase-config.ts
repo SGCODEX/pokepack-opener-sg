@@ -16,10 +16,13 @@ const firebaseConfig = {
   measurementId: "YOUR_MEASUREMENT_ID_HERE" // Example: G-Q0RM7RYYD5 (Optional)
 };
 
-// IMPORTANT: If you encounter an 'auth/unauthorized-domain' error,
-// ensure you have added 'localhost' (for development) and your deployed app's domain
-// to the "Authorized domains" list in your Firebase project's Authentication settings
-// in the Firebase Console (Authentication > Sign-in method tab).
+// IMPORTANT: If you encounter an 'auth/unauthorized-domain' error:
+// 1. Ensure you have added 'localhost' (for local development) to the "Authorized domains" list
+//    in your Firebase project's Authentication settings (Authentication > Sign-in method tab).
+// 2. If running in an online IDE or preview environment (like Firebase Studio), you MUST also add
+//    the specific domain that environment uses to serve your app (e.g., check the browser's address bar
+//    when the error occurs) to the "Authorized domains" list in Firebase.
+// 3. When deploying to production, add your live app's domain as well.
 
 // Initialize Firebase
 let app;
@@ -32,3 +35,4 @@ if (!getApps().length) {
 export const auth = getAuth(app);
 export const db = getFirestore(app); // If you plan to use Firestore database
 export default app;
+
