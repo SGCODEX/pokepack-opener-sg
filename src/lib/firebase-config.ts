@@ -3,7 +3,6 @@
 import { initializeApp, getApp, getApps } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage"; // Import Firebase Storage
 
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // CRITICAL: YOU MUST REPLACE ALL PLACEHOLDER VALUES BELOW WITH YOUR ACTUAL
@@ -22,19 +21,18 @@ import { getStorage } from "firebase/storage"; // Import Firebase Storage
 //     You MUST add the SPECIFIC domain that the IDE/preview uses to serve your app.
 //     For example, for a URL like 'https://6000-firebase-studio-1749498673632.cluster-ubrd2huk7jh6otbgyei4h62ope.cloudworkstations.dev/login',
 //     the domain to add would be '6000-firebase-studio-1749498673632.cluster-ubrd2huk7jh6otbgyei4h62ope.cloudworkstations.dev'.
-//     Another example: for 'https://studio.firebase.google.com/your-project-path', add 'studio.firebase.google.com'.
+//     Another example: for 'https://studio.firebase.google.com/your-project-id', add 'studio.firebase.google.com'.
 //     Always check your browser's address bar when the error appears to find the exact domain to authorize.
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 const firebaseConfig = {
-  apiKey: "AIzaSyBdLrhMFCr6UUyhQ3wRWTXf8dFuJqjnxxY", // <-- REPLACE THIS WITH YOUR ACTUAL API KEY
-  authDomain: "pokepackopenersg.firebaseapp.com", // <-- REPLACE THIS
-  projectId: "pokepackopenersg", // <-- REPLACE THIS
-  storageBucket: "pokepackopenersg.appspot.com", // <-- REPLACE THIS. IMPORTANT FOR FIREBASE STORAGE
-  messagingSenderId: "7903817941", // <-- REPLACE THIS
-  appId: "1:7903817941:web:d92fcf804ae535075af25c", // <-- REPLACE THIS
-  measurementId: "G-Q0RM7RYYD5" // <-- REPLACE THIS (Optional)
+  apiKey: "AIzaSyBdLrhMFCr6UUyhQ3wRWTXf8dFuJqjnxxY", // <-- PASTE YOUR ACTUAL API KEY FROM FIREBASE CONSOLE HERE
+  authDomain: "pokepackopenersg.firebaseapp.com", // <-- PASTE YOURS HERE
+  projectId: "pokepackopenersg", // <-- PASTE YOURS HERE
+  storageBucket: "pokepackopenersg.appspot.com", // <-- PASTE YOURS HERE (even if not using Storage for profile pics now, good to have)
+  messagingSenderId: "7903817941", // <-- PASTE YOURS HERE
+  appId: "1:7903817941:web:d92fcf804ae535075af25c", // <-- PASTE YOURS HERE
+  measurementId: "G-Q0RM7RYYD5" // <-- PASTE YOURS HERE (Optional)
 };
-
 
 // Initialize Firebase
 let app;
@@ -46,5 +44,5 @@ if (!getApps().length) {
 
 export const auth = getAuth(app);
 export const db = getFirestore(app); // If you plan to use Firestore database
-export const storage = getStorage(app); // Initialize and export Firebase Storage
+// No longer exporting Firebase Storage as it's not used for profile pictures in this approach.
 export default app;

@@ -50,11 +50,6 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'bananagames.ca', 
         pathname: '/**',
-      },
-      { // Added for Firebase Storage (user profile pictures)
-        protocol: 'https',
-        hostname: 'firebasestorage.googleapis.com',
-        pathname: '/**',
       }
     ],
   },
