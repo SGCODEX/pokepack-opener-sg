@@ -3,12 +3,13 @@
 
 import { useAuth } from "@/contexts/auth-context";
 import { useMyTeam } from "@/hooks/use-my-team";
+import { usePokedex } from "@/hooks/use-pokedex"; // Added
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { CardComponent } from "@/components/card-component";
-import { UserCircle, Shield, Mail, LogOut } from "lucide-react";
+import { UserCircle, Shield, Mail, LogOut, BookOpen } from "lucide-react"; // Added BookOpen
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation"; // Keep for potential future use or other navigations
+import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
   const { user, loading: authLoading, signOut } = useAuth();
@@ -16,16 +17,17 @@ export default function ProfilePage() {
     getActiveTeamCards, 
     getActiveTeam, 
     isLoaded: teamHookLoaded,
-    teamSize 
   } = useMyTeam();
-  const router = useRouter(); // Keep router for other potential uses
+  const { 
+    totalCollectedIncludingDuplicates, 
+    isLoaded: pokedexLoaded 
+  } = usePokedex(); // Added
+  const router = useRouter();
 
   const activeTeamDetails = getActiveTeam();
   const activeTeamCards = getActiveTeamCards();
   
-  // Removed useEffect for redirecting to login
-
-  if (authLoading || !teamHookLoaded) {
+  if (authLoading || !teamHookLoaded || !pokedexLoaded) { // Added pokedexLoaded
     return (
       <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[hsl(217,91%,60%)]"></div>
@@ -33,8 +35,6 @@ export default function ProfilePage() {
       </div>
     );
   }
-
-  // const emptySlots = Array(teamSize).fill(null); // Not currently used, can be removed if not needed later
 
   return (
     <div className="space-y-10">
@@ -52,13 +52,17 @@ export default function ProfilePage() {
                   <UserCircle className="h-20 w-20 text-muted-foreground" />
                 </AvatarFallback>
               </Avatar>
-              <div className="text-center sm:text-left">
+              <div className="text-center sm:text-left space-y-1">
                 <CardTitle className="text-3xl font-headline text-primary-foreground dark:text-foreground">{user.displayName || 'Mysterious Trainer'}</CardTitle>
+                <CardDescription className="text-lg text-accent">"Gotta Catch 'Em All!"</CardDescription> 
                 {user.email && (
-                  <p className="text-muted-foreground flex items-center justify-center sm:justify-start gap-2 mt-1">
-                    <Mail className="h-5 w-5" /> {user.email}
+                  <p className="text-sm text-muted-foreground flex items-center justify-center sm:justify-start gap-1.5 pt-1">
+                    <Mail className="h-4 w-4" /> {user.email}
                   </p>
                 )}
+                <p className="text-sm text-muted-foreground flex items-center justify-center sm:justify-start gap-1.5">
+                  <BookOpen className="h-4 w-4" /> Total Pokémon Caught: {totalCollectedIncludingDuplicates}
+                </p>
               </div>
             </div>
           </CardHeader>
@@ -78,7 +82,6 @@ export default function ProfilePage() {
             <UserCircle className="mx-auto h-16 w-16 text-muted-foreground/50 mb-4" />
             <p className="text-xl text-muted-foreground">User profile information is not available.</p>
             <p className="text-sm text-muted-foreground mt-2">Sign in to see your details and manage your account.</p>
-            {/* Optionally, add a sign-in button here later that navigates to a future login page */}
           </CardContent>
         </Card>
       )}
