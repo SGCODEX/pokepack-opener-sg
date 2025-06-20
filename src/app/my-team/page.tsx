@@ -11,7 +11,7 @@ import { useMyTeam } from '@/hooks/use-my-team';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { AlertTriangle, Search, Trash2, Users, PlusCircle, MinusCircle, ShieldCheck, Pencil, Copy, ListChecks, Edit3, Star } from 'lucide-react';
+import { AlertTriangle, Search, Trash2, Users, PlusCircle, MinusCircle, ShieldCheck, Pencil, Copy, ListChecks, Edit3, Star, CheckCircle } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
@@ -203,6 +203,11 @@ export default function MyTeamPage() {
                       </p>
                     </div>
                     <div className="flex flex-wrap gap-2">
+                      {team.id !== activeTeamId && (
+                        <Button variant="outline" size="sm" onClick={() => setActiveTeamId(team.id)} className="bg-green-500 hover:bg-green-600 text-white border-green-600">
+                          <CheckCircle className="mr-1.5 h-4 w-4" /> Make Active
+                        </Button>
+                      )}
                       <Button variant="outline" size="sm" onClick={() => handleEditTeam(team.id)}>
                         <Edit3 className="mr-1.5 h-4 w-4" /> Edit
                       </Button>
@@ -461,3 +466,6 @@ export default function MyTeamPage() {
     </div>
   );
 }
+
+
+    
