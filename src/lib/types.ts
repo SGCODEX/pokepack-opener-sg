@@ -50,3 +50,9 @@ export interface PokemonPack {
   };
   possibleCards: string[]; // Array of card IDs that can be in this pack
 }
+
+export interface Team {
+  id: string;
+  name: string;
+  pokemonIds: (string | null)[];
+}
