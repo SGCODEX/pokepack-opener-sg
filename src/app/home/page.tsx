@@ -7,41 +7,35 @@ export default function HomePage() {
   return (
     // This outer div is now primarily for structuring the content overlay
     // within the main content area provided by the layout.
-    <div className="relative flex flex-col flex-grow items-center justify-center text-center">
+    <div className="relative flex flex-col flex-grow items-center justify-center">
       
       {/* Spline Scene Container - Fixed position to act as a true background */}
-      {/* It will be behind other content with higher z-index or explicit backgrounds. */}
       <div className="fixed inset-0 z-0">
         <Spline
           scene="https://prod.spline.design/UzrvpUcT7-i5b2xS/scene.splinecode"
-          style={{ width: '100%', height: '100%' }} // Spline component fills this fixed div
+          style={{ width: '100%', height: '100%' }}
         />
       </div>
 
       {/* Content Overlay - Positioned above Spline.
-          Needs its own padding and max-width to keep text readable and centered.
-          flex-grow here, along with items-center/justify-center on its parent, helps vertically center this block.
+          Aligned to the start (left) for a more modern feel.
       */}
-      <div className="relative z-10 flex flex-col flex-grow items-center justify-center text-center p-4 space-y-10 
-                      w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <header className="space-y-6 w-full max-w-4xl">
-          {/* Added text-shadow for better readability over 3D background */}
-          <h1 className="text-4xl sm:text-5xl font-headline font-bold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
+      <div className="relative z-10 flex flex-col flex-grow items-start justify-center w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-10 space-y-8">
+        <header className="space-y-4 w-full max-w-3xl">
+          <h1 className="text-5xl sm:text-6xl md:text-7xl font-headline font-bold text-white text-left drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
             Welcome to PokePack Opener SG!
           </h1>
         </header>
-        <section className="max-w-2xl lg:max-w-3xl">
-          {/* Adjusted text color and added shadow for readability */}
-          <p className="text-lg sm:text-xl text-gray-100 dark:text-gray-200 drop-shadow-[0_1px_1px_rgba(0,0,0,0.7)] leading-relaxed">
-            Dive into the exciting world of Pokémon cards. Open virtual booster packs from various sets, discover rare and powerful Pokémon, build your Pokédex, and assemble your ultimate battle teams. Your adventure starts here!
+        <section className="max-w-xl lg:max-w-2xl text-left">
+          <p className="text-lg sm:text-xl text-gray-100 dark:text-gray-200 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] leading-relaxed">
+            Unlock the thrill of Pokémon TCG. Open virtual packs, collect rare cards, and build your dream team. Start your adventure!
           </p>
         </section>
       </div>
       {/* 
         Future enhancements could include:
-        - A "Featured Pack" section linking to a specific pack.
-        - Statistics like "Total Packs Opened by Community".
-        - A "Call to Action" button like "Start Opening Packs!"
+        - A "Call to Action" button like "Start Opening Packs!" linked to '/'
+        - Maybe a small section highlighting a "Featured Pack".
       */}
     </div>
   );
