@@ -7,26 +7,31 @@ import { getFirestore } from "firebase/firestore";
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // CRITICAL: YOU MUST REPLACE ALL PLACEHOLDER VALUES BELOW WITH YOUR ACTUAL
 // FIREBASE PROJECT CONFIGURATION.
-// The 'auth/api-key-not-valid' error means your apiKey is incorrect or missing.
-// Get your config from: Firebase Console > Project Settings > General tab > Your apps > Web app > SDK setup and configuration > Config
+//
+// If you get 'auth/api-key-not-valid':
+//   - Your apiKey is incorrect or missing.
+//   - Get your config from: Firebase Console > Project Settings > General tab > Your apps > Web app > SDK setup and configuration > Config
+//
+// If you get 'auth/unauthorized-domain':
+//   - The domain your app is running on (check your browser's address bar when the error occurs)
+//     is NOT in the "Authorized domains" list in Firebase.
+//   - Go to: Firebase Console > Your Project > Authentication > Sign-in method tab > Authorized domains.
+//   - Add 'localhost' for local development.
+//   - !! VERY IMPORTANT FOR ONLINE IDEs/PREVIEW ENVIRONMENTS (like Firebase Studio) !!
+//     You MUST add the SPECIFIC domain that the IDE/preview uses to serve your app.
+//     This might be something like 'your-project-id--random-string.web.app' or 'your-username.firebase.studio'.
+//     Check your browser's address bar when the error appears to find this domain.
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY_HERE", // Example: AIzaSyBdLrhMFCr6UUyhQ3wRWTXf8dFuJqjnxxY --- THIS MUST BE YOUR ACTUAL API KEY
-  authDomain: "YOUR_AUTH_DOMAIN_HERE", // Example: pokepackopenersg.firebaseapp.com
-  projectId: "YOUR_PROJECT_ID_HERE", // Example: pokepackopenersg
-  storageBucket: "YOUR_STORAGE_BUCKET_HERE", // Example: pokepackopenersg.appspot.com
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID_HERE", // Example: 7903817941
-  appId: "YOUR_APP_ID_HERE", // Example: 1:7903817941:web:d92fcf804ae535075af25c
-  measurementId: "YOUR_MEASUREMENT_ID_HERE" // Example: G-Q0RM7RYYD5 (Optional)
+  apiKey: "AIzaSyBdLrhMFCr6UUyhQ3wRWTXf8dFuJqjnxxY", // <-- REPLACE THIS WITH YOUR ACTUAL API KEY
+  authDomain: "pokepackopenersg.firebaseapp.com", // <-- REPLACE THIS
+  projectId: "pokepackopenersg", // <-- REPLACE THIS
+  storageBucket: "pokepackopenersg.firebasestorage.app", // <-- REPLACE THIS
+  messagingSenderId: "7903817941", // <-- REPLACE THIS
+  appId: "1:7903817941:web:d92fcf804ae535075af25c", // <-- REPLACE THIS
+  measurementId: "G-Q0RM7RYYD5" // <-- REPLACE THIS (Optional)
 };
 
-// IMPORTANT: If you encounter an 'auth/unauthorized-domain' error:
-// 1. Ensure you have added 'localhost' (for local development) to the "Authorized domains" list
-//    in your Firebase project's Authentication settings (Authentication > Sign-in method tab).
-// 2. If running in an online IDE or preview environment (like Firebase Studio), you MUST also add
-//    the specific domain that environment uses to serve your app (e.g., check the browser's address bar
-//    when the error occurs) to the "Authorized domains" list in Firebase. This is a common cause of this error in such environments.
-// 3. When deploying to production, add your live app's domain as well.
 
 // Initialize Firebase
 let app;
