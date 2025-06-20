@@ -43,10 +43,10 @@ export default function ProfilePage() {
       </header>
 
       {user ? (
-        <Card className="shadow-xl border-2 border-border dark:border-primary/30">
+        <Card className="shadow-xl border-2 border-border dark:border-[hsl(217,91%,60%)]/30">
           <CardHeader>
             <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
-              <Avatar className="h-24 w-24 border-2 border-primary">
+              <Avatar className="h-24 w-24 border-2 border-[hsl(217,91%,60%)]">
                 <AvatarImage src={user.photoURL || undefined} alt={user.displayName || 'User'} />
                 <AvatarFallback>
                   <UserCircle className="h-20 w-20 text-muted-foreground" />
@@ -77,16 +77,16 @@ export default function ProfilePage() {
           </CardContent>
         </Card>
       ) : (
-        <Card className="shadow-xl border-2 border-border dark:border-primary/30">
+        <Card className="shadow-xl border-2 border-border dark:border-[hsl(217,91%,60%)]/30">
           <CardContent className="text-center py-8">
             <UserCircle className="mx-auto h-16 w-16 text-muted-foreground/50 mb-4" />
-            <p className="text-xl text-muted-foreground">User profile information is not available.</p>
+            <p className="text-xl text-foreground">User profile information is not available.</p>
             <p className="text-sm text-muted-foreground mt-2">Sign in to see your details and manage your account.</p>
           </CardContent>
         </Card>
       )}
 
-      <Card className="shadow-xl border-2 border-border dark:border-primary/30">
+      <Card className="shadow-xl border-2 border-border dark:border-[hsl(217,91%,60%)]/30">
         <CardHeader>
           <CardTitle className="text-3xl font-headline text-center flex items-center justify-center gap-3 text-primary-foreground dark:text-foreground">
             <Shield className="h-8 w-8 text-[hsl(217,91%,60%)]" />
