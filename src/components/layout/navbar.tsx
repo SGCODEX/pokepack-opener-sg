@@ -2,39 +2,28 @@
 "use client";
 
 import Link from 'next/link';
-import { Sparkles, Users, User } from 'lucide-react'; // Added User icon
+import { Sparkles, Users, User } from 'lucide-react'; 
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Container } from './container';
 import dynamic from 'next/dynamic';
-import { useAuth } from '@/contexts/auth-context'; // Import useAuth
 
-// Dynamically import ThemeToggleButton to make it client-side only
 const ThemeToggleButton = dynamic(() =>
   import('@/components/theme-toggle-button').then(mod => mod.ThemeToggleButton),
   { ssr: false }
 );
 
-const navLinksBase = [
+const navLinks = [
   { href: '/', label: 'Open Packs' },
   { href: '/pokedex', label: 'My Pokedex' },
   { href: '/my-team', label: 'My Team', icon: Users },
-  // Profile link will be added dynamically based on auth state
+  { href: '/profile', label: 'Profile', icon: User }, 
 ];
 
 export function Navbar() {
   const pathname = usePathname();
-  const { user, loading } = useAuth(); // Get user and loading state
-
   const pokemonBlueBg = "bg-[hsl(217,91%,60%)]";
   const activeLinkBg = "bg-[hsl(217,91%,50%)]";
-
-  const currentNavLinks = [
-    ...navLinksBase,
-    ...(user ? [{ href: '/profile', label: 'Profile', icon: User }] : []),
-    ...(!user && !loading ? [{ href: '/login', label: 'Login', icon: User }] : [])
-  ];
-
 
   return (
     <header className={cn(pokemonBlueBg, "shadow-md sticky top-0 z-50")}>
@@ -46,7 +35,7 @@ export function Navbar() {
           </Link>
           <div className="flex items-center space-x-4">
             <nav className="hidden sm:flex items-center space-x-1">
-              {currentNavLinks.map((link) => (
+              {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
@@ -65,7 +54,7 @@ export function Navbar() {
         </div>
         {/* Mobile navigation links */}
         <nav className="sm:hidden flex items-center justify-around space-x-1 py-2 border-t border-primary/30">
-            {currentNavLinks.map((link) => (
+            {navLinks.map((link) => (
             <Link
                 key={link.href + "-mobile"}
                 href={link.href}

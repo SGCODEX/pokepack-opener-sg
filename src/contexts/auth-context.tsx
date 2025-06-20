@@ -6,7 +6,7 @@ import { auth } from '@/lib/firebase-config';
 import { onAuthStateChanged, signOut as firebaseSignOut, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import type { ReactNode } from 'react';
 import { createContext, useContext, useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation'; // Not needed for redirect on sign out anymore
 
 interface AuthContextType {
   user: User | null;
@@ -20,7 +20,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
+  // const router = useRouter(); // Not needed for redirect on sign out anymore
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -34,7 +34,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const provider = new GoogleAuthProvider();
     try {
       await signInWithPopup(auth, provider);
-      // User will be set by onAuthStateChanged, router.push can be handled there or on page
+      // User will be set by onAuthStateChanged.
+      // Navigation after sign-in will be handled by the page calling this, or by useEffect on pages watching user state.
     } catch (error) {
       console.error("Error signing in with Google: ", error);
       // Handle error (e.g., show a toast message)
@@ -44,7 +45,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOut = async () => {
     try {
       await firebaseSignOut(auth);
-      router.push('/login'); // Redirect to login after sign out
+      // Removed redirect to /login
+      // User state will update via onAuthStateChanged, pages can react accordingly.
     } catch (error) {
       console.error("Error signing out: ", error);
       // Handle error
