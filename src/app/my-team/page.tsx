@@ -155,9 +155,11 @@ export default function MyTeamPage() {
           ))}
         </div>
         {currentTeamCount > 0 && (
-          <Button onClick={handleClearTeam} variant="outline" className="w-full sm:w-auto mx-auto block">
-            <Trash2 className="mr-2 h-4 w-4" /> Clear Entire Team
-          </Button>
+          <div className="text-center mt-4"> {/* Wrapper div for centering */}
+            <Button onClick={handleClearTeam} variant="outline" className="w-full sm:w-auto">
+              <Trash2 className="mr-2 h-4 w-4" /> Clear Entire Team
+            </Button>
+          </div>
         )}
       </section>
 
@@ -273,3 +275,4 @@ export default function MyTeamPage() {
     </div>
   );
 }
+
