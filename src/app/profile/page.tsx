@@ -17,7 +17,7 @@ import { updateProfile } from "firebase/auth";
 import { auth } from "@/lib/firebase-config";
 import { useToast } from "@/hooks/use-toast";
 import Image from "next/image";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogClose } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
 
 const DEFAULT_BIO = "Gotta Catch 'Em All!";
 
@@ -39,8 +39,8 @@ const predefinedAvatars = [
   { id: 'avatarEri', url: 'https://scarletviolet.pokemon.com/_images/character/eri/character-eri.webp', alt: 'Eri Avatar', dataAiHint: 'pokemon eri' },
   { id: 'avatarGeeta', url: 'https://scarletviolet.pokemon.com/_images/character/geeta/character-geeta.webp', alt: 'Geeta Avatar', dataAiHint: 'pokemon geeta' },
   { id: 'avatarIono', url: 'https://scarletviolet.pokemon.com/_images/character/iono/character-iono.webp', alt: 'Iono Avatar', dataAiHint: 'pokemon iono' },
-  { id: 'avatarYellowAbstract', url: 'https://placehold.co/100x100.png', alt: 'Yellow Abstract Avatar', dataAiHint: 'abstract yellow' },
-  { id: 'avatarBlueAbstract', url: 'https://placehold.co/100x100.png', alt: 'Blue Abstract Avatar', dataAiHint: 'abstract blue' },
+  { id: 'avatarGiacomo', url: 'https://scarletviolet.pokemon.com/_images/character/giacomo/character-giacomo.webp', alt: 'Giacomo Avatar', dataAiHint: 'pokemon giacomo' },
+  { id: 'avatarKofu', url: 'https://scarletviolet.pokemon.com/_images/character/kofu/character-kofu.webp', alt: 'Kofu Avatar', dataAiHint: 'pokemon kofu' },
 ];
 
 
