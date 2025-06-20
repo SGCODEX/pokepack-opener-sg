@@ -173,7 +173,7 @@ export default function MyTeamPage() {
             <p className="text-lg text-muted-foreground dark:text-foreground/80">Manage your battle squads or themed collections.</p>
           </header>
           <div className="text-center">
-            <Button onClick={handleCreateNewTeam} size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
+            <Button onClick={handleCreateNewTeam} size="lg" className="bg-[hsl(217,91%,60%)] hover:bg-[hsl(217,91%,50%)] text-white">
               <PlusCircle className="mr-2 h-5 w-5" /> Create New Team
             </Button>
           </div>
@@ -466,3 +466,4 @@ export default function MyTeamPage() {
     </div>
   );
 }
+
