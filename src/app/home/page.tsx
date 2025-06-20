@@ -5,23 +5,23 @@ import Spline from '@splinetool/react-spline';
 
 export default function HomePage() {
   return (
-    // This div expands to fill its parent (Container's content area)
-    // and then uses negative margins to "break out" of the Container's padding.
-    // It's also flex-col to allow the text overlay to use flex-grow for vertical centering.
-    <div className="relative flex flex-col flex-grow 
-                  my-[-2rem] mx-[-1rem] sm:mx-[-1.5rem] lg:mx-[-2rem]">
+    // This outer div is now primarily for structuring the content overlay
+    // within the main content area provided by the layout.
+    <div className="relative flex flex-col flex-grow items-center justify-center text-center">
       
-      {/* Spline Scene Container - Absolute positioned to fill the expanded parent */}
-      <div className="absolute inset-0 z-0">
+      {/* Spline Scene Container - Fixed position to act as a true background */}
+      {/* It will be behind other content with higher z-index or explicit backgrounds. */}
+      <div className="fixed inset-0 z-0">
         <Spline
           scene="https://prod.spline.design/XxKU8Oe97YpmuHwh/scene.splinecode"
-          style={{ width: '100%', height: '100%' }}
+          style={{ width: '100%', height: '100%' }} // Spline component fills this fixed div
         />
       </div>
 
       {/* Content Overlay - Positioned above Spline.
           Needs its own padding and max-width to keep text readable and centered.
-          flex-grow allows it to take up available vertical space for centering. */}
+          flex-grow here, along with items-center/justify-center on its parent, helps vertically center this block.
+      */}
       <div className="relative z-10 flex flex-col flex-grow items-center justify-center text-center p-4 space-y-10 
                       w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <header className="space-y-6 w-full max-w-4xl">
