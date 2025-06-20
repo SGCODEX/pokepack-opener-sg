@@ -149,21 +149,21 @@ export default function ProfilePage() {
             <CardHeader>
               <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
                 <div className="relative group">
-                  <Avatar className="h-28 w-28 border-2 border-[hsl(217,91%,60%)]">
+                  <Avatar className="h-32 w-32 border-2 border-[hsl(217,91%,60%)]">
                     <AvatarImage src={user.photoURL || undefined} alt={user.displayName || 'User'} />
                     <AvatarFallback>
-                      {user.displayName ? user.displayName.charAt(0).toUpperCase() : <UserCircle className="h-24 w-24 text-muted-foreground" />}
+                      {user.displayName ? user.displayName.charAt(0).toUpperCase() : <UserCircle className="h-28 w-28 text-muted-foreground" />}
                     </AvatarFallback>
                   </Avatar>
                   <Button 
                     size="icon" 
                     variant="ghost" 
-                    className="absolute bottom-0 right-0 bg-background/70 hover:bg-background rounded-full h-8 w-8 group-hover:opacity-100 opacity-50 transition-opacity"
+                    className="absolute bottom-1 right-1 bg-background/70 hover:bg-background rounded-full h-10 w-10 group-hover:opacity-100 opacity-50 transition-opacity"
                     onClick={() => setIsAvatarSelectionDialogOpen(true)}
                     disabled={isUpdatingAvatar}
                     aria-label="Change profile picture"
                   >
-                    {isUpdatingAvatar ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
+                    {isUpdatingAvatar ? <Loader2 className="h-5 w-5 animate-spin" /> : <Camera className="h-5 w-5" />}
                   </Button>
                 </div>
 
@@ -346,3 +346,4 @@ export default function ProfilePage() {
     </div>
   );
 }
+
