@@ -11,7 +11,7 @@ import { useMyTeam } from '@/hooks/use-my-team';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { AlertTriangle, Search, Trash2, Users, PlusCircle, MinusCircle, ShieldCheck, Pencil, Copy, ListChecks, Edit3 } from 'lucide-react';
+import { AlertTriangle, Search, Trash2, Users, PlusCircle, MinusCircle, ShieldCheck, Pencil, Copy, ListChecks, Edit3, Star } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
@@ -19,6 +19,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { cn } from '@/lib/utils';
 import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
 
 
 const cardTypes = ["All", "Fire", "Water", "Grass", "Lightning", "Psychic", "Fighting", "Colorless", "Darkness", "Metal", "Dragon", "Fairy", "Trainer", "Energy"];
@@ -149,7 +150,7 @@ export default function MyTeamPage() {
     const newTeamId = duplicateTeam(teamId);
     if (newTeamId) {
       setActiveTeamId(newTeamId);
-      setViewMode('edit'); // Optionally switch to edit the new duplicated team
+      setViewMode('edit'); 
     }
   };
 
@@ -178,12 +179,25 @@ export default function MyTeamPage() {
           </div>
 
           {teams.length > 0 ? (
-            <ScrollArea className="h-[calc(100vh-20rem)]"> {/* Adjust height as needed */}
+            <ScrollArea className="h-[calc(100vh-20rem)]"> 
               <div className="space-y-4 p-1">
                 {teams.map(team => (
-                  <div key={team.id} className="p-4 bg-card rounded-lg shadow-md border border-border flex flex-col sm:flex-row justify-between items-center gap-3">
+                  <div 
+                    key={team.id} 
+                    className={cn(
+                      "p-4 bg-card rounded-lg shadow-md border flex flex-col sm:flex-row justify-between items-center gap-3 transition-all",
+                      team.id === activeTeamId ? "border-primary ring-2 ring-primary shadow-xl" : "border-border hover:shadow-lg"
+                    )}
+                  >
                     <div className="flex-grow">
-                      <h3 className="text-xl font-semibold text-card-foreground">{team.name}</h3>
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-xl font-semibold text-card-foreground">{team.name}</h3>
+                        {team.id === activeTeamId && (
+                           <Badge variant="default" className="bg-accent text-accent-foreground">
+                             <Star className="mr-1 h-3 w-3" /> Active
+                           </Badge>
+                        )}
+                      </div>
                       <p className="text-sm text-muted-foreground">
                         {team.pokemonIds.filter(id => id !== null).length} / {teamSize} Pokémon
                       </p>
@@ -235,7 +249,7 @@ export default function MyTeamPage() {
       {viewMode === 'edit' && currentActiveTeamDetails && (
         <>
           <header className="flex flex-col sm:flex-row justify-between items-center gap-3">
-            <Button variant="outline" onClick={() => { setViewMode('list'); setActiveTeamId(null); }}>
+            <Button variant="outline" onClick={() => { setViewMode('list'); /* setActiveTeamId(null); // Keep activeTeamId for highlighting in list */ }}>
               <ListChecks className="mr-2 h-4 w-4" /> Back to Team List
             </Button>
             <div className="text-center flex-grow">
