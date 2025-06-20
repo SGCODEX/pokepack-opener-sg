@@ -186,14 +186,14 @@ export default function MyTeamPage() {
                     key={team.id} 
                     className={cn(
                       "p-4 bg-card rounded-lg shadow-md border flex flex-col sm:flex-row justify-between items-center gap-3 transition-all",
-                      team.id === activeTeamId ? "border-primary ring-2 ring-primary shadow-xl" : "border-border hover:shadow-lg"
+                      team.id === activeTeamId ? "border-[hsl(217,91%,60%)] ring-2 ring-[hsl(217,91%,60%)] shadow-xl" : "border-border hover:shadow-lg"
                     )}
                   >
                     <div className="flex-grow">
                       <div className="flex items-center gap-2">
                         <h3 className="text-xl font-semibold text-card-foreground">{team.name}</h3>
                         {team.id === activeTeamId && (
-                           <Badge variant="default" className="bg-accent text-accent-foreground">
+                           <Badge className="bg-[hsl(217,91%,60%)] text-white">
                              <Star className="mr-1 h-3 w-3" /> Active
                            </Badge>
                         )}
@@ -466,6 +466,3 @@ export default function MyTeamPage() {
     </div>
   );
 }
-
-
-    
