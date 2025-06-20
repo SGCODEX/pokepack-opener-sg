@@ -39,8 +39,8 @@ const predefinedAvatars = [
   { id: 'avatarBulbasaur', url: 'https://i.pinimg.com/736x/8e/31/3f/8e313f80c651f89dbb2c933a2958739a.jpg', alt: 'Bulbasaur Avatar', dataAiHint: 'bulbasaur avatar' },
   { id: 'avatarEevee', url: 'https://i.pinimg.com/736x/e9/8b/76/e98b76231f47833501a59230514a6003.jpg', alt: 'Eevee Avatar', dataAiHint: 'eevee avatar' },
   { id: 'avatarJigglypuff', url: 'https://i.pinimg.com/736x/36/53/56/3653569806a380963d332d0c2420f8e9.jpg', alt: 'Jigglypuff Avatar', dataAiHint: 'jigglypuff avatar' },
-  { id: 'avatarOrange', url: 'https://placehold.co/100x100/E67E22/FFFFFF.png?text=P7', alt: 'Orange Abstract Avatar', dataAiHint: 'abstract orange' },
-  { id: 'avatarGrey', url: 'https://placehold.co/100x100/7F8C8D/FFFFFF.png?text=P8', alt: 'Grey Abstract Avatar', dataAiHint: 'abstract grey' },
+  { id: 'avatarOrange', url: 'https://placehold.co/100x100.png', alt: 'Orange Abstract Avatar', dataAiHint: 'abstract orange' },
+  { id: 'avatarGrey', url: 'https://placehold.co/100x100.png', alt: 'Grey Abstract Avatar', dataAiHint: 'abstract grey' },
 ];
 
 
@@ -346,3 +346,7 @@ export default function ProfilePage() {
     </div>
   );
 }
+
+    
+
+    
