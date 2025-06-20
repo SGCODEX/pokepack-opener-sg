@@ -4,62 +4,87 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { PokemonCard, Team } from '@/lib/types';
 import { getCardById } from '@/lib/pokemon-data';
+import { useAuth } from '@/contexts/auth-context';
+import { db } from '@/lib/firebase-config';
+import { doc, getDoc, setDoc, deleteField } from 'firebase/firestore';
 
-const TEAMS_STORAGE_KEY = 'pokemon_teams_v2'; // Updated key for new structure
+// No longer using TEAMS_STORAGE_KEY or local storage for active team ID
 const TEAM_SIZE = 6;
 
+interface TeamsFirestoreData {
+  teams: Team[];
+  activeTeamId: string | null;
+}
+
 export function useMyTeam() {
+  const { user } = useAuth();
   const [teams, setTeams] = useState<Team[]>([]);
   const [activeTeamId, setActiveTeamId] = useState<string | null>(null);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false); // Indicates if initial load attempt is complete
 
+  // Load teams data from Firestore
   useEffect(() => {
-    try {
-      const storedData = localStorage.getItem(TEAMS_STORAGE_KEY);
-      if (storedData) {
-        const parsedData = JSON.parse(storedData) as Team[];
-        if (Array.isArray(parsedData) && parsedData.every(team => 
-          typeof team.id === 'string' &&
-          typeof team.name === 'string' &&
-          Array.isArray(team.pokemonIds) &&
-          team.pokemonIds.length === TEAM_SIZE &&
-          team.pokemonIds.every(id => id === null || (typeof id === 'string' && getCardById(id)))
-        )) {
-          setTeams(parsedData);
-          if (parsedData.length > 0) {
-            // Try to restore active team id if it exists, otherwise set to first
-            const storedActiveId = localStorage.getItem(`${TEAMS_STORAGE_KEY}_active`);
-            if (storedActiveId && parsedData.find(t => t.id === storedActiveId)) {
-              setActiveTeamId(storedActiveId);
+    if (user) {
+      setIsLoaded(false); // Set to false before fetching
+      const userDocRef = doc(db, 'users', user.uid);
+      getDoc(userDocRef).then(docSnap => {
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          const teamsData = userData.teamsData as TeamsFirestoreData | undefined;
+
+          if (teamsData && Array.isArray(teamsData.teams)) {
+            // Validate teams structure further if necessary
+            const validTeams = teamsData.teams.filter(team => 
+              typeof team.id === 'string' &&
+              typeof team.name === 'string' &&
+              Array.isArray(team.pokemonIds) &&
+              team.pokemonIds.length === TEAM_SIZE &&
+              team.pokemonIds.every(id => id === null || (typeof id === 'string' && getCardById(id)))
+            );
+            setTeams(validTeams);
+
+            if (teamsData.activeTeamId && validTeams.find(t => t.id === teamsData.activeTeamId)) {
+              setActiveTeamId(teamsData.activeTeamId);
+            } else if (validTeams.length > 0) {
+              setActiveTeamId(validTeams[0].id); // Default to first team if activeId is invalid or not set
             } else {
-              setActiveTeamId(parsedData[0].id);
+              setActiveTeamId(null);
             }
+          } else {
+            setTeams([]);
+            setActiveTeamId(null);
           }
         } else {
-          setTeams([]); // Invalid data structure
+          // New user or no teams data yet
+          setTeams([]);
+          setActiveTeamId(null);
         }
-      }
-    } catch (error) {
-      console.error("Error loading teams data from localStorage:", error);
+        setIsLoaded(true);
+      }).catch(error => {
+        console.error("Error loading teams data from Firestore:", error);
+        setTeams([]);
+        setActiveTeamId(null);
+        setIsLoaded(true);
+      });
+    } else {
+      // No user, reset states and mark as loaded
       setTeams([]);
+      setActiveTeamId(null);
+      setIsLoaded(true);
     }
-    setIsLoaded(true);
-  }, []);
+  }, [user]);
 
+  // Save teams data to Firestore when teams or activeTeamId changes
   useEffect(() => {
-    if (isLoaded) {
-      try {
-        localStorage.setItem(TEAMS_STORAGE_KEY, JSON.stringify(teams));
-        if (activeTeamId) {
-          localStorage.setItem(`${TEAMS_STORAGE_KEY}_active`, activeTeamId);
-        } else {
-          localStorage.removeItem(`${TEAMS_STORAGE_KEY}_active`);
-        }
-      } catch (error) {
-        console.error("Error saving teams data to localStorage:", error);
-      }
+    if (user && isLoaded) { // Only save if user is present and initial load is done
+      const userDocRef = doc(db, 'users', user.uid);
+      const dataToSave: TeamsFirestoreData = { teams, activeTeamId };
+      setDoc(userDocRef, { teamsData: dataToSave }, { merge: true })
+        .catch(error => {
+          console.error("Error saving teams data to Firestore:", error);
+        });
     }
-  }, [teams, activeTeamId, isLoaded]);
+  }, [teams, activeTeamId, user, isLoaded]);
 
   const createTeam = useCallback((name?: string): string => {
     const newTeamId = Date.now().toString();
@@ -69,16 +94,19 @@ export function useMyTeam() {
       pokemonIds: Array(TEAM_SIZE).fill(null),
     };
     setTeams(prevTeams => [...prevTeams, newTeam]);
-    setActiveTeamId(newTeamId);
+    setActiveTeamId(newTeamId); // Set as active immediately
     return newTeamId;
   }, [teams.length]);
 
   const deleteTeam = useCallback((teamId: string) => {
-    setTeams(prevTeams => prevTeams.filter(team => team.id !== teamId));
-    if (activeTeamId === teamId) {
-      setActiveTeamId(teams.length > 1 ? teams.find(t => t.id !== teamId)?.[0].id ?? null : null);
-    }
-  }, [activeTeamId, teams]);
+    setTeams(prevTeams => {
+      const updatedTeams = prevTeams.filter(team => team.id !== teamId);
+      if (activeTeamId === teamId) {
+        setActiveTeamId(updatedTeams.length > 0 ? updatedTeams[0].id : null);
+      }
+      return updatedTeams;
+    });
+  }, [activeTeamId]); // Removed 'teams' from dependencies to avoid stale closure issues with setActiveTeamId
 
   const renameTeam = useCallback((teamId: string, newName: string) => {
     setTeams(prevTeams =>
@@ -110,7 +138,7 @@ export function useMyTeam() {
   const addCardToActiveTeam = useCallback((cardId: string): boolean => {
     const currentActiveTeam = getActiveTeam();
     if (!currentActiveTeam || currentActiveTeam.pokemonIds.includes(cardId)) {
-      return false; // No active team or card already in team
+      return false; 
     }
     const emptySlotIndex = currentActiveTeam.pokemonIds.findIndex(id => id === null);
     if (emptySlotIndex !== -1) {
@@ -177,7 +205,7 @@ export function useMyTeam() {
   return {
     teams,
     activeTeamId,
-    setActiveTeamId,
+    setActiveTeamId, // Expose setActiveTeamId directly
     getActiveTeam,
     getActiveTeamCards,
     createTeam,

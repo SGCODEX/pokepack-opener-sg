@@ -2,40 +2,59 @@
 "use client";
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { allCards } from '@/lib/pokemon-data'; 
+import { useAuth } from '@/contexts/auth-context';
+import { db } from '@/lib/firebase-config';
+import { doc, getDoc, setDoc, deleteField } from 'firebase/firestore';
 
-const POKEDEX_STORAGE_KEY = 'collected_pokemon_cards_map'; // Updated key
+// No longer using POKEDEX_STORAGE_KEY
 
 export function usePokedex() {
+  const { user } = useAuth();
   const [collectedCardsMap, setCollectedCardsMap] = useState<Record<string, number>>({});
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false); // Indicates if initial load attempt is complete
 
+  // Load Pokedex data from Firestore
   useEffect(() => {
-    try {
-      const storedData = localStorage.getItem(POKEDEX_STORAGE_KEY);
-      if (storedData) {
-        const parsedData = JSON.parse(storedData);
-        if (typeof parsedData === 'object' && parsedData !== null) {
-          setCollectedCardsMap(parsedData);
+    if (user) {
+      const userDocRef = doc(db, 'users', user.uid);
+      getDoc(userDocRef).then(docSnap => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (data && typeof data.pokedexData === 'object' && data.pokedexData !== null) {
+            setCollectedCardsMap(data.pokedexData);
+          } else {
+            setCollectedCardsMap({}); // Initialize if field is missing or not an object
+          }
         } else {
-          setCollectedCardsMap({}); // Fallback for invalid data
+          // New user or no Pokedex data yet, initialize as empty
+          setCollectedCardsMap({});
+          // Optionally, you could write initial empty data here,
+          // but saving on change will handle it.
         }
-      }
-    } catch (error) {
-      console.error("Error loading Pokedex data from localStorage:", error);
+        setIsLoaded(true);
+      }).catch(error => {
+        console.error("Error loading Pokedex data from Firestore:", error);
+        setCollectedCardsMap({}); // Fallback on error
+        setIsLoaded(true);
+      });
+    } else {
+      // No user, reset and mark as loaded (nothing to load)
       setCollectedCardsMap({});
+      setIsLoaded(true); 
     }
-    setIsLoaded(true);
-  }, []);
+  }, [user]);
 
+  // Save Pokedex data to Firestore when collectedCardsMap changes
   useEffect(() => {
-    if (isLoaded) {
-      try {
-        localStorage.setItem(POKEDEX_STORAGE_KEY, JSON.stringify(collectedCardsMap));
-      } catch (error) {
-        console.error("Error saving Pokedex data to localStorage:", error);
-      }
+    if (user && isLoaded) { // Only save if user is present and initial load is done
+      const userDocRef = doc(db, 'users', user.uid);
+      // Using setDoc with merge:true to avoid overwriting other potential user data
+      setDoc(userDocRef, { pokedexData: collectedCardsMap }, { merge: true })
+        .catch(error => {
+          console.error("Error saving Pokedex data to Firestore:", error);
+        });
     }
-  }, [collectedCardsMap, isLoaded]);
+  }, [collectedCardsMap, user, isLoaded]);
 
   const addCardsToCollection = useCallback((cardIds: string[]) => {
     setCollectedCardsMap(prevMap => {
@@ -51,14 +70,20 @@ export function usePokedex() {
     return collectedCardsMap[cardId] || 0;
   }, [collectedCardsMap]);
 
-  const resetPokedex = useCallback(() => {
-    setCollectedCardsMap({});
-    try {
-      localStorage.removeItem(POKEDEX_STORAGE_KEY);
-    } catch (error) {
-      console.error("Error removing Pokedex data from localStorage:", error);
+  const resetPokedex = useCallback(async () => {
+    if (user) {
+      const userDocRef = doc(db, 'users', user.uid);
+      try {
+        // To remove the pokedexData field, we set it to deleteField()
+        await setDoc(userDocRef, { pokedexData: deleteField() }, { merge: true });
+        setCollectedCardsMap({}); // Reset local state
+      } catch (error) {
+        console.error("Error resetting Pokedex data in Firestore:", error);
+      }
+    } else {
+      setCollectedCardsMap({}); // If no user, just reset local state
     }
-  }, []);
+  }, [user]);
 
   const totalUniqueCollected = Object.keys(collectedCardsMap).length;
 

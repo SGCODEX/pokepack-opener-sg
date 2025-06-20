@@ -14,7 +14,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import { updateProfile } from "firebase/auth";
-import { auth } from "@/lib/firebase-config";
+import { auth, db } from "@/lib/firebase-config"; // Import db
+import { doc, getDoc, setDoc } from "firebase/firestore"; // Import Firestore functions
 import { useToast } from "@/hooks/use-toast";
 import Image from "next/image";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from "@/components/ui/dialog";
@@ -68,16 +69,37 @@ export default function ProfilePage() {
   const [showFullEmail, setShowFullEmail] = useState(false);
   const [isAvatarSelectionDialogOpen, setIsAvatarSelectionDialogOpen] = useState(false);
   const [isUpdatingAvatar, setIsUpdatingAvatar] = useState(false);
+  const [profileDataLoading, setProfileDataLoading] = useState(true);
 
 
   useEffect(() => {
     if (user) {
       setEditableDisplayName(user.displayName || "");
-      const storedBio = localStorage.getItem(`userBio-${user.uid}`);
-      setCurrentBio(storedBio || DEFAULT_BIO);
-      setEditableBio(storedBio || DEFAULT_BIO);
+      // Load bio from Firestore
+      const userDocRef = doc(db, 'users', user.uid);
+      setProfileDataLoading(true);
+      getDoc(userDocRef).then(docSnap => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          const firestoreBio = data.profileBio;
+          setCurrentBio(firestoreBio || DEFAULT_BIO);
+          setEditableBio(firestoreBio || DEFAULT_BIO);
+        } else {
+          setCurrentBio(DEFAULT_BIO);
+          setEditableBio(DEFAULT_BIO);
+        }
+      }).catch(error => {
+        console.error("Error loading bio from Firestore:", error);
+        toast({ title: "Error", description: "Could not load profile bio.", variant: "destructive" });
+        setCurrentBio(DEFAULT_BIO); // Fallback
+        setEditableBio(DEFAULT_BIO);
+      }).finally(() => {
+        setProfileDataLoading(false);
+      });
+    } else {
+      setProfileDataLoading(false); // No user, so nothing to load
     }
-  }, [user]);
+  }, [user, toast]);
 
   const handleSaveName = async () => {
     if (!auth.currentUser) {
@@ -92,18 +114,25 @@ export default function ProfilePage() {
       await updateProfile(auth.currentUser, { displayName: editableDisplayName });
       toast({ title: "Success", description: "Display name updated!" });
       setIsEditingName(false);
+      // No need to update 'user' state directly, onAuthStateChanged or context refresh will handle it.
     } catch (error) {
       console.error("Error updating display name:", error);
       toast({ title: "Error", description: "Failed to update display name.", variant: "destructive" });
     }
   };
 
-  const handleSaveBio = () => {
+  const handleSaveBio = async () => {
     if (user) {
-      localStorage.setItem(`userBio-${user.uid}`, editableBio);
-      setCurrentBio(editableBio);
-      toast({ title: "Success", description: "Bio updated!" });
-      setIsEditingBio(false);
+      const userDocRef = doc(db, 'users', user.uid);
+      try {
+        await setDoc(userDocRef, { profileBio: editableBio }, { merge: true });
+        setCurrentBio(editableBio);
+        toast({ title: "Success", description: "Bio updated!" });
+        setIsEditingBio(false);
+      } catch (error) {
+        console.error("Error saving bio to Firestore:", error);
+        toast({ title: "Error", description: "Failed to save bio.", variant: "destructive" });
+      }
     }
   };
   
@@ -115,6 +144,7 @@ export default function ProfilePage() {
     setIsUpdatingAvatar(true);
     try {
       await updateProfile(auth.currentUser, { photoURL: avatarUrl });
+      // The user object in useAuth context will update via onAuthStateChanged listener
       toast({ title: "Success", description: "Profile picture updated!" });
       setIsAvatarSelectionDialogOpen(false);
     } catch (error) {
@@ -125,7 +155,7 @@ export default function ProfilePage() {
     }
   };
   
-  if (authLoading || !teamHookLoaded || !pokedexLoaded) {
+  if (authLoading || !teamHookLoaded || !pokedexLoaded || profileDataLoading) {
     return (
       <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[hsl(217,91%,60%)]"></div>
@@ -346,4 +376,3 @@ export default function ProfilePage() {
     </div>
   );
 }
-
