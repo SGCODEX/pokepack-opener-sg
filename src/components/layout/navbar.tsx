@@ -2,7 +2,7 @@
 "use client";
 
 import Link from 'next/link';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Users } from 'lucide-react'; // Added Users icon for My Team
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Container } from './container';
@@ -17,6 +17,7 @@ const ThemeToggleButton = dynamic(() =>
 const navLinks = [
   { href: '/', label: 'Open Packs' },
   { href: '/pokedex', label: 'My Pokedex' },
+  { href: '/my-team', label: 'My Team' }, // New link
 ];
 
 export function Navbar() {
@@ -39,10 +40,11 @@ export function Navbar() {
                   key={link.href}
                   href={link.href}
                   className={cn(
-                    "text-primary hover:text-white transition-colors px-3 py-2 rounded-md text-sm font-medium", // Yellow text, hover to white
+                    "text-primary hover:text-white transition-colors px-3 py-2 rounded-md text-sm font-medium flex items-center", // Yellow text, hover to white, flex for icon
                     pathname === link.href ? cn(activeLinkBg, "text-white") : "" // Active: Darker blue BG, white text
                   )}
                 >
+                  {link.label === 'My Team' && <Users className="mr-1.5 h-4 w-4" />} {/* Icon for My Team */}
                   {link.label}
                 </Link>
               ))}
@@ -57,10 +59,11 @@ export function Navbar() {
                 key={link.href + "-mobile"}
                 href={link.href}
                 className={cn(
-                  "text-primary hover:text-white transition-colors px-3 py-2 rounded-md text-sm font-medium flex-1 text-center", // Yellow text, hover to white
+                  "text-primary hover:text-white transition-colors px-3 py-2 rounded-md text-sm font-medium flex-1 text-center flex items-center justify-center", // Yellow text, hover to white, flex for icon
                   pathname === link.href ? cn(activeLinkBg, "text-white") : "" // Active: Darker blue BG, white text
                 )}
             >
+                {link.label === 'My Team' && <Users className="mr-1.5 h-4 w-4" />} {/* Icon for My Team */}
                 {link.label}
             </Link>
             ))}
