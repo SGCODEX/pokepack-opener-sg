@@ -50,6 +50,11 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'bananagames.ca', 
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i.pinimg.com', // Added for the new login page logo
+        pathname: '/**',
       }
     ],
   },

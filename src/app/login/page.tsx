@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { useAuth } from '@/contexts/auth-context';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card'; // Added import
+import { Card } from '@/components/ui/card';
 import { LogIn } from 'lucide-react';
 import Image from 'next/image';
 import { PageLoader } from '@/components/layout/page-loader';
@@ -32,7 +32,7 @@ export default function LoginPage() {
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-15rem)] text-center p-4 sm:p-6">
       <Card className="w-full max-w-md p-6 sm:p-8 shadow-xl border-2 border-border dark:border-[hsl(217,91%,60%)]/30">
         <Image 
-          src="https://placehold.co/120x120.png" 
+          src="https://i.pinimg.com/736x/bf/95/34/bf953419d76bf747cba69b55e6e03957.jpg" 
           alt="PokePack Opener SG Logo" 
           width={100} 
           height={100} 
