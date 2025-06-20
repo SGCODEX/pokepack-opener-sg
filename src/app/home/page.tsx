@@ -5,10 +5,13 @@ import Spline from '@splinetool/react-spline';
 
 export default function HomePage() {
   return (
-    // This div will act as the relative parent for the absolute positioned Spline and text overlay.
-    // flex-grow allows it to take available vertical space. h-full ensures it tries to fill height.
-    <div className="relative flex flex-col flex-grow w-full h-full items-center justify-center">
-      {/* Spline Scene Container - Absolute positioned to fill parent */}
+    // This div expands to fill its parent (Container's content area)
+    // and then uses negative margins to "break out" of the Container's padding.
+    // It's also flex-col to allow the text overlay to use flex-grow for vertical centering.
+    <div className="relative flex flex-col flex-grow 
+                  my-[-2rem] mx-[-1rem] sm:mx-[-1.5rem] lg:mx-[-2rem]">
+      
+      {/* Spline Scene Container - Absolute positioned to fill the expanded parent */}
       <div className="absolute inset-0 z-0">
         <Spline
           scene="https://prod.spline.design/XxKU8Oe97YpmuHwh/scene.splinecode"
@@ -16,8 +19,11 @@ export default function HomePage() {
         />
       </div>
 
-      {/* Content Overlay - Positioned above Spline with z-10 */}
-      <div className="relative z-10 flex flex-col items-center justify-center text-center p-4 space-y-10 w-full">
+      {/* Content Overlay - Positioned above Spline.
+          Needs its own padding and max-width to keep text readable and centered.
+          flex-grow allows it to take up available vertical space for centering. */}
+      <div className="relative z-10 flex flex-col flex-grow items-center justify-center text-center p-4 space-y-10 
+                      w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <header className="space-y-6 w-full max-w-4xl">
           {/* Added text-shadow for better readability over 3D background */}
           <h1 className="text-4xl sm:text-5xl font-headline font-bold text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
