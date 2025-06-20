@@ -3,11 +3,11 @@
 
 import { useAuth } from "@/contexts/auth-context";
 import { useMyTeam } from "@/hooks/use-my-team";
-import { usePokedex } from "@/hooks/use-pokedex"; // Added
+import { usePokedex } from "@/hooks/use-pokedex";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { CardComponent } from "@/components/card-component";
-import { UserCircle, Shield, Mail, LogOut, BookOpen } from "lucide-react"; // Added BookOpen
+import { UserCircle, Shield, Mail, LogOut, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
@@ -21,13 +21,13 @@ export default function ProfilePage() {
   const { 
     totalCollectedIncludingDuplicates, 
     isLoaded: pokedexLoaded 
-  } = usePokedex(); // Added
+  } = usePokedex();
   const router = useRouter();
 
   const activeTeamDetails = getActiveTeam();
   const activeTeamCards = getActiveTeamCards();
   
-  if (authLoading || !teamHookLoaded || !pokedexLoaded) { // Added pokedexLoaded
+  if (authLoading || !teamHookLoaded || !pokedexLoaded) {
     return (
       <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[hsl(217,91%,60%)]"></div>
@@ -42,49 +42,52 @@ export default function ProfilePage() {
         <h1 className="text-4xl sm:text-5xl font-headline font-bold text-primary-foreground dark:text-foreground">Your Trainer Profile</h1>
       </header>
 
-      {user ? (
-        <Card className="shadow-xl border-2 border-border dark:border-[hsl(217,91%,60%)]/30">
-          <CardHeader>
-            <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
-              <Avatar className="h-24 w-24 border-2 border-[hsl(217,91%,60%)]">
-                <AvatarImage src={user.photoURL || undefined} alt={user.displayName || 'User'} />
-                <AvatarFallback>
-                  <UserCircle className="h-20 w-20 text-muted-foreground" />
-                </AvatarFallback>
-              </Avatar>
-              <div className="text-center sm:text-left space-y-1">
-                <CardTitle className="text-3xl font-headline text-primary-foreground dark:text-foreground">{user.displayName || 'Mysterious Trainer'}</CardTitle>
-                <CardDescription className="text-lg text-accent">"Gotta Catch 'Em All!"</CardDescription> 
-                {user.email && (
-                  <p className="text-sm text-muted-foreground flex items-center justify-center sm:justify-start gap-1.5 pt-1">
-                    <Mail className="h-4 w-4" /> {user.email}
+      <Card className="shadow-xl border-2 border-border dark:border-[hsl(217,91%,60%)]/30">
+        {user ? (
+          <>
+            <CardHeader>
+              <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
+                <Avatar className="h-24 w-24 border-2 border-[hsl(217,91%,60%)]">
+                  <AvatarImage src={user.photoURL || undefined} alt={user.displayName || 'User'} />
+                  <AvatarFallback>
+                    <UserCircle className="h-20 w-20 text-muted-foreground" />
+                  </AvatarFallback>
+                </Avatar>
+                <div className="text-center sm:text-left space-y-1">
+                  <CardTitle className="text-3xl font-headline text-primary-foreground dark:text-foreground">{user.displayName || 'Mysterious Trainer'}</CardTitle>
+                  <CardDescription className="text-lg text-accent">"Gotta Catch 'Em All!"</CardDescription> 
+                  {user.email && (
+                    <p className="text-sm text-muted-foreground flex items-center justify-center sm:justify-start gap-1.5 pt-1">
+                      <Mail className="h-4 w-4" /> {user.email}
+                    </p>
+                  )}
+                  <p className="text-sm text-muted-foreground flex items-center justify-center sm:justify-start gap-1.5">
+                    <BookOpen className="h-4 w-4" /> Total Pokémon Caught: {totalCollectedIncludingDuplicates}
                   </p>
-                )}
-                <p className="text-sm text-muted-foreground flex items-center justify-center sm:justify-start gap-1.5">
-                  <BookOpen className="h-4 w-4" /> Total Pokémon Caught: {totalCollectedIncludingDuplicates}
-                </p>
+                </div>
               </div>
-            </div>
-          </CardHeader>
-          <CardContent className="flex justify-center sm:justify-end">
-            <Button 
-              onClick={signOut} 
-              variant="outline" 
-              className="w-full max-w-xs sm:w-auto border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
-            >
-              <LogOut className="mr-2 h-4 w-4" /> Sign Out
-            </Button>
-          </CardContent>
-        </Card>
-      ) : (
-        <Card className="shadow-xl border-2 border-border dark:border-[hsl(217,91%,60%)]/30">
-          <CardContent className="text-center py-8">
+            </CardHeader>
+            <CardContent className="flex justify-center sm:justify-end">
+              <Button 
+                onClick={signOut} 
+                variant="outline" 
+                className="w-full max-w-xs sm:w-auto border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
+              >
+                <LogOut className="mr-2 h-4 w-4" /> Sign Out
+              </Button>
+            </CardContent>
+          </>
+        ) : (
+          <CardContent className="text-center py-8 space-y-3">
             <UserCircle className="mx-auto h-16 w-16 text-muted-foreground/50 mb-4" />
             <p className="text-xl text-foreground">User profile information is not available.</p>
             <p className="text-sm text-muted-foreground mt-2">Sign in to see your details and manage your account.</p>
+            <p className="text-md text-foreground flex items-center justify-center gap-1.5 pt-2">
+              <BookOpen className="h-5 w-5 text-primary" /> Total Pokémon Caught: {totalCollectedIncludingDuplicates}
+            </p>
           </CardContent>
-        </Card>
-      )}
+        )}
+      </Card>
 
       <Card className="shadow-xl border-2 border-border dark:border-[hsl(217,91%,60%)]/30">
         <CardHeader>
@@ -128,3 +131,4 @@ export default function ProfilePage() {
     </div>
   );
 }
+
