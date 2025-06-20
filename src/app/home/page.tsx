@@ -13,7 +13,7 @@ export default function HomePage() {
       {/* It will be behind other content with higher z-index or explicit backgrounds. */}
       <div className="fixed inset-0 z-0">
         <Spline
-          scene="https://prod.spline.design/XxKU8Oe97YpmuHwh/scene.splinecode"
+          scene="https://prod.spline.design/UzrvpUcT7-i5b2xS/scene.splinecode"
           style={{ width: '100%', height: '100%' }} // Spline component fills this fixed div
         />
       </div>
