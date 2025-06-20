@@ -1,0 +1,56 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# Testing
+/coverage
+
+# Next.js build output
+/.next/
+/out/
+
+# Production
+/build
+
+# Misc
+.DS_Store
+*.pem
+*.log
+firebase-debug.log*
+genkit.log*
+
+# Local Environment Variables
+.env
+.env*.local
+!.env.example
+!.env.production
+!.env.development
+
+# Editor directories and files
+.idea
+# .vscode/* # Commented out to allow your existing .vscode/settings.json
+!.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Firebase
+.firebase/
+hosting.*.log
+database-debug.log
+storage-debug.log
+firebase-emulators-*.log
+*.firebase*.* # except for firebase.json or firebase.js
+!firebase.json
+!firebase.js
+
+# Patch-package
+patches/
+*.patch
+*.orig
