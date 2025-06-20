@@ -17,12 +17,12 @@ import { getFirestore } from "firebase/firestore";
 //     is NOT in the "Authorized domains" list in Firebase.
 //   - Go to: Firebase Console > Your Project > Authentication > Sign-in method tab > Authorized domains.
 //   - Add 'localhost' for local development (e.g., if running on http://localhost:9002).
-//   - !! VERY IMPORTANT FOR ONLINE IDEs/PREVIEW ENVIRONMENTS (like Firebase Studio on Cloud Workstations) !!
+//   - !! VERY IMPORTANT FOR ONLINE IDEs/PREVIEW ENVIRONMENTS (like Firebase Studio on Cloud Workstations or other preview URLs) !!
 //     You MUST add the SPECIFIC domain that the IDE/preview uses to serve your app.
-//     This might be something like 'your-project-id--random-string.web.app' or,
-//     for the URL 'https://6000-firebase-studio-1749498673632.cluster-ubrd2huk7jh6otbgyei4h62ope.cloudworkstations.dev/login',
+//     For example, for a URL like 'https://6000-firebase-studio-1749498673632.cluster-ubrd2huk7jh6otbgyei4h62ope.cloudworkstations.dev/login',
 //     the domain to add would be '6000-firebase-studio-1749498673632.cluster-ubrd2huk7jh6otbgyei4h62ope.cloudworkstations.dev'.
-//     Check your browser's address bar when the error appears to find this domain.
+//     For a URL like 'https://studio.firebase.google.com/your-project-path', the domain to add would be 'studio.firebase.google.com'.
+//     Always check your browser's address bar when the error appears to find the exact domain to authorize.
 // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 const firebaseConfig = {
   apiKey: "AIzaSyBdLrhMFCr6UUyhQ3wRWTXf8dFuJqjnxxY", // <-- REPLACE THIS WITH YOUR ACTUAL API KEY
