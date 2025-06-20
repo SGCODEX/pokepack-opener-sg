@@ -30,7 +30,7 @@ export default function HomePage() {
           </h1>
         </header>
         <section className="max-w-xl lg:max-w-2xl text-left">
-          <p className="text-xl sm:text-2xl font-headline font-medium text-white drop-shadow-[0_3px_5px_rgba(0,0,0,0.95)] leading-relaxed">
+          <p className="text-xl sm:text-2xl font-headline font-medium text-white drop-shadow-[0_0_2px_rgba(0,0,0,1)] leading-relaxed">
             Unlock the thrill of Pokémon TCG. Open virtual packs, collect rare cards, and build your dream team. Start your adventure!
           </p>
         </section>
