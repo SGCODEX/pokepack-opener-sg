@@ -2,6 +2,9 @@
 "use client"; // Spline component needs to be client-side
 
 import Spline from '@splinetool/react-spline';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { Package, BookOpen, Users, User } from 'lucide-react';
 
 export default function HomePage() {
   return (
@@ -31,12 +34,31 @@ export default function HomePage() {
             Unlock the thrill of Pokémon TCG. Open virtual packs, collect rare cards, and build your dream team. Start your adventure!
           </p>
         </section>
+        
+        {/* Navigation Buttons Section */}
+        <section className="mt-8 flex flex-wrap gap-4">
+          <Button asChild size="lg" className="bg-[hsl(217,91%,60%)] hover:bg-[hsl(217,91%,50%)] text-white text-base py-3 px-6 shadow-lg hover:shadow-xl transition-shadow">
+            <Link href="/">
+              <Package className="mr-2 h-5 w-5" /> Open Packs
+            </Link>
+          </Button>
+          <Button asChild size="lg" className="bg-[hsl(217,91%,60%)] hover:bg-[hsl(217,91%,50%)] text-white text-base py-3 px-6 shadow-lg hover:shadow-xl transition-shadow">
+            <Link href="/pokedex">
+              <BookOpen className="mr-2 h-5 w-5" /> My Pokedex
+            </Link>
+          </Button>
+          <Button asChild size="lg" className="bg-[hsl(217,91%,60%)] hover:bg-[hsl(217,91%,50%)] text-white text-base py-3 px-6 shadow-lg hover:shadow-xl transition-shadow">
+            <Link href="/my-team">
+              <Users className="mr-2 h-5 w-5" /> My Team
+            </Link>
+          </Button>
+          <Button asChild size="lg" className="bg-[hsl(217,91%,60%)] hover:bg-[hsl(217,91%,50%)] text-white text-base py-3 px-6 shadow-lg hover:shadow-xl transition-shadow">
+            <Link href="/profile">
+              <User className="mr-2 h-5 w-5" /> Profile
+            </Link>
+          </Button>
+        </section>
       </div>
-      {/* 
-        Future enhancements could include:
-        - A "Call to Action" button like "Start Opening Packs!" linked to '/'
-        - Maybe a small section highlighting a "Featured Pack".
-      */}
     </div>
   );
 }
