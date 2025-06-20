@@ -8,7 +8,7 @@ import { usePokedex } from "@/hooks/use-pokedex";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CardComponent } from "@/components/card-component";
-import { UserCircle, Shield, Mail, LogOut, BookOpen, Pencil, Save, X, Eye, EyeOff, Camera, Loader2, Image as ImageIcon } from "lucide-react";
+import { UserCircle, Shield, Mail, LogOut, BookOpen, Pencil, Save, X, Eye, EyeOff, Camera, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -33,14 +33,14 @@ function maskEmail(email: string | null | undefined): string {
 }
 
 const predefinedAvatars = [
-  { id: 'avatar1', url: 'https://placehold.co/100x100/E74C3C/FFFFFF.png?text=P1', alt: 'Red Avatar', dataAiHint: 'abstract avatar' },
-  { id: 'avatar2', url: 'https://placehold.co/100x100/3498DB/FFFFFF.png?text=P2', alt: 'Blue Avatar', dataAiHint: 'geometric avatar' },
-  { id: 'avatar3', url: 'https://placehold.co/100x100/2ECC71/FFFFFF.png?text=P3', alt: 'Green Avatar', dataAiHint: 'nature avatar' },
-  { id: 'avatar4', url: 'https://placehold.co/100x100/F1C40F/FFFFFF.png?text=P4', alt: 'Yellow Avatar', dataAiHint: 'sun avatar' },
-  { id: 'avatar5', url: 'https://placehold.co/100x100/9B59B6/FFFFFF.png?text=P5', alt: 'Purple Avatar', dataAiHint: 'space avatar' },
-  { id: 'avatar6', url: 'https://placehold.co/100x100/1ABC9C/FFFFFF.png?text=P6', alt: 'Turquoise Avatar', dataAiHint: 'water avatar' },
-  { id: 'avatar7', url: 'https://placehold.co/100x100/E67E22/FFFFFF.png?text=P7', alt: 'Orange Avatar', dataAiHint: 'fire avatar' },
-  { id: 'avatar8', url: 'https://placehold.co/100x100/7F8C8D/FFFFFF.png?text=P8', alt: 'Grey Avatar', dataAiHint: 'minimalist avatar' },
+  { id: 'avatarPikachu', url: 'https://i.pinimg.com/736x/07/72/7e/07727e155c88b59f37c38ba046205705.jpg', alt: 'Pikachu Avatar', dataAiHint: 'pikachu avatar' },
+  { id: 'avatarCharmander', url: 'https://i.pinimg.com/736x/8f/35/dd/8f35dd92cd711f0a59b959220be65509.jpg', alt: 'Charmander Avatar', dataAiHint: 'charmander avatar' },
+  { id: 'avatarSquirtle', url: 'https://i.pinimg.com/736x/cc/21/c8/cc21c82823055e81d8a4f9103c8ba9ae.jpg', alt: 'Squirtle Avatar', dataAiHint: 'squirtle avatar' },
+  { id: 'avatarBulbasaur', url: 'https://i.pinimg.com/736x/8e/31/3f/8e313f80c651f89dbb2c933a2958739a.jpg', alt: 'Bulbasaur Avatar', dataAiHint: 'bulbasaur avatar' },
+  { id: 'avatarEevee', url: 'https://i.pinimg.com/736x/e9/8b/76/e98b76231f47833501a59230514a6003.jpg', alt: 'Eevee Avatar', dataAiHint: 'eevee avatar' },
+  { id: 'avatarJigglypuff', url: 'https://i.pinimg.com/736x/36/53/56/3653569806a380963d332d0c2420f8e9.jpg', alt: 'Jigglypuff Avatar', dataAiHint: 'jigglypuff avatar' },
+  { id: 'avatarOrange', url: 'https://placehold.co/100x100/E67E22/FFFFFF.png?text=P7', alt: 'Orange Abstract Avatar', dataAiHint: 'abstract orange' },
+  { id: 'avatarGrey', url: 'https://placehold.co/100x100/7F8C8D/FFFFFF.png?text=P8', alt: 'Grey Abstract Avatar', dataAiHint: 'abstract grey' },
 ];
 
 
