@@ -85,12 +85,10 @@ function AppContent({ children }: { children: ReactNode }) {
             <header className="bg-[hsl(217,91%,60%)] shadow-md sticky top-0 z-50">
               <Container>
                 <div className="flex items-center justify-between h-16">
-                   <Link href="/" passHref legacyBehavior>
-                    <a className="flex items-center gap-2 text-primary hover:opacity-90 transition-opacity">
+                   <Link href="/" passHref className="flex items-center gap-2 text-primary hover:opacity-90 transition-opacity">
                       <Sparkles className="h-8 w-8 text-primary" />
                       <span className="font-pokemonlogo text-3xl text-primary tracking-wider">PokePack Opener SG</span>
-                    </a>
-                  </Link>
+                   </Link>
                 </div>
               </Container>
             </header>
