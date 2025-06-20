@@ -10,7 +10,7 @@ import { CardComponent } from '@/components/card-component';
 import { Button } from '@/components/ui/button';
 import { usePokedex } from '@/hooks/use-pokedex';
 import { CardDetailModal } from '@/components/card-detail-modal';
-import { ArrowLeft, PackageOpen, Eye, PackagePlus, Package, FastForward, Home } from 'lucide-react';
+import { ArrowLeft, PackageOpen, Eye, PackagePlus, Package, FastForward } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
@@ -848,7 +848,7 @@ export default function PackOpeningPage() {
             onClick={() => router.push('/')}
             className="bg-[hsl(217,91%,60%)] hover:bg-[hsl(217,91%,50%)] text-white"
           >
-            <Home className="mr-2 h-5 w-5" /> Back to Home
+            <Package className="mr-2 h-5 w-5" /> Back to Packs
           </Button>
           <Button
             size="lg"
