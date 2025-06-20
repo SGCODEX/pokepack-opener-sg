@@ -53,7 +53,12 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'i.pinimg.com', // Added for the new login page logo
+        hostname: 'i.pinimg.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'scarletviolet.pokemon.com', // Added for new avatars
         pathname: '/**',
       }
     ],
