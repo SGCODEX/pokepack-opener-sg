@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { useAuth } from '@/contexts/auth-context';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card'; // Added import
 import { LogIn } from 'lucide-react';
 import Image from 'next/image';
 import { PageLoader } from '@/components/layout/page-loader';
