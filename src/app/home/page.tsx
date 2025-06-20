@@ -10,7 +10,7 @@ export default function HomePage() {
         <h1 className="text-4xl sm:text-5xl font-headline font-bold text-primary-foreground dark:text-foreground drop-shadow-md">
           Welcome to PokePack Opener SG!
         </h1>
-        <div className="relative w-full max-w-xl lg:max-w-2xl mx-auto aspect-[16/9] rounded-xl overflow-hidden shadow-2xl border-4 border-primary dark:border-primary/80 group">
+        <div className="relative w-full max-w-xl lg:max-w-2xl mx-auto aspect-[16/9] rounded-xl overflow-hidden shadow-2xl group">
           <Spline
             scene="https://prod.spline.design/XxKU8Oe97YpmuHwh/scene.splinecode"
             style={{ width: '100%', height: '100%' }}
