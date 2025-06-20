@@ -1,24 +1,21 @@
 
-import Image from 'next/image';
+"use client"; // Spline component needs to be client-side
 
-// This will be a server component by default
+import Spline from '@splinetool/react-spline';
+
 export default function HomePage() {
   return (
-    <div className="space-y-10 flex flex-col flex-grow items-center justify-center text-center p-4">
+    <div className="space-y-10 flex flex-col flex-grow items-center text-center p-4">
       <header className="space-y-6 w-full max-w-4xl">
         <h1 className="text-4xl sm:text-5xl font-headline font-bold text-primary-foreground dark:text-foreground drop-shadow-md">
           Welcome to PokePack Opener SG!
         </h1>
         <div className="relative w-full max-w-xl lg:max-w-2xl mx-auto aspect-[16/9] rounded-xl overflow-hidden shadow-2xl border-4 border-primary dark:border-primary/80 group">
-          <Image
-            src="https://placehold.co/800x450.png"
-            alt="A vibrant collection of Pokémon ready for adventure"
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-500 ease-in-out"
-            data-ai-hint="pokemon group welcome"
-            priority
+          <Spline
+            scene="https://prod.spline.design/XxKU8Oe97YpmuHwh/scene.splinecode"
+            style={{ width: '100%', height: '100%' }}
           />
-           <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/10 opacity-70 group-hover:opacity-50 transition-opacity duration-300"></div>
+           <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-black/10 opacity-70 group-hover:opacity-50 transition-opacity duration-300 pointer-events-none"></div>
         </div>
       </header>
       <section className="max-w-2xl lg:max-w-3xl">
