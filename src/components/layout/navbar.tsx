@@ -2,7 +2,7 @@
 "use client";
 
 import Link from 'next/link';
-import { Sparkles, Users, User, Package, BookOpen } from 'lucide-react'; 
+import { Sparkles, Users, User, Package, BookOpen, Home } from 'lucide-react'; 
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Container } from './container';
@@ -15,6 +15,7 @@ const ThemeToggleButton = dynamic(() =>
 );
 
 const navLinks = [
+  { href: '/home', label: 'Home', icon: Home },
   { href: '/', label: 'Open Packs', icon: Package },
   { href: '/pokedex', label: 'My Pokedex', icon: BookOpen },
   { href: '/my-team', label: 'My Team', icon: Users },
