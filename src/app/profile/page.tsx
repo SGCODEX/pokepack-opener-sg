@@ -1,20 +1,21 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/contexts/auth-context";
 import { useMyTeam } from "@/hooks/use-my-team";
 import { usePokedex } from "@/hooks/use-pokedex";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CardComponent } from "@/components/card-component";
-import { UserCircle, Shield, Mail, LogOut, BookOpen, Pencil, Save, X, Eye, EyeOff } from "lucide-react";
+import { UserCircle, Shield, Mail, LogOut, BookOpen, Pencil, Save, X, Eye, EyeOff, Camera, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import { updateProfile } from "firebase/auth";
-import { auth } from "@/lib/firebase-config";
+import { auth, storage } from "@/lib/firebase-config"; // Import storage
+import { ref as storageRef, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 
@@ -54,6 +55,11 @@ export default function ProfilePage() {
 
   const [showFullEmail, setShowFullEmail] = useState(false);
 
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+
   useEffect(() => {
     if (user) {
       setEditableDisplayName(user.displayName || "");
@@ -76,7 +82,7 @@ export default function ProfilePage() {
       await updateProfile(auth.currentUser, { displayName: editableDisplayName });
       toast({ title: "Success", description: "Display name updated!" });
       setIsEditingName(false);
-      // The user object in useAuth should update via onAuthStateChanged
+      // The user object in useAuth should update via onAuthStateChanged from firebase
     } catch (error) {
       console.error("Error updating display name:", error);
       toast({ title: "Error", description: "Failed to update display name.", variant: "destructive" });
@@ -89,6 +95,49 @@ export default function ProfilePage() {
       setCurrentBio(editableBio);
       toast({ title: "Success", description: "Bio updated!" });
       setIsEditingBio(false);
+    }
+  };
+
+  const handleImageFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      const file = event.target.files[0];
+      // Basic validation (optional)
+      if (!file.type.startsWith('image/')) {
+        toast({ title: "Invalid File", description: "Please select an image file.", variant: "destructive" });
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) { // 5MB limit
+        toast({ title: "File Too Large", description: "Image size should be less than 5MB.", variant: "destructive" });
+        return;
+      }
+      setImageFile(file);
+      handleImageUpload(file); // Automatically start upload
+    }
+  };
+  
+  const handleImageUpload = async (fileToUpload: File) => {
+    if (!fileToUpload || !user || !auth.currentUser) {
+      toast({ title: "Error", description: "User not found or no file selected.", variant: "destructive" });
+      return;
+    }
+  
+    setIsUploadingPhoto(true);
+    try {
+      const imagePath = `profilePictures/${user.uid}/${fileToUpload.name}`;
+      const imageStorageRef = storageRef(storage, imagePath);
+  
+      await uploadBytes(imageStorageRef, fileToUpload);
+      const downloadURL = await getDownloadURL(imageStorageRef);
+  
+      await updateProfile(auth.currentUser, { photoURL: downloadURL });
+      
+      toast({ title: "Success", description: "Profile picture updated!" });
+      setImageFile(null); 
+    } catch (error) {
+      console.error("Error uploading image or updating profile:", error);
+      toast({ title: "Upload Error", description: "Failed to update profile picture.", variant: "destructive" });
+    } finally {
+      setIsUploadingPhoto(false);
     }
   };
   
@@ -106,6 +155,13 @@ export default function ProfilePage() {
 
   return (
     <div className="space-y-10">
+      <input 
+        type="file" 
+        ref={fileInputRef} 
+        onChange={handleImageFileChange} 
+        style={{ display: 'none' }} 
+        accept="image/*" 
+      />
       <header className="text-center mt-4">
         <h1 className="text-4xl sm:text-5xl font-headline font-bold text-primary-foreground dark:text-foreground">Your Trainer Profile</h1>
       </header>
@@ -115,12 +171,25 @@ export default function ProfilePage() {
           <>
             <CardHeader>
               <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
-                <Avatar className="h-24 w-24 border-2 border-[hsl(217,91%,60%)]">
-                  <AvatarImage src={user.photoURL || undefined} alt={user.displayName || 'User'} />
-                  <AvatarFallback>
-                    {user.displayName ? user.displayName.charAt(0).toUpperCase() : <UserCircle className="h-20 w-20 text-muted-foreground" />}
-                  </AvatarFallback>
-                </Avatar>
+                <div className="relative group">
+                  <Avatar className="h-24 w-24 border-2 border-[hsl(217,91%,60%)]">
+                    <AvatarImage src={user.photoURL || undefined} alt={user.displayName || 'User'} />
+                    <AvatarFallback>
+                      {user.displayName ? user.displayName.charAt(0).toUpperCase() : <UserCircle className="h-20 w-20 text-muted-foreground" />}
+                    </AvatarFallback>
+                  </Avatar>
+                  <Button 
+                    size="icon" 
+                    variant="ghost" 
+                    className="absolute bottom-0 right-0 bg-background/70 hover:bg-background rounded-full h-8 w-8 group-hover:opacity-100 opacity-50 transition-opacity"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isUploadingPhoto}
+                    aria-label="Change profile picture"
+                  >
+                    {isUploadingPhoto ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
+                  </Button>
+                </div>
+
                 <div className="text-center sm:text-left space-y-2 flex-grow">
                   {/* Display Name Editing */}
                   <div className="flex items-center gap-2 justify-center sm:justify-start">
@@ -262,5 +331,3 @@ export default function ProfilePage() {
     </div>
   );
 }
-
-    

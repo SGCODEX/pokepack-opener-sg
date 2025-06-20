@@ -43,12 +43,17 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'pbs.twimg.com', // Added for Destined Rivals pack image
+        hostname: 'pbs.twimg.com', 
         pathname: '/**',
       },
       {
         protocol: 'https',
-        hostname: 'bananagames.ca', // Added for new Generations pack image
+        hostname: 'bananagames.ca', 
+        pathname: '/**',
+      },
+      { // Added for Firebase Storage (user profile pictures)
+        protocol: 'https',
+        hostname: 'firebasestorage.googleapis.com',
         pathname: '/**',
       }
     ],
