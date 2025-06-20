@@ -97,7 +97,7 @@ function AppContent({ children }: { children: ReactNode }) {
                     <PageLoader />
                 </Container>
             </main>
-            <footer className={cn("bg-[hsl(217,91%,60%)] text-center py-4")}>
+            <footer className={cn("bg-[hsl(217,91%,60%)] text-center py-4 relative z-40")}>
                 <Container>
                     <a
                         href="https://github.com/SGCODEX"
@@ -123,7 +123,7 @@ function AppContent({ children }: { children: ReactNode }) {
         </Container>
       </main>
       <Toaster />
-      <footer className={cn("bg-[hsl(217,91%,60%)] text-center py-4")}>
+      <footer className={cn("bg-[hsl(217,91%,60%)] text-center py-4 relative z-40")}>
         <Container>
           <a
             href="https://github.com/SGCODEX"
