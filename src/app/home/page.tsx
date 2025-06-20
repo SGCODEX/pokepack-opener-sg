@@ -27,7 +27,7 @@ export default function HomePage() {
           </h1>
         </header>
         <section className="max-w-xl lg:max-w-2xl text-left">
-          <p className="text-lg sm:text-xl text-gray-100 dark:text-gray-200 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] leading-relaxed">
+          <p className="text-xl sm:text-2xl text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] leading-relaxed">
             Unlock the thrill of Pokémon TCG. Open virtual packs, collect rare cards, and build your dream team. Start your adventure!
           </p>
         </section>
