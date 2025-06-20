@@ -149,10 +149,10 @@ export default function ProfilePage() {
             <CardHeader>
               <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
                 <div className="relative group">
-                  <Avatar className="h-24 w-24 border-2 border-[hsl(217,91%,60%)]">
+                  <Avatar className="h-28 w-28 border-2 border-[hsl(217,91%,60%)]">
                     <AvatarImage src={user.photoURL || undefined} alt={user.displayName || 'User'} />
                     <AvatarFallback>
-                      {user.displayName ? user.displayName.charAt(0).toUpperCase() : <UserCircle className="h-20 w-20 text-muted-foreground" />}
+                      {user.displayName ? user.displayName.charAt(0).toUpperCase() : <UserCircle className="h-24 w-24 text-muted-foreground" />}
                     </AvatarFallback>
                   </Avatar>
                   <Button 
