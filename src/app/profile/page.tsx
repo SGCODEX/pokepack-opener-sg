@@ -143,38 +143,38 @@ export default function ProfilePage() {
   const activeTeamCards = getActiveTeamCards();
 
   return (
-    <div className="space-y-10 flex flex-col flex-grow">
-      <header className="text-center mt-4">
+    <div className="space-y-6 flex flex-col flex-grow">
+      <header className="text-center">
         <h1 className="text-4xl sm:text-5xl font-headline font-bold text-primary-foreground dark:text-foreground">Your Trainer Profile</h1>
       </header>
 
       <Card className="shadow-xl border-2 border-border dark:border-[hsl(var(--border))]">
         {user ? (
           <>
-            <CardHeader>
+            <CardHeader className="p-4">
               <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
                 <div className="relative group">
-                  <Avatar className="h-32 w-32 border-2 border-[hsl(217,91%,60%)]">
+                  <Avatar className="h-24 w-24 border-2 border-[hsl(217,91%,60%)]">
                     <AvatarImage src={user.photoURL || undefined} alt={user.displayName || 'User'} />
                     <AvatarFallback>
-                      {user.displayName ? user.displayName.charAt(0).toUpperCase() : <UserCircle className="h-28 w-28 text-muted-foreground" />}
+                      {user.displayName ? user.displayName.charAt(0).toUpperCase() : <UserCircle className="h-20 w-20 text-muted-foreground" />}
                     </AvatarFallback>
                   </Avatar>
                   <Button 
                     size="icon" 
                     variant="ghost" 
-                    className="absolute bottom-1 right-1 bg-background/70 hover:bg-background rounded-full h-10 w-10 group-hover:opacity-100 opacity-50 transition-opacity"
+                    className="absolute bottom-0 right-0 bg-background/70 hover:bg-background rounded-full h-8 w-8 group-hover:opacity-100 opacity-50 transition-opacity"
                     onClick={() => setIsAvatarSelectionDialogOpen(true)}
                     disabled={isUpdatingAvatar}
                     aria-label="Change profile picture"
                   >
-                    {isUpdatingAvatar ? <Loader2 className="h-5 w-5 animate-spin" /> : <Camera className="h-5 w-5" />}
+                    {isUpdatingAvatar ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
                   </Button>
                 </div>
 
                 <div className="text-center sm:text-left space-y-2 flex-grow">
                   <div className="flex items-center justify-center sm:justify-start">
-                    <CardTitle className="text-3xl font-headline text-primary-foreground dark:text-foreground">
+                    <CardTitle className="text-2xl font-headline text-primary-foreground dark:text-foreground">
                       {user.displayName || 'Mysterious Trainer'}
                     </CardTitle>
                   </div>
@@ -223,7 +223,7 @@ export default function ProfilePage() {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="flex justify-center sm:justify-end">
+            <CardContent className="flex justify-center sm:justify-end p-4">
               <Button 
                 onClick={contextSignOut} 
                 variant="outline" 
@@ -254,15 +254,15 @@ export default function ProfilePage() {
         </CardHeader>
         <CardContent>
           {activeTeamDetails && activeTeamCards.some(card => card !== null) ? (
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-4 justify-items-center">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 justify-items-center">
               {activeTeamCards.map((card, index) => (
-                <div key={`active-team-${index}`} className="w-full">
+                <div key={`active-team-${index}`} className="w-full max-w-[150px]">
                   {card ? (
-                    <CardComponent card={card} className="w-full h-auto aspect-[240/336] shadow-lg hover:shadow-2xl transition-shadow duration-300" showDetails={true} />
+                    <CardComponent card={card} className="w-full h-auto aspect-[240/336] shadow-lg hover:shadow-2xl transition-shadow duration-300" showDetails={false} />
                   ) : (
-                    <div className="aspect-[240/336] border-2 border-dashed border-muted rounded-lg flex flex-col items-center justify-center bg-background/30 p-4">
-                       <UserCircle className="h-16 w-16 text-muted-foreground/50 mb-2" />
-                      <p className="text-muted-foreground text-center">Empty Slot</p>
+                    <div className="aspect-[240/336] border-2 border-dashed border-muted rounded-lg flex flex-col items-center justify-center bg-background/30 p-2">
+                       <UserCircle className="h-12 w-12 text-muted-foreground/50 mb-2" />
+                      <p className="text-muted-foreground text-center text-sm">Empty Slot</p>
                     </div>
                   )}
                 </div>
@@ -328,3 +328,5 @@ export default function ProfilePage() {
     </div>
   );
 }
+
+    
