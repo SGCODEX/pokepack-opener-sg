@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -55,7 +56,8 @@ export default function GlobalChatPage() {
 
   return (
     // Use flex-grow and relative positioning on the main container.
-    <div className="flex-grow flex flex-col relative">
+    // Negative margin (-my-8) counteracts the container's default padding (py-8).
+    <div className="flex-grow flex flex-col relative -my-8">
       {/* The Card will be positioned absolutely to fill the container. */}
       <Card className="absolute inset-0 flex flex-col">
         <CardHeader>
