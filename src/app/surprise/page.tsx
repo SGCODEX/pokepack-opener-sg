@@ -54,20 +54,15 @@ export default function GlobalChatPage() {
   };
 
   return (
-    // The main container will grow to fill the available space from the layout.
-    <div className="flex flex-col flex-grow">
-      {/* The Card will act as the chat window, also a flex column that grows. */}
-      {/* overflow-hidden on the card is important to contain the children */}
-      <Card className="flex-grow flex flex-col overflow-hidden">
+    // Use flex-grow and relative positioning on the main container.
+    <div className="flex-grow flex flex-col relative">
+      {/* The Card will be positioned absolutely to fill the container. */}
+      <Card className="absolute inset-0 flex flex-col">
         <CardHeader>
           <CardTitle className="text-center font-headline text-3xl text-primary-foreground dark:text-foreground">Global Chat Room</CardTitle>
         </CardHeader>
-        {/* This CardContent will be the scrollable message area.
-            - flex-1 makes it take up all available space between header and footer.
-            - min-h-0 is crucial for flex items to allow them to shrink and not overflow their parent.
-            - overflow-y-auto enables scrolling when content is too tall.
-        */}
-        <CardContent className="flex-1 p-4 overflow-y-auto min-h-0">
+        {/* The content area will take up the remaining space and be scrollable. */}
+        <CardContent className="flex-1 overflow-y-auto p-4">
           <div className="space-y-4">
             {messages.map((msg) => (
               <ChatMessageItem
@@ -79,7 +74,7 @@ export default function GlobalChatPage() {
             <div ref={messagesEndRef} />
           </div>
         </CardContent>
-        {/* The footer is a static part of the flex layout. */}
+        {/* The footer stays at the bottom. */}
         <CardFooter className="pt-4 border-t">
           <form onSubmit={handleSendMessage} className="flex w-full items-center space-x-2">
             <Input
