@@ -56,12 +56,3 @@ export interface Team {
   name: string;
   pokemonIds: (string | null)[];
 }
-
-export interface ChatMessage {
-  id: string;
-  text: string;
-  userId: string;
-  displayName: string | null;
-  photoURL: string | null;
-  timestamp: any; // Firestore Timestamp or ServerTimestampFieldValue
-}
