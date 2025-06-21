@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
@@ -516,7 +515,7 @@ export default function PackOpeningPage() {
 
   return (
     <div className={cn(
-        "transition-colors duration-1000 flex flex-col min-h-[calc(100vh-10rem)]",
+        "transition-colors duration-1000 flex flex-col relative",
         stage === 'all-revealed' ? 'bg-white text-black' :
         (hasHolo && (stage === 'opening' || stage === 'stack-reveal') && stage !== 'transitioning') ? 'holo-blue-wave-background-active animate-holo-blue-wave-shimmer text-white dark:text-white' :
         (hasRareNonHolo && (stage === 'opening' || stage === 'stack-reveal') && stage !== 'transitioning') ? 'rare-gold-holo-background-active animate-rare-gold-shimmer text-black dark:text-black' :
@@ -526,7 +525,7 @@ export default function PackOpeningPage() {
         variant="outline"
         onClick={() => router.push('/pack-selection')}
         className={cn(
-            "absolute top-24 left-4 md:left-8 z-10",
+            "absolute top-4 left-4 z-20",
             "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]",
             stage === 'all-revealed'
                 ? "text-black border-black dark:text-black dark:border-black"
@@ -543,7 +542,7 @@ export default function PackOpeningPage() {
           variant="outline"
           onClick={handleSkipToResults}
           className={cn(
-            "absolute top-24 right-4 md:right-8 z-10",
+            "absolute top-4 right-4 z-20",
             "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]",
              stage === 'all-revealed'
                 ? "text-black border-black dark:text-black dark:border-black"
@@ -556,7 +555,7 @@ export default function PackOpeningPage() {
           <FastForward className="mr-2 h-4 w-4" /> Skip to Results
         </Button>
       )}
-      <header className="relative z-5 pt-8 pb-4 text-center">
+      <header className="relative z-10 pt-20 pb-4 text-center">
         <h1 className={cn(
           "text-4xl font-headline font-bold",
            stage === 'all-revealed' ? 'text-black' :
