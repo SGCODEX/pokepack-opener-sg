@@ -58,12 +58,3 @@ export interface Team {
   name: string;
   pokemonIds: (string | null)[];
 }
-
-export interface ChatMessage {
-  id: string;
-  text: string;
-  uid: string;
-  displayName: string | null;
-  photoURL: string | null;
-  timestamp: Timestamp;
-}
