@@ -1,6 +1,7 @@
 
 // No "use client" here
 import type { Metadata } from 'next';
+import { Analytics } from '@vercel/analytics/react';
 import './globals.css'; // Keep this for global styles
 import { ClientProviders } from '@/components/layout/client-providers'; // Import the new wrapper
 
@@ -28,6 +29,7 @@ export default function RootLayout({
         <ClientProviders>
           {children}
         </ClientProviders>
+        <Analytics />
       </body>
     </html>
   );
