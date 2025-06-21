@@ -56,11 +56,11 @@ export default function GlobalChatPage() {
   };
 
   return (
-    <Card className="flex-grow flex flex-col -my-8 -mx-4 sm:-mx-6 lg:-mx-8 rounded-none border-x-0">
-      <CardHeader className="pt-6">
+    <Card className="flex-grow flex flex-col">
+      <CardHeader>
         <CardTitle className="text-center font-headline text-3xl text-primary-foreground dark:text-foreground">Global Chat Room</CardTitle>
       </CardHeader>
-      <CardContent className="flex-1 overflow-y-auto p-4 min-h-0">
+      <CardContent className="flex-grow overflow-y-auto p-4 min-h-0">
         <div className="space-y-4">
           {messages.map((msg) => (
             <ChatMessageItem
