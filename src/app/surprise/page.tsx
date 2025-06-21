@@ -10,7 +10,6 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Send } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 export default function GlobalChatPage() {
   const { user, loading } = useAuth();
@@ -19,12 +18,10 @@ export default function GlobalChatPage() {
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    // Scroll to the bottom of the messages list whenever new messages are added
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
   useEffect(() => {
-    // Set up the Firestore query and listener
     const q = query(collection(db, 'messages'), orderBy('timestamp', 'asc'));
 
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
@@ -35,7 +32,6 @@ export default function GlobalChatPage() {
       setMessages(msgs);
     });
 
-    // Clean up the listener when the component unmounts
     return () => unsubscribe();
   }, []);
 
@@ -51,10 +47,9 @@ export default function GlobalChatPage() {
         displayName: user.displayName,
         photoURL: user.photoURL,
       });
-      setNewMessage(''); // Clear the input field
+      setNewMessage('');
     } catch (error) {
       console.error("Error sending message: ", error);
-      // Optionally, show an error toast to the user
     }
   };
 
@@ -64,19 +59,17 @@ export default function GlobalChatPage() {
         <CardHeader>
           <CardTitle className="text-center font-headline text-3xl text-primary-foreground dark:text-foreground">Global Chat Room</CardTitle>
         </CardHeader>
-        <CardContent className="flex-grow min-h-0">
-          <ScrollArea className="h-full pr-4">
-            <div className="space-y-4">
-              {messages.map((msg) => (
-                <ChatMessageItem
-                  key={msg.id}
-                  message={msg}
-                  isCurrentUser={user?.uid === msg.uid}
-                />
-              ))}
-              <div ref={messagesEndRef} />
-            </div>
-          </ScrollArea>
+        <CardContent className="flex-1 p-4 overflow-y-auto">
+          <div className="space-y-4">
+            {messages.map((msg) => (
+              <ChatMessageItem
+                key={msg.id}
+                message={msg}
+                isCurrentUser={user?.uid === msg.uid}
+              />
+            ))}
+            <div ref={messagesEndRef} />
+          </div>
         </CardContent>
         <CardFooter className="pt-4 border-t">
           <form onSubmit={handleSendMessage} className="flex w-full items-center space-x-2">
