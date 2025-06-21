@@ -150,14 +150,15 @@ export default function ProfilePage() {
 
       <Card className="shadow-xl border-2 border-border dark:border-[hsl(var(--border))]">
         {user ? (
-          <>
-            <CardHeader className="p-4">
-              <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-6">
-                <div className="relative group">
-                  <Avatar className="h-24 w-24 border-2 border-[hsl(217,91%,60%)]">
+          <CardHeader className="p-4">
+            <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-4">
+              
+              <div className="flex items-center gap-4">
+                <div className="relative group flex-shrink-0">
+                  <Avatar className="h-20 w-20 border-2 border-[hsl(217,91%,60%)]">
                     <AvatarImage src={user.photoURL || undefined} alt={user.displayName || 'User'} />
                     <AvatarFallback>
-                      {user.displayName ? user.displayName.charAt(0).toUpperCase() : <UserCircle className="h-20 w-20 text-muted-foreground" />}
+                      {user.displayName ? user.displayName.charAt(0).toUpperCase() : <UserCircle className="h-16 w-16 text-muted-foreground" />}
                     </AvatarFallback>
                   </Avatar>
                   <Button 
@@ -172,67 +173,67 @@ export default function ProfilePage() {
                   </Button>
                 </div>
 
-                <div className="text-center sm:text-left space-y-2 flex-grow">
-                  <div className="flex items-center justify-center sm:justify-start">
-                    <CardTitle className="text-2xl font-headline text-primary-foreground dark:text-foreground">
-                      {user.displayName || 'Mysterious Trainer'}
-                    </CardTitle>
-                  </div>
-
-                  <div className="flex items-center gap-2 mt-1 justify-center sm:justify-start">
+                <div className="text-left space-y-1">
+                  <CardTitle className="text-xl font-headline text-primary-foreground dark:text-foreground">
+                    {user.displayName || 'Mysterious Trainer'}
+                  </CardTitle>
+                  
+                  <div className="flex items-center gap-2">
                     {isEditingBio ? (
-                      <div className="flex-grow">
+                      <div className="w-full">
                         <Textarea 
                           value={editableBio} 
                           onChange={(e) => setEditableBio(e.target.value)} 
                           placeholder="Your bio..." 
-                          className="w-full text-base"
+                          className="w-full text-sm"
                           rows={2}
                         />
-                        <div className="flex gap-2 mt-2 justify-center sm:justify-start">
-                          <Button onClick={handleSaveBio} size="sm" className="bg-green-500 hover:bg-green-600"><Save className="mr-1.5 h-4 w-4" />Save Bio</Button>
+                        <div className="flex gap-2 mt-1">
+                          <Button onClick={handleSaveBio} size="sm" className="bg-green-500 hover:bg-green-600"><Save className="mr-1 h-3 w-3" />Save</Button>
                           <Button variant="ghost" size="sm" onClick={() => { setIsEditingBio(false); setEditableBio(currentBio); }}>Cancel</Button>
                         </div>
                       </div>
                     ) : (
                       <>
-                        <p className="text-md text-accent flex-grow italic">"{currentBio}"</p>
-                        <Button size="icon" variant="ghost" onClick={() => {
+                        <p className="text-sm text-accent flex-grow italic">"{currentBio}"</p>
+                        <Button size="icon" variant="ghost" className="h-6 w-6" onClick={() => {
                           setEditableBio(currentBio);
                           setIsEditingBio(true);
                         }}>
-                          <Pencil className="h-4 w-4" />
+                          <Pencil className="h-3 w-3" />
                         </Button>
                       </>
                     )}
                   </div>
                   
                   {user.email && (
-                    <div className="text-sm text-muted-foreground flex items-center justify-center sm:justify-start gap-1.5 pt-1">
-                      <Mail className="h-4 w-4" />
+                    <div className="text-xs text-muted-foreground flex items-center gap-1.5">
+                      <Mail className="h-3 w-3" />
                       <span>{showFullEmail ? user.email : maskEmail(user.email)}</span>
-                      <Button size="icon" variant="ghost" className="h-6 w-6" onClick={() => setShowFullEmail(!showFullEmail)}>
-                        {showFullEmail ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      <Button size="icon" variant="ghost" className="h-5 w-5" onClick={() => setShowFullEmail(!showFullEmail)}>
+                        {showFullEmail ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
                       </Button>
                     </div>
                   )}
 
-                  <p className="text-sm text-muted-foreground flex items-center justify-center sm:justify-start gap-1.5">
-                    <BookOpen className="h-4 w-4" /> Total Pokémon Caught: {totalCollectedIncludingDuplicates}
+                  <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+                    <BookOpen className="h-3 w-3" /> Total Pokémon Caught: {totalCollectedIncludingDuplicates}
                   </p>
                 </div>
               </div>
-            </CardHeader>
-            <CardContent className="flex justify-center sm:justify-end p-4">
-              <Button 
-                onClick={contextSignOut} 
-                variant="outline" 
-                className="w-full max-w-xs sm:w-auto border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
-              >
-                <LogOut className="mr-2 h-4 w-4" /> Sign Out
-              </Button>
-            </CardContent>
-          </>
+
+              <div className="w-full sm:w-auto">
+                <Button 
+                  onClick={contextSignOut} 
+                  variant="outline" 
+                  className="w-full sm:w-auto border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
+                >
+                  <LogOut className="mr-2 h-4 w-4" /> Sign Out
+                </Button>
+              </div>
+
+            </div>
+          </CardHeader>
         ) : (
           <CardContent className="text-center py-8 space-y-3">
             <UserCircle className="mx-auto h-16 w-16 text-muted-foreground/50 mb-4" />
@@ -328,5 +329,3 @@ export default function ProfilePage() {
     </div>
   );
 }
-
-    
