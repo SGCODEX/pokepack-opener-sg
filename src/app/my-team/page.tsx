@@ -179,7 +179,7 @@ export default function MyTeamPage() {
           </div>
 
           {teams.length > 0 ? (
-            <ScrollArea className="h-[calc(100vh-20rem)]"> 
+            <ScrollArea className="flex-grow min-h-0"> 
               <div className="space-y-4 p-1">
                 {teams.map(team => (
                   <div 
@@ -242,7 +242,7 @@ export default function MyTeamPage() {
               </div>
             </ScrollArea>
           ) : (
-            <div className="text-center py-10">
+            <div className="text-center py-10 flex-grow flex flex-col justify-center items-center">
               <AlertTriangle className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
               <p className="text-xl text-muted-foreground">No teams created yet.</p>
               <p className="text-sm text-muted-foreground">Click "Create New Team" to get started!</p>
