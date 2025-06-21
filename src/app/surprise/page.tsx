@@ -57,7 +57,7 @@ export default function GlobalChatPage() {
 
   return (
     <div className="flex-grow flex flex-col overflow-hidden">
-        <Card className="flex flex-col h-full">
+        <Card className="flex flex-col flex-grow">
             <CardHeader>
                 <CardTitle className="text-center font-headline text-3xl text-primary-foreground dark:text-foreground">Global Chat Room</CardTitle>
             </CardHeader>
