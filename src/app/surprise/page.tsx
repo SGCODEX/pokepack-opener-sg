@@ -56,38 +56,40 @@ export default function GlobalChatPage() {
   };
 
   return (
-    <Card className="flex-grow flex flex-col">
-      <CardHeader>
-        <CardTitle className="text-center font-headline text-3xl text-primary-foreground dark:text-foreground">Global Chat Room</CardTitle>
-      </CardHeader>
-      <CardContent className="flex-grow overflow-y-auto p-4 min-h-0">
-        <div className="space-y-4">
-          {messages.map((msg) => (
-            <ChatMessageItem
-              key={msg.id}
-              message={msg}
-              isCurrentUser={user?.uid === msg.uid}
-            />
-          ))}
-          <div ref={messagesEndRef} />
-        </div>
-      </CardContent>
-      <CardFooter className="pt-4 border-t">
-        <form onSubmit={handleSendMessage} className="flex w-full items-center space-x-2">
-          <Input
-            type="text"
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            placeholder="Type your message..."
-            disabled={loading || !user}
-            autoComplete="off"
-          />
-          <Button type="submit" disabled={loading || !user || newMessage.trim() === ''}>
-            <Send className="h-4 w-4" />
-            <span className="sr-only">Send</span>
-          </Button>
-        </form>
-      </CardFooter>
-    </Card>
+    <div className="flex-grow flex flex-col overflow-hidden">
+        <Card className="flex flex-col h-full">
+            <CardHeader>
+                <CardTitle className="text-center font-headline text-3xl text-primary-foreground dark:text-foreground">Global Chat Room</CardTitle>
+            </CardHeader>
+            <CardContent className="flex-grow overflow-y-auto p-4 min-h-0">
+                <div className="space-y-4">
+                    {messages.map((msg) => (
+                        <ChatMessageItem
+                        key={msg.id}
+                        message={msg}
+                        isCurrentUser={user?.uid === msg.uid}
+                        />
+                    ))}
+                    <div ref={messagesEndRef} />
+                </div>
+            </CardContent>
+            <CardFooter className="pt-4 border-t">
+                <form onSubmit={handleSendMessage} className="flex w-full items-center space-x-2">
+                    <Input
+                        type="text"
+                        value={newMessage}
+                        onChange={(e) => setNewMessage(e.target.value)}
+                        placeholder="Type your message..."
+                        disabled={loading || !user}
+                        autoComplete="off"
+                    />
+                    <Button type="submit" disabled={loading || !user || newMessage.trim() === ''}>
+                        <Send className="h-4 w-4" />
+                        <span className="sr-only">Send</span>
+                    </Button>
+                </form>
+            </CardFooter>
+        </Card>
+    </div>
   );
 }
