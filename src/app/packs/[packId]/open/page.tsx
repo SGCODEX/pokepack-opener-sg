@@ -199,8 +199,8 @@ export default function PackOpeningPage() {
       fillAttempts++;
     }
   
-    // Shuffle the final pack to randomize card order
-    return shuffleArray(packCards);
+    // Return the pack with its natural pull order, without shuffling.
+    return packCards;
   }, [packData]);
 
 
@@ -807,3 +807,5 @@ export default function PackOpeningPage() {
     </div>
   );
 }
+
+    
