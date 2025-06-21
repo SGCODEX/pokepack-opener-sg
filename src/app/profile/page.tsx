@@ -143,7 +143,7 @@ export default function ProfilePage() {
   const activeTeamCards = getActiveTeamCards();
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 flex flex-col flex-grow">
       <header className="text-center mt-4">
         <h1 className="text-4xl sm:text-5xl font-headline font-bold text-primary-foreground dark:text-foreground">Your Trainer Profile</h1>
       </header>
@@ -254,9 +254,9 @@ export default function ProfilePage() {
         </CardHeader>
         <CardContent>
           {activeTeamDetails && activeTeamCards.some(card => card !== null) ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 justify-items-center">
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-4 justify-items-center">
               {activeTeamCards.map((card, index) => (
-                <div key={`active-team-${index}`} className="w-full max-w-xs sm:max-w-none">
+                <div key={`active-team-${index}`} className="w-full">
                   {card ? (
                     <CardComponent card={card} className="w-full h-auto aspect-[240/336] shadow-lg hover:shadow-2xl transition-shadow duration-300" showDetails={true} />
                   ) : (
