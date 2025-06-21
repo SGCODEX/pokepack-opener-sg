@@ -516,7 +516,7 @@ export default function PackOpeningPage() {
 
   return (
     <div className={cn(
-        "transition-colors duration-1000 flex flex-col flex-grow",
+        "relative transition-colors duration-1000 flex flex-col flex-grow",
         stage === 'all-revealed' ? 'bg-white text-black' :
         (hasHolo && (stage === 'opening' || stage === 'stack-reveal') && stage !== 'transitioning') ? 'holo-blue-wave-background-active animate-holo-blue-wave-shimmer text-white dark:text-white' :
         (hasRareNonHolo && (stage === 'opening' || stage === 'stack-reveal') && stage !== 'transitioning') ? 'rare-gold-holo-background-active animate-rare-gold-shimmer text-black dark:text-black' :
@@ -804,5 +804,7 @@ export default function PackOpeningPage() {
     </div>
   );
 }
+
+    
 
     
