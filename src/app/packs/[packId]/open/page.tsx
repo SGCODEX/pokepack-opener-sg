@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
@@ -534,7 +535,8 @@ export default function PackOpeningPage() {
                     : "text-foreground border-foreground dark:border-[hsl(var(--border))]" 
         )}
       >
-        <ArrowLeft className="mr-2 h-4 w-4" /> {backButtonText}
+        <ArrowLeft className="h-4 w-4 sm:mr-2" />
+        <span className="hidden sm:inline">{backButtonText}</span>
       </Button>
       {!isSkippingAnimations &&
         (stage === 'opening' || stage === 'stack-reveal' || (isProcessingBulk && stage === 'transitioning')) && stage !== 'initial' && (
@@ -552,7 +554,8 @@ export default function PackOpeningPage() {
           )}
           disabled={!packData}
         >
-          <FastForward className="mr-2 h-4 w-4" /> Skip to Results
+          <FastForward className="h-4 w-4 sm:mr-2" />
+          <span className="hidden sm:inline">Skip to Results</span>
         </Button>
       )}
       <header className="relative z-10 pt-20 pb-4 text-center">
@@ -807,3 +810,5 @@ export default function PackOpeningPage() {
     </div>
   );
 }
+
+    
