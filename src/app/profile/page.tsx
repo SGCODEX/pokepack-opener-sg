@@ -8,9 +8,8 @@ import { usePokedex } from "@/hooks/use-pokedex";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { CardComponent } from "@/components/card-component";
-import { UserCircle, Shield, Mail, LogOut, BookOpen, Pencil, Save, X, Eye, EyeOff, Camera, Loader2 } from "lucide-react";
+import { UserCircle, Shield, Mail, LogOut, BookOpen, Pencil, Save, Eye, EyeOff, Camera, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import { updateProfile } from "firebase/auth";
@@ -59,9 +58,6 @@ export default function ProfilePage() {
   const router = useRouter();
   const { toast } = useToast();
 
-  const [isEditingName, setIsEditingName] = useState(false);
-  const [editableDisplayName, setEditableDisplayName] = useState("");
-
   const [currentBio, setCurrentBio] = useState(DEFAULT_BIO);
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [editableBio, setEditableBio] = useState("");
@@ -74,7 +70,6 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (user) {
-      setEditableDisplayName(user.displayName || "");
       // Load bio from Firestore
       const userDocRef = doc(db, 'users', user.uid);
       setProfileDataLoading(true);
@@ -100,26 +95,6 @@ export default function ProfilePage() {
       setProfileDataLoading(false); // No user, so nothing to load
     }
   }, [user, toast]);
-
-  const handleSaveName = async () => {
-    if (!auth.currentUser) {
-      toast({ title: "Error", description: "You must be logged in to update your name.", variant: "destructive" });
-      return;
-    }
-    if (!editableDisplayName.trim()) {
-      toast({ title: "Error", description: "Display name cannot be empty.", variant: "destructive" });
-      return;
-    }
-    try {
-      await updateProfile(auth.currentUser, { displayName: editableDisplayName });
-      toast({ title: "Success", description: "Display name updated!" });
-      setIsEditingName(false);
-      // No need to update 'user' state directly, onAuthStateChanged or context refresh will handle it.
-    } catch (error) {
-      console.error("Error updating display name:", error);
-      toast({ title: "Error", description: "Failed to update display name.", variant: "destructive" });
-    }
-  };
 
   const handleSaveBio = async () => {
     if (user) {
@@ -198,33 +173,10 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="text-center sm:text-left space-y-2 flex-grow">
-                  <div className="flex items-center gap-2 justify-center sm:justify-start">
-                    {isEditingName ? (
-                      <>
-                        <Input 
-                          value={editableDisplayName} 
-                          onChange={(e) => setEditableDisplayName(e.target.value)} 
-                          className="text-2xl font-headline h-10"
-                          placeholder="Your Name"
-                        />
-                        <Button size="icon" onClick={handleSaveName} className="bg-green-500 hover:bg-green-600"><Save className="h-4 w-4" /></Button>
-                        <Button size="icon" variant="ghost" onClick={() => { setIsEditingName(false); setEditableDisplayName(user.displayName || ""); }}>
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </>
-                    ) : (
-                      <>
-                        <CardTitle className="text-3xl font-headline text-primary-foreground dark:text-foreground">
-                          {user.displayName || 'Mysterious Trainer'}
-                        </CardTitle>
-                        <Button size="icon" variant="ghost" onClick={() => {
-                          setEditableDisplayName(user.displayName || '');
-                          setIsEditingName(true);
-                        }}>
-                          <Pencil className="h-5 w-5" />
-                        </Button>
-                      </>
-                    )}
+                  <div className="flex items-center justify-center sm:justify-start">
+                    <CardTitle className="text-3xl font-headline text-primary-foreground dark:text-foreground">
+                      {user.displayName || 'Mysterious Trainer'}
+                    </CardTitle>
                   </div>
 
                   <div className="flex items-center gap-2 mt-1 justify-center sm:justify-start">
@@ -376,4 +328,3 @@ export default function ProfilePage() {
     </div>
   );
 }
-
