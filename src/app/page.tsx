@@ -23,7 +23,7 @@ export default function RootPage() {
       {/* Content Overlay - Positioned above Spline.
           Aligned to the start (left) for a more modern feel.
       */}
-      <div className="relative z-10 flex flex-col flex-grow items-start justify-center w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 py-10 space-y-8">
+      <div className="relative z-10 flex flex-col flex-grow items-start justify-center w-full max-w-screen-2xl mx-auto px-6 sm:px-8 lg:px-12 py-10 space-y-8">
         <header className="space-y-4 w-full max-w-3xl">
           <h1 className="text-5xl sm:text-6xl md:text-7xl font-headline font-bold text-white text-left drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
             Welcome to PokePack Opener SG!
