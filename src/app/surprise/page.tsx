@@ -11,7 +11,6 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Send } from 'lucide-react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
 
 export default function GlobalChatPage() {
   const { user, loading } = useAuth();
@@ -56,12 +55,16 @@ export default function GlobalChatPage() {
   };
 
   return (
-    <div className="flex-grow flex flex-col overflow-hidden">
-        <Card className="flex flex-col flex-grow">
-            <CardHeader>
+    // The main container fills the available vertical space.
+    <div className="flex-grow flex flex-col relative">
+        {/* The Card is positioned absolutely to fill its parent, preventing the page from growing. */}
+        <Card className="absolute inset-0 flex flex-col">
+            {/* The header has a fixed height. */}
+            <CardHeader className="flex-shrink-0">
                 <CardTitle className="text-center font-headline text-3xl text-primary-foreground dark:text-foreground">Global Chat Room</CardTitle>
             </CardHeader>
-            <CardContent className="flex-grow overflow-y-auto p-4 min-h-0">
+            {/* The content area grows and scrolls internally. */}
+            <CardContent className="flex-grow overflow-y-auto p-4">
                 <div className="space-y-4">
                     {messages.map((msg) => (
                         <ChatMessageItem
@@ -73,7 +76,8 @@ export default function GlobalChatPage() {
                     <div ref={messagesEndRef} />
                 </div>
             </CardContent>
-            <CardFooter className="pt-4 border-t">
+            {/* The footer has a fixed height. */}
+            <CardFooter className="pt-4 border-t flex-shrink-0">
                 <form onSubmit={handleSendMessage} className="flex w-full items-center space-x-2">
                     <Input
                         type="text"
