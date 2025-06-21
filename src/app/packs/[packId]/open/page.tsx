@@ -16,6 +16,15 @@ import { cn } from '@/lib/utils';
 
 type PackOpeningStage = 'initial' | 'opening' | 'stack-reveal' | 'all-revealed' | 'transitioning';
 
+// Helper to shuffle an array
+function shuffleArray<T>(array: T[]): T[] {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
 export default function PackOpeningPage() {
   const router = useRouter();
   const params = useParams();
@@ -60,62 +69,52 @@ export default function PackOpeningPage() {
 
   const pullCardsForOnePack = useCallback((): PokemonCard[] => {
     if (!packData) return [];
-
+  
     const packCards: PokemonCard[] = [];
     const availableCardsInSeries = allCards.filter(card =>
       packData.possibleCards.includes(card.id) &&
       (packData.series === "Any" || card.series === packData.series)
     );
-
+  
+    // Helper to pull random cards from a pool without replacement for this specific pull
+    const pullRandomFrom = (pool: PokemonCard[], count: number): PokemonCard[] => {
+      const mutablePool = [...pool]; // Create a mutable copy to splice from
+      const pulled: PokemonCard[] = [];
+      for (let i = 0; i < count; i++) {
+        if (mutablePool.length === 0) break;
+        const randomIndex = Math.floor(Math.random() * mutablePool.length);
+        // Splice returns an array, so we take the first element
+        const card = mutablePool.splice(randomIndex, 1)[0];
+        if (card) pulled.push(card);
+      }
+      return pulled;
+    };
+  
     if (packData.id === 'destined-rivals-booster-001') {
-      const pullAndAddCardByRarity = (targetRarity: CardRarity, count: number): void => {
-        for (let i = 0; i < count; i++) {
-          if (packCards.length >= packData.cardsPerPack) break;
-          const potentialCards = availableCardsInSeries.filter(c => c.rarity === targetRarity);
-          if (potentialCards.length > 0) {
-            const card = potentialCards[Math.floor(Math.random() * potentialCards.length)];
-            packCards.push(card);
-          } else {
-            const fallbackRarities: CardRarity[] = ['Rare', 'Uncommon', 'Common'];
-            let foundFallback = false;
-            for (const fr of fallbackRarities) {
-                const fallbackPotential = availableCardsInSeries.filter(c => c.rarity === fr);
-                if (fallbackPotential.length > 0) {
-                    packCards.push(fallbackPotential[Math.floor(Math.random() * fallbackPotential.length)]);
-                    foundFallback = true;
-                    break;
-                }
-            }
-            if(!foundFallback && availableCardsInSeries.length > 0) {
-                packCards.push(availableCardsInSeries[Math.floor(Math.random() * availableCardsInSeries.length)]);
-            }
-          }
-        }
-      };
-
-      // Pull base cards: 4 Common, 2 Uncommon, 1 Rare
-      pullAndAddCardByRarity('Common', 4);
-      pullAndAddCardByRarity('Uncommon', 2);
-      pullAndAddCardByRarity('Rare', 1);
-
+      const commonPool = availableCardsInSeries.filter(c => c.rarity === 'Common');
+      const uncommonPool = availableCardsInSeries.filter(c => c.rarity === 'Uncommon');
+      const rarePool = availableCardsInSeries.filter(c => c.rarity === 'Rare');
+      
+      packCards.push(...pullRandomFrom(commonPool, 4));
+      packCards.push(...pullRandomFrom(uncommonPool, 2));
+      packCards.push(...pullRandomFrom(rarePool, 1));
+      
       const hitRarityPool: { rarity: CardRarity; weight: number }[] = [
         { rarity: 'Hyper Rare', weight: 6 },
         { rarity: 'Special Illustration Rare', weight: 12 },
         { rarity: 'Illustration Rare', weight: 10 },
-        { rarity: 'Ultra Rare', weight: 15 }, 
+        { rarity: 'Ultra Rare', weight: 15 },
         { rarity: 'Double Rare', weight: 25 },
         { rarity: 'Rare', weight: 30 },
       ];
       const totalWeight = hitRarityPool.reduce((sum, item) => sum + item.weight, 0);
-
+  
       const numberOfHitSlots = 3;
-
       for (let i = 0; i < numberOfHitSlots; i++) {
         if (packCards.length >= packData.cardsPerPack) break;
-
+  
         let randomWeight = Math.random() * totalWeight;
-        let chosenRarity: CardRarity | null = null;
-
+        let chosenRarity: CardRarity = 'Rare';
         for (const item of hitRarityPool) {
           if (randomWeight < item.weight) {
             chosenRarity = item.rarity;
@@ -123,147 +122,85 @@ export default function PackOpeningPage() {
           }
           randomWeight -= item.weight;
         }
-        if (!chosenRarity) chosenRarity = 'Rare';
-
-        let pulledHitCard: PokemonCard | undefined;
-        const potentialHitCards = availableCardsInSeries.filter(c => c.rarity === chosenRarity);
-        if (potentialHitCards.length > 0) {
-          pulledHitCard = potentialHitCards[Math.floor(Math.random() * potentialHitCards.length)];
-        }
-
+  
+        let potentialHitCards = availableCardsInSeries.filter(c => c.rarity === chosenRarity && !packCards.some(pc => pc.id === c.id));
+        let pulledHitCard = pullRandomFrom(potentialHitCards, 1)[0];
+  
         if (!pulledHitCard) {
           const fallbackRaritiesSequence: CardRarity[] = ['Ultra Rare', 'Double Rare', 'Rare', 'Uncommon', 'Common'];
           for (const fr of fallbackRaritiesSequence) {
-            if (fr === chosenRarity && potentialHitCards.length === 0) continue;
-            const potentialFallbackCards = availableCardsInSeries.filter(c => c.rarity === fr);
-            if (potentialFallbackCards.length > 0) {
-              pulledHitCard = potentialFallbackCards[Math.floor(Math.random() * potentialFallbackCards.length)];
-              break;
+            potentialHitCards = availableCardsInSeries.filter(c => c.rarity === fr && !packCards.some(pc => pc.id === c.id));
+            if (potentialHitCards.length > 0) {
+              pulledHitCard = pullRandomFrom(potentialHitCards, 1)[0];
+              if (pulledHitCard) break;
             }
           }
         }
-
+  
         if (pulledHitCard) {
           packCards.push(pulledHitCard);
-        } else if (availableCardsInSeries.length > 0) {
-            packCards.push(availableCardsInSeries[Math.floor(Math.random() * availableCardsInSeries.length)]);
+        } else {
+          const fallbackPool = availableCardsInSeries.filter(c => !packCards.some(pc => pc.id === c.id));
+          const finalFallback = pullRandomFrom(fallbackPool, 1)[0];
+          if(finalFallback) packCards.push(finalFallback);
         }
       }
-      return packCards;
-
-    } else { // Handles Base Set, Generations, and other generic packs
-      const availableCardsInPack = allCards.filter(card => packData.possibleCards.includes(card.id));
-      if (availableCardsInPack.length === 0) return [];
-
-      let rareSlotCard: PokemonCard | undefined;
-
-      // 1. Pull Commons
-      for (let i = 0; i < packData.rarityDistribution.common; i++) {
-        if (packCards.length >= packData.cardsPerPack -1) break; 
-        let card = availableCardsInPack.find(c => c.rarity === 'Common' && !packCards.some(pc => pc.id === c.id));
-        if (!card) { 
-            const commonPool = availableCardsInPack.filter(c => c.rarity === 'Common');
-            if(commonPool.length > 0) card = commonPool[Math.floor(Math.random() * commonPool.length)];
-            else { 
-                const nonRarePool = availableCardsInPack.filter(c => c.rarity !== 'Rare' && c.rarity !== 'Holo Rare' && c.rarity !== 'Ultra Rare');
-                if (nonRarePool.length > 0) card = nonRarePool[Math.floor(Math.random() * nonRarePool.length)];
-                else if (availableCardsInPack.length > 0) card = availableCardsInPack[Math.floor(Math.random() * availableCardsInPack.length)];
-            }
-        }
-        if (card) packCards.push(card);
-      }
-
-      // 2. Pull Uncommons
-      for (let i = 0; i < packData.rarityDistribution.uncommon; i++) {
-        if (packCards.length >= packData.cardsPerPack -1) break; 
-        let card = availableCardsInPack.find(c => c.rarity === 'Uncommon' && !packCards.some(pc => pc.id === c.id));
-        if (!card) { 
-            const uncommonPool = availableCardsInPack.filter(c => c.rarity === 'Uncommon');
-             if(uncommonPool.length > 0) card = uncommonPool[Math.floor(Math.random() * uncommonPool.length)];
-             else { 
-                const nonRarePool = availableCardsInPack.filter(c => c.rarity !== 'Rare' && c.rarity !== 'Holo Rare' && c.rarity !== 'Ultra Rare' && !packCards.some(pc => pc.id === c.id));
-                if (nonRarePool.length > 0) card = nonRarePool[Math.floor(Math.random() * nonRarePool.length)];
-                else if (availableCardsInPack.length > 0) card = availableCardsInPack[Math.floor(Math.random() * availableCardsInPack.length)];
-            }
-        }
-        if (card) packCards.push(card);
-      }
-
-      // 3. Determine Rare Slot card (Ultra Rare, Holo Rare, or Rare for generic packs)
+  
+    } else { // Correctly handles Base Set, Generations, and other generic packs
+      const commonPool = availableCardsInSeries.filter(c => c.rarity === 'Common');
+      const uncommonPool = availableCardsInSeries.filter(c => c.rarity === 'Uncommon');
+      const rarePool = availableCardsInSeries.filter(c => c.rarity === 'Rare');
+      const holoRarePool = availableCardsInSeries.filter(c => c.rarity === 'Holo Rare');
+      const ultraRarePool = availableCardsInSeries.filter(c => c.rarity === 'Ultra Rare');
+  
+      // Pull commons and uncommons randomly
+      packCards.push(...pullRandomFrom(commonPool, packData.rarityDistribution.common));
+      packCards.push(...pullRandomFrom(uncommonPool, packData.rarityDistribution.uncommon));
+  
+      // Handle the rare slot
       if (packData.rarityDistribution.rareSlot > 0) {
-          const rareSlotRoll = Math.random();
-          let chosenRarityForSlot: CardRarity | null = null;
-          let attemptOrder: CardRarity[] = [];
-
-          if (rareSlotRoll < 0.10) { // 10% chance for Ultra Rare
-              chosenRarityForSlot = 'Ultra Rare';
-              attemptOrder = ['Ultra Rare', 'Holo Rare', 'Rare'];
-          } else if (rareSlotRoll < 0.10 + 0.25) { // 25% chance for Holo Rare (cumulative 35%)
-              chosenRarityForSlot = 'Holo Rare';
-              attemptOrder = ['Holo Rare', 'Ultra Rare', 'Rare'];
-          } else { // Remaining 65% chance for Rare
-              chosenRarityForSlot = 'Rare';
-              attemptOrder = ['Rare', 'Holo Rare', 'Ultra Rare'];
-          }
-          
-          for (const rarity of attemptOrder) {
-              const potentialCards = availableCardsInPack.filter(c => c.rarity === rarity && !packCards.some(pc => pc.id === c.id));
-              if (potentialCards.length > 0) {
-                  rareSlotCard = potentialCards[Math.floor(Math.random() * potentialCards.length)];
-                  break; 
-              }
-          }
-
-          // Fallback if the chosen rarity or primary fallbacks aren't available (e.g. card pool exhausted)
-          if (!rareSlotCard) {
-              const allPossibleRareSlotCards = availableCardsInPack.filter(c => 
-                  (c.rarity === 'Ultra Rare' || c.rarity === 'Holo Rare' || c.rarity === 'Rare') && 
-                  !packCards.some(pc => pc.id === c.id)
-              );
-              if (allPossibleRareSlotCards.length > 0) {
-                  rareSlotCard = allPossibleRareSlotCards[Math.floor(Math.random() * allPossibleRareSlotCards.length)];
-              }
-          }
-      }
-
-      // 4. Fill pack if still not full
-      let fillAttempts = 0;
-      while(packCards.length < (packData.cardsPerPack - (rareSlotCard ? 1:0) ) && availableCardsInPack.length > 0 && fillAttempts < 20) {
-        let cardToFill = availableCardsInPack.find(c => c.rarity === 'Common' && !packCards.some(pc => pc.id === c.id));
-        if (!cardToFill) cardToFill = availableCardsInPack.find(c => c.rarity === 'Uncommon' && !packCards.some(pc => pc.id === c.id));
-        if (!cardToFill) { 
-            cardToFill = availableCardsInPack.filter(c => c.rarity !== 'Rare' && c.rarity !== 'Holo Rare' && c.rarity !== 'Ultra Rare' && !packCards.some(pc => pc.id === c.id))[0];
-            if (!cardToFill) cardToFill = availableCardsInPack.filter(c => !packCards.some(pc => pc.id === c.id))[0];
+        let rareSlotCard: PokemonCard | undefined;
+        const rareSlotRoll = Math.random();
+  
+        // Determine the rarity to pull
+        if (ultraRarePool.length > 0 && rareSlotRoll < 0.10) { // 10% chance for Ultra Rare
+            rareSlotCard = pullRandomFrom(ultraRarePool, 1)[0];
+        } else if (holoRarePool.length > 0 && rareSlotRoll < 0.35) { // 25% chance for Holo Rare (total 35%)
+            rareSlotCard = pullRandomFrom(holoRarePool, 1)[0];
+        } 
+        
+        // If the chosen rarity pool was empty, or it's a regular rare roll, pull from the rare pool
+        if (!rareSlotCard) {
+            rareSlotCard = pullRandomFrom(rarePool, 1)[0];
         }
-        if (!cardToFill && availableCardsInPack.length > 0) { 
-            const nonDuplicatePool = availableCardsInPack.filter(c => !packCards.some(pc => pc.id === c.id));
-            if (nonDuplicatePool.length > 0) {
-              cardToFill = nonDuplicatePool[Math.floor(Math.random() * nonDuplicatePool.length)];
-            }
+  
+        // Final fallback chain if a specific pool was empty but we still need a card
+        if (!rareSlotCard) {
+            rareSlotCard = pullRandomFrom(holoRarePool, 1)[0] ?? pullRandomFrom(ultraRarePool, 1)[0] ?? pullRandomFrom(rarePool, 1)[0];
         }
-        if(cardToFill) packCards.push(cardToFill); else break; 
-        fillAttempts++;
-      }
-
-      // 5. Add the Rare/Holo Rare/Ultra Rare card last if it was pulled
-      if (rareSlotCard) {
-        packCards.push(rareSlotCard);
-      }
-
-      // Final fill to ensure pack size if anything is missing after specific pulls
-      fillAttempts = 0;
-      while(packCards.length < packData.cardsPerPack && availableCardsInPack.length > 0 && fillAttempts < 10) {
-        let finalFillCardPool = availableCardsInPack.filter(c => !packCards.some(pc => pc.id === c.id));
-        let finalFillCard = finalFillCardPool.length > 0 ? finalFillCardPool[0] : null;
-
-        if (!finalFillCard && availableCardsInPack.length > 0) { 
-            finalFillCard = availableCardsInPack[Math.floor(Math.random() * availableCardsInPack.length)];
+  
+        if (rareSlotCard) {
+          packCards.push(rareSlotCard);
         }
-        if (finalFillCard) packCards.push(finalFillCard); else break;
-        fillAttempts++;
       }
-      return packCards;
     }
+  
+    // Final check to fill the pack if any pools were smaller than the required pull count
+    let fillAttempts = 0;
+    while (packCards.length < packData.cardsPerPack && fillAttempts < 10) {
+      const remainingPool = availableCardsInSeries.filter(c => !packCards.some(pc => pc.id === c.id));
+      if (remainingPool.length === 0) break;
+      const fillCard = pullRandomFrom(remainingPool, 1)[0];
+      if (fillCard) {
+        packCards.push(fillCard);
+      } else {
+        break; // Stop if no more cards to fill with
+      }
+      fillAttempts++;
+    }
+  
+    // Shuffle the final pack to randomize card order
+    return shuffleArray(packCards);
   }, [packData]);
 
 
@@ -587,7 +524,7 @@ export default function PackOpeningPage() {
       )}>
       <Button
         variant="outline"
-        onClick={() => router.push('/')}
+        onClick={() => router.push('/pack-selection')}
         className={cn(
             "absolute top-24 left-4 md:left-8 z-10",
             "hover:bg-[hsl(217,91%,60%)] hover:text-white hover:border-[hsl(217,91%,60%)]",
@@ -845,7 +782,7 @@ export default function PackOpeningPage() {
           )}
           <Button
             size="lg"
-            onClick={() => router.push('/')}
+            onClick={() => router.push('/pack-selection')}
             className="bg-[hsl(217,91%,60%)] hover:bg-[hsl(217,91%,50%)] text-white"
           >
             <Package className="mr-2 h-5 w-5" /> Back to Packs
@@ -870,4 +807,3 @@ export default function PackOpeningPage() {
     </div>
   );
 }
-
