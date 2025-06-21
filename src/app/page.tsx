@@ -4,7 +4,7 @@
 import Spline from '@splinetool/react-spline';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { Package, BookOpen, Users, User } from 'lucide-react';
+import { Package, BookOpen, Users, User, MessageSquare } from 'lucide-react';
 
 export default function RootPage() {
   return (
@@ -50,6 +50,11 @@ export default function RootPage() {
           <Button asChild size="lg" className="bg-[hsl(217,91%,60%)] hover:bg-[hsl(217,91%,50%)] text-white text-base py-3 px-6 shadow-xl hover:shadow-2xl transition-shadow">
             <Link href="/my-team">
               <Users className="mr-2 h-5 w-5" /> My Team
+            </Link>
+          </Button>
+          <Button asChild size="lg" className="bg-[hsl(217,91%,60%)] hover:bg-[hsl(217,91%,50%)] text-white text-base py-3 px-6 shadow-xl hover:shadow-2xl transition-shadow">
+            <Link href="/surprise">
+              <MessageSquare className="mr-2 h-5 w-5" /> Global Chat
             </Link>
           </Button>
           <Button asChild size="lg" className="bg-[hsl(217,91%,60%)] hover:bg-[hsl(217,91%,50%)] text-white text-base py-3 px-6 shadow-xl hover:shadow-2xl transition-shadow">
