@@ -21,6 +21,7 @@ export function ChatMessageItem({ message, isCurrentUser }: ChatMessageItemProps
     return name.substring(0, 2).toUpperCase();
   };
 
+  // Check if timestamp exists and has a toDate method before formatting
   const formattedTimestamp = message.timestamp?.toDate
     ? formatDistanceToNowStrict(message.timestamp.toDate(), { addSuffix: true })
     : 'sending...';
@@ -40,7 +41,7 @@ export function ChatMessageItem({ message, isCurrentUser }: ChatMessageItemProps
             }`}
         >
           <p className="text-xs font-semibold mb-1 opacity-80">
-            {isCurrentUser ? 'You' : (message.displayName || 'Anonymous User')}
+            {message.displayName || 'Anonymous User'}
           </p>
           <p className="text-sm">{message.text}</p>
         </div>
