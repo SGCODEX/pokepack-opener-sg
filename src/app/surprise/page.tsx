@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -65,7 +64,7 @@ export default function GlobalChatPage() {
         <CardHeader>
           <CardTitle className="text-center font-headline text-3xl text-primary-foreground dark:text-foreground">Global Chat Room</CardTitle>
         </CardHeader>
-        <CardContent className="flex-grow overflow-hidden">
+        <CardContent className="flex-grow min-h-0">
           <ScrollArea className="h-full pr-4">
             <div className="space-y-4">
               {messages.map((msg) => (
