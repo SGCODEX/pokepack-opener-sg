@@ -802,10 +802,9 @@ export default function PackOpeningPage() {
           card={selectedCardForModal}
           isOpen={isModalOpen}
           onClose={closeModal}
+          collectedCount={getCollectedCount(selectedCardForModal.id)}
         />
       )}
     </div>
   );
 }
-
-    

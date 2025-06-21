@@ -254,10 +254,10 @@ export default function PokedexPage() {
           card={selectedCard}
           isOpen={isModalOpen}
           onClose={closeModal}
+          collectedCount={getCollectedCount(selectedCard.id)}
         />
       )}
       
     </div>
   );
 }
-

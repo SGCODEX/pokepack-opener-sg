@@ -438,6 +438,7 @@ export default function MyTeamPage() {
           card={selectedCardForModal}
           isOpen={isCardModalOpen}
           onClose={closeCardModal}
+          collectedCount={getCollectedCount(selectedCardForModal.id)}
         />
       )}
 
@@ -466,4 +467,3 @@ export default function MyTeamPage() {
     </div>
   );
 }
-

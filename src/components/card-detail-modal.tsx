@@ -9,21 +9,26 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Button } from '@/components/ui/button';
 import { Separator } from './ui/separator';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Layers } from 'lucide-react';
 import { PokemonTypeIcon } from './pokemon-type-icon';
 import { Badge } from './ui/badge';
 import { cn } from '@/lib/utils';
+import { usePokedex } from '@/hooks/use-pokedex';
 
 interface CardDetailModalProps {
   card: PokemonCard | null;
   isOpen: boolean;
   onClose: () => void;
+  collectedCount?: number;
 }
 
-export function CardDetailModal({ card, isOpen, onClose }: CardDetailModalProps) {
+export function CardDetailModal({ card, isOpen, onClose, collectedCount: initialCollectedCount }: CardDetailModalProps) {
   const [trivia, setTrivia] = useState<string | null>(null);
   const [loadingTrivia, setLoadingTrivia] = useState(false);
   const [errorTrivia, setErrorTrivia] = useState<string | null>(null);
+  
+  // Use the hook to get live count, fallback to prop
+  const { getCollectedCount } = usePokedex();
 
   useEffect(() => {
     if (card && isOpen) {
@@ -50,6 +55,9 @@ export function CardDetailModal({ card, isOpen, onClose }: CardDetailModalProps)
 
   if (!card) return null;
 
+  const collectedCount = getCollectedCount(card.id) ?? initialCollectedCount;
+
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md p-0"> {/* Simplified max width */}
@@ -62,10 +70,16 @@ export function CardDetailModal({ card, isOpen, onClose }: CardDetailModalProps)
                 )}>
                 {card.name}
               </DialogTitle>
-              <div className="flex items-center justify-center space-x-2 pt-1">
+              <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 pt-1">
                   <Badge variant={card.rarity === 'Holo Rare' ? 'destructive' : 'secondary'} className="text-xs">{card.rarity}</Badge>
                   {card.type !== 'Trainer' && card.type !== 'Energy' && <PokemonTypeIcon type={card.type} className="h-5 w-5" />}
                   {card.pokedexNumber && <span className="text-xs text-muted-foreground">#{card.pokedexNumber}</span>}
+                  {collectedCount && collectedCount > 0 && (
+                    <div className="flex items-center space-x-1 text-xs text-muted-foreground">
+                        <Layers className="h-3 w-3" />
+                        <span>Owned: {collectedCount}</span>
+                    </div>
+                  )}
               </div>
             </DialogHeader>
             
