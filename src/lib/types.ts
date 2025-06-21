@@ -1,4 +1,6 @@
 
+import type { Timestamp } from 'firebase/firestore';
+
 export type PokemonType =
   | 'Fire'
   | 'Water'
@@ -55,4 +57,13 @@ export interface Team {
   id: string;
   name: string;
   pokemonIds: (string | null)[];
+}
+
+export interface ChatMessage {
+  id: string;
+  text: string;
+  uid: string;
+  displayName: string | null;
+  photoURL: string | null;
+  timestamp: Timestamp;
 }

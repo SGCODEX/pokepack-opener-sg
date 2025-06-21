@@ -1,7 +1,8 @@
+
 "use client";
 
 import Link from 'next/link';
-import { Sparkles, Users, User, Package, BookOpen, Home, Gift } from 'lucide-react';
+import { Sparkles, Users, User, Package, BookOpen, Home, MessageSquare } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Container } from './container';
@@ -17,7 +18,7 @@ const navLinks = [
   { href: '/', label: 'Home', icon: Home },
   { href: '/pack-selection', label: 'Open Packs', icon: Package },
   { href: '/pokedex', label: 'My Pokedex', icon: BookOpen },
-  { href: '/surprise', label: 'Surprise', icon: Gift },
+  { href: '/global-chat', label: 'Global Chat', icon: MessageSquare },
   { href: '/my-team', label: 'My Team', icon: Users },
   { href: '/profile', label: 'Profile', icon: User },
 ];
