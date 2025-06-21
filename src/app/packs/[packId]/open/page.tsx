@@ -558,9 +558,9 @@ export default function PackOpeningPage() {
           <span className="hidden sm:inline">Skip to Results</span>
         </Button>
       )}
-      <header className="relative z-10 pt-20 pb-4 text-center">
+      <header className="relative z-10 pt-20 pb-2 text-center">
         <h1 className={cn(
-          "text-4xl font-headline font-bold",
+          "text-3xl font-headline font-bold",
            stage === 'all-revealed' ? 'text-black' :
            (hasHolo && activeOpeningStages.includes(stage) && stage !== 'transitioning') ? 'text-white' :
            (hasRareNonHolo && activeOpeningStages.includes(stage) && stage !== 'transitioning') ? 'text-black' :
@@ -569,32 +569,30 @@ export default function PackOpeningPage() {
       </header>
 
       {stage === 'initial' && (
-        <div className="flex flex-col items-center space-y-6 flex-grow justify-center">
+        <div className="flex flex-col items-center space-y-4 flex-grow justify-center">
           <Image
             src={packData.image}
             alt={packData.name}
-            width={250}
-            height={350}
+            width={200}
+            height={280}
             className="object-cover rounded-lg shadow-xl border-4 border-primary hover:animate-pack-shake"
             data-ai-hint={packData.dataAiHint || packData.name}
             priority
           />
           <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
             <Button
-              size="lg"
               onClick={() => setTimeout(() => initiateOpeningProcess(1), 50)}
-              className="bg-accent hover:bg-accent/90 text-accent-foreground text-lg px-8 py-6"
+              className="bg-accent hover:bg-accent/90 text-accent-foreground"
               disabled={!pokedexLoaded || !packData}
             >
-              <Package className="mr-2 h-6 w-6" /> Open 1 Booster Pack
+              <Package className="mr-2 h-5 w-5" /> Open 1 Booster Pack
             </Button>
             <Button
-              size="lg"
               onClick={() => setTimeout(() => initiateOpeningProcess(10), 50)}
-              className="bg-primary hover:bg-primary/90 text-primary-foreground text-lg px-8 py-6"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
               disabled={!pokedexLoaded || !packData || packData.possibleCards.length < packData.cardsPerPack * 10 }
             >
-              <PackagePlus className="mr-2 h-6 w-6" /> Open 10 Booster Packs
+              <PackagePlus className="mr-2 h-5 w-5" /> Open 10 Booster Packs
             </Button>
           </div>
         </div>
@@ -607,8 +605,8 @@ export default function PackOpeningPage() {
               <Image
                 src={packData.image}
                 alt="Opening pack"
-                width={250}
-                height={350}
+                width={200}
+                height={280}
                 className="object-cover rounded-lg shadow-xl border-4 border-accent animate-opening-pack-burst"
                 data-ai-hint={packData.dataAiHint || packData.name}
                 priority
@@ -653,7 +651,7 @@ export default function PackOpeningPage() {
           )}
           {openedCards.length > 0 ? (
             <div
-              className="relative w-[240px] h-[336px] mx-auto cursor-pointer select-none z-10 animate-stack-arrive"
+              className="relative w-[200px] h-[280px] mx-auto cursor-pointer select-none z-10 animate-stack-arrive"
               onClick={!currentSwipingCard ? handleRevealNextCard : undefined}
               role="button"
               tabIndex={0}
@@ -707,7 +705,7 @@ export default function PackOpeningPage() {
           ) : (
             <div
               className={cn(
-                "relative w-[240px] h-[336px] mx-auto cursor-pointer select-none z-10 flex items-center justify-center animate-stack-arrive",
+                "relative w-[200px] h-[280px] mx-auto cursor-pointer select-none z-10 flex items-center justify-center animate-stack-arrive",
                 (hasHolo && activeOpeningStages.includes(stage) && stage !== 'transitioning') ? 'text-white/70' :
                 (hasRareNonHolo && activeOpeningStages.includes(stage) && stage !== 'transitioning') ? 'text-black/70' :
                 'text-muted-foreground'
@@ -728,10 +726,10 @@ export default function PackOpeningPage() {
         <div className="flex-grow flex flex-col items-center justify-center">
           {allOpenedCardsInSession.length > 0 && (
             <>
-              <h2 className="text-2xl font-headline font-semibold text-black mb-4">
+              <h2 className="text-xl font-headline font-semibold text-black mb-4">
                 {totalPacksInBulkLoop > 1 ? `Your ${totalPacksInBulkLoop} Packs Yielded` : 'Your Cards!'}
               </h2>
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-items-center">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 gap-4 justify-items-center">
                 {allOpenedCardsInSession.map((card, index) => (
                   <CardComponent
                     key={`${card.id}-grid-${index}`}
@@ -739,7 +737,7 @@ export default function PackOpeningPage() {
                     onClick={() => handleCardClickForModal(card)}
                     showDetails={true}
                     collectedCount={getCollectedCount(card.id)}
-                    className="w-40"
+                    className="w-36"
                   />
                 ))}
               </div>
@@ -751,7 +749,6 @@ export default function PackOpeningPage() {
       {(stage === 'all-revealed' || (stage === 'stack-reveal' && currentStackIndex >= openedCards.length && openedCards.length === 0 && !isProcessingBulk )) && (
         <div className="mt-auto py-6 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4 relative z-5">
           <Button
-            size="lg"
             onClick={() => resetPackOpening(1)}
             variant="outline"
             className={cn(
@@ -767,7 +764,6 @@ export default function PackOpeningPage() {
           </Button>
           {packData && packData.possibleCards.length >= packData.cardsPerPack * 10 && (
              <Button
-                size="lg"
                 onClick={() => resetPackOpening(10)}
                 variant="outline"
                 className={cn(
@@ -783,14 +779,12 @@ export default function PackOpeningPage() {
             </Button>
           )}
           <Button
-            size="lg"
             onClick={() => router.push('/pack-selection')}
             className="bg-[hsl(217,91%,60%)] hover:bg-[hsl(217,91%,50%)] text-white"
           >
             <Package className="mr-2 h-5 w-5" /> Back to Packs
           </Button>
           <Button
-            size="lg"
             onClick={() => router.push('/pokedex')}
             className="bg-[hsl(217,91%,60%)] hover:bg-[hsl(217,91%,50%)] text-white"
           >
@@ -810,5 +804,3 @@ export default function PackOpeningPage() {
     </div>
   );
 }
-
-    
