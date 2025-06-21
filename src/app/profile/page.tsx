@@ -143,7 +143,7 @@ export default function ProfilePage() {
   const activeTeamCards = getActiveTeamCards();
 
   return (
-    <div className="space-y-6 flex flex-col flex-grow">
+    <div className="space-y-6 flex flex-col">
       <header className="text-center">
         <h1 className="text-4xl sm:text-5xl font-headline font-bold text-primary-foreground dark:text-foreground">Your Trainer Profile</h1>
       </header>
@@ -155,16 +155,16 @@ export default function ProfilePage() {
               
               <div className="flex items-center gap-4">
                 <div className="relative group flex-shrink-0">
-                  <Avatar className="h-20 w-20 border-2 border-[hsl(217,91%,60%)]">
+                  <Avatar className="h-16 w-16 border-2 border-[hsl(217,91%,60%)]">
                     <AvatarImage src={user.photoURL || undefined} alt={user.displayName || 'User'} />
                     <AvatarFallback>
-                      {user.displayName ? user.displayName.charAt(0).toUpperCase() : <UserCircle className="h-16 w-16 text-muted-foreground" />}
+                      {user.displayName ? user.displayName.charAt(0).toUpperCase() : <UserCircle className="h-12 w-12 text-muted-foreground" />}
                     </AvatarFallback>
                   </Avatar>
                   <Button 
                     size="icon" 
                     variant="ghost" 
-                    className="absolute bottom-0 right-0 bg-background/70 hover:bg-background rounded-full h-8 w-8 group-hover:opacity-100 opacity-50 transition-opacity"
+                    className="absolute bottom-0 right-0 bg-background/70 hover:bg-background rounded-full h-7 w-7 group-hover:opacity-100 opacity-50 transition-opacity"
                     onClick={() => setIsAvatarSelectionDialogOpen(true)}
                     disabled={isUpdatingAvatar}
                     aria-label="Change profile picture"
@@ -174,7 +174,7 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="text-left space-y-1">
-                  <CardTitle className="text-xl font-headline text-primary-foreground dark:text-foreground">
+                  <CardTitle className="text-lg font-headline text-primary-foreground dark:text-foreground">
                     {user.displayName || 'Mysterious Trainer'}
                   </CardTitle>
                   
@@ -206,19 +206,20 @@ export default function ProfilePage() {
                     )}
                   </div>
                   
-                  {user.email && (
-                    <div className="text-xs text-muted-foreground flex items-center gap-1.5">
-                      <Mail className="h-3 w-3" />
-                      <span>{showFullEmail ? user.email : maskEmail(user.email)}</span>
-                      <Button size="icon" variant="ghost" className="h-5 w-5" onClick={() => setShowFullEmail(!showFullEmail)}>
-                        {showFullEmail ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
-                      </Button>
-                    </div>
-                  )}
-
-                  <p className="text-xs text-muted-foreground flex items-center gap-1.5">
-                    <BookOpen className="h-3 w-3" /> Total Pokémon Caught: {totalCollectedIncludingDuplicates}
-                  </p>
+                  <div className="space-y-1 text-xs text-muted-foreground">
+                    {user.email && (
+                      <div className="flex items-center gap-1.5">
+                        <Mail className="h-3 w-3" />
+                        <span>{showFullEmail ? user.email : maskEmail(user.email)}</span>
+                        <Button size="icon" variant="ghost" className="h-5 w-5" onClick={() => setShowFullEmail(!showFullEmail)}>
+                          {showFullEmail ? <EyeOff className="h-3 w-3" /> : <Eye className="h-3 w-3" />}
+                        </Button>
+                      </div>
+                    )}
+                    <p className="flex items-center gap-1.5">
+                      <BookOpen className="h-3 w-3" /> Total Pokémon Caught: {totalCollectedIncludingDuplicates}
+                    </p>
+                  </div>
                 </div>
               </div>
 

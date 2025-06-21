@@ -131,7 +131,7 @@ export default function PokedexPage() {
   }
   
   return (
-    <div className="space-y-8 flex flex-col flex-grow">
+    <div className="space-y-8 flex flex-col">
       <header className="text-center space-y-3">
         <h1 className="text-4xl font-headline font-bold text-primary-foreground dark:text-foreground">Pokédex</h1>
          <p className="text-lg text-muted-foreground dark:text-foreground/80">Browse your collection for {activeSeriesTab}.</p>
