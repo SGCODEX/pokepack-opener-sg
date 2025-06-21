@@ -39,11 +39,9 @@ export function ChatMessageItem({ message, isCurrentUser }: ChatMessageItemProps
               : 'bg-card text-card-foreground rounded-bl-none border border-border'
             }`}
         >
-          {!isCurrentUser && (
-            <p className="text-xs font-semibold mb-1 opacity-80">
-              {message.displayName || 'Anonymous User'}
-            </p>
-          )}
+          <p className="text-xs font-semibold mb-1 opacity-80">
+            {isCurrentUser ? 'You' : (message.displayName || 'Anonymous User')}
+          </p>
           <p className="text-sm">{message.text}</p>
         </div>
         <p className={`text-xs mt-1 ${isCurrentUser ? 'mr-1' : 'ml-1'} text-muted-foreground`}>
