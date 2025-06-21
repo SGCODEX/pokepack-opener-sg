@@ -23,13 +23,14 @@ export function PackItem({ pack }: PackItemProps) {
           data-ai-hint={pack.dataAiHint || pack.name}
         />
       </CardHeader>
-      <CardContent className="p-4 flex flex-col flex-grow">
-        <CardTitle className="text-xl font-headline mb-2" title={pack.name}>{pack.name}</CardTitle>
-        <p className="text-sm text-muted-foreground mb-1">{pack.series}</p>
-        <p className="text-sm text-muted-foreground mb-4">{pack.cardsPerPack} cards per pack</p>
+      <CardContent className="p-3 flex flex-col flex-grow">
+        <CardTitle className="text-lg font-headline mb-1" title={pack.name}>{pack.name}</CardTitle>
+        <p className="text-xs text-muted-foreground">{pack.series}</p>
+        <p className="text-xs text-muted-foreground mb-3">{pack.cardsPerPack} cards per pack</p>
         <div className="mt-auto">
           <Button 
             asChild 
+            size="sm"
             className={cn(
               "w-full",
               "bg-[hsl(217,91%,60%)] hover:bg-[hsl(217,91%,50%)]", // Blue background, darker blue on hover
@@ -37,7 +38,7 @@ export function PackItem({ pack }: PackItemProps) {
             )}
           >
             <Link href={`/packs/${pack.id}/open`}>
-              <PackageOpen className="mr-2 h-5 w-5" />
+              <PackageOpen className="mr-2 h-4 w-4" />
               Open Pack
             </Link>
           </Button>
