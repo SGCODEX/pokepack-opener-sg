@@ -17,9 +17,9 @@ const navLinks = [
   { href: '/', label: 'Home', icon: Home },
   { href: '/pack-selection', label: 'Open Packs', icon: Package },
   { href: '/pokedex', label: 'My Pokedex', icon: BookOpen },
+  { href: '/surprise', label: 'Surprise', icon: Gift },
   { href: '/my-team', label: 'My Team', icon: Users },
   { href: '/profile', label: 'Profile', icon: User },
-  { href: '/surprise', label: 'Surprise', icon: Gift },
 ];
 
 export function Navbar() {
