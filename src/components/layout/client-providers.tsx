@@ -96,7 +96,10 @@ function AppContent({ children }: { children: ReactNode }) {
     <>
       <Navbar /> 
       <main className="flex-grow">
-        <Container className="py-8 min-h-[calc(100vh-12rem)] flex flex-col">
+        <Container className={cn(
+            "min-h-[calc(100vh-12rem)] flex flex-col",
+            pathname === '/surprise' ? 'pt-8 pb-2' : 'py-8'
+          )}>
           {contentToDisplay}
         </Container>
       </main>
